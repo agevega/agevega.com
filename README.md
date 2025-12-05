@@ -102,7 +102,7 @@ terraform apply
 
 ---
 
-## 🚀 Roadmap
+## 🗺 Roadmap
 
 Estado actual de las tareas principales y evolución prevista:
 
