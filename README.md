@@ -102,7 +102,7 @@ terraform apply
 
 ---
 
-## 🗺 Roadmap
+## 🚀 Roadmap
 
 Estado actual de las tareas principales y evolución prevista:
 
@@ -115,7 +115,12 @@ Estado actual de las tareas principales y evolución prevista:
 
 ---
 
-## 📄 Licencia y Contacto
+## 📄 Licencia
 
-**Alejandro Vega** - [agevega.com](https://agevega.com)
-Proyecto distribuido bajo licencia [MIT](./LICENSE).
+© Alejandro Vega. Este proyecto es open source bajo la licencia [MIT](./LICENSE).
+
+---
+
+## 📬 Autor y Contacto
+
+**Alejandro Vega** · 🌐 [agevega.com](https://agevega.com) · 💼 [LinkedIn](https://www.linkedin.com/in/alejandro-vega94/) · ✉️ [agevega@gmail.com](mailto:agevega@gmail.com)
