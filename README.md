@@ -1,166 +1,121 @@
 # 🌐 agevega.com
 
-*Landing page profesional — Proyecto personal de **Alejandro Vega**.*
+![AWS](https://img.shields.io/badge/AWS-232F3E?style=for-the-badge&logo=amazon-aws&logoColor=white)
+![Terraform](https://img.shields.io/badge/terraform-%235835CC.svg?style=for-the-badge&logo=terraform&logoColor=white)
+![Astro](https://img.shields.io/badge/astro-%232C2052.svg?style=for-the-badge&logo=astro&logoColor=white)
+![GitHub Actions](https://img.shields.io/badge/github%20actions-%232671E5.svg?style=for-the-badge&logo=githubactions&logoColor=white)
+
+Este repositorio contiene el código fuente y la definición de infraestructura para el sitio web personal de **Alejandro Vega**.
+
+El proyecto funciona como un **monorepo** que centraliza tanto el desarrollo del frontend (landing page) como la gestión del ciclo de vida de la infraestructura en la nube (AWS) mediante código.
 
 ---
 
-## 📖 Índice
-1. [Descripción](#-descripción)
-2. [Características](#-características)
-3. [Stack Tecnológico](#-stack-tecnológico)
-4. [Arquitectura del Proyecto](#-arquitectura-del-proyecto)
-5. [Instalación y Uso Local](#-instalación-y-uso-local)
-6. [Estructura del Repositorio](#-estructura-del-repositorio)
-7. [Roadmap](#-roadmap)
-8. [Contribución](#-contribución)
-9. [Licencia](#-licencia)
-10. [Autor y Contacto](#-autor-y-contacto)
+## 💡 Filosofía del Proyecto
+
+Aunque el objetivo final es servir un sitio web estático, el proyecto se aborda con una **perspectiva de ingeniería de infraestructura**. Se priorizan prácticas como:
+
+- **Infraestructura como Código (IaC):** Todo el entorno se define y provisiona mediante Terraform, evitando configuraciones manuales irreproducibles.
+- **Security First:** Implementación de auditoría (CloudTrail), cumplimiento de configuración (AWS Config) y principios de mínimo privilegio desde el inicio.
+- **Soberanía:** Control granular sobre la red y la distribución de contenido, evitando plataformas PaaS "caja negra" en favor de una arquitectura AWS nativa.
 
 ---
 
-## 🧩 Descripción
+## 🏗 Arquitectura del Sistema
 
-Este proyecto tiene como objetivo **centralizar mi presencia profesional online** mediante una **landing page moderna y optimizada**.
+La solución se compone de dos capas principales: Aplicación y Plataforma.
 
-La página está diseñada para:
-- Servir como **punto de referencia** para mi identidad profesional digital.  
-- Presentar mi **portfolio y experiencia** en ingeniería DevSecOps.  
-- Reunir enlaces a mis **proyectos, perfiles y canales de contacto**.  
+### 1. Frontend (Aplicación)
 
-Desarrollado con un enfoque en **optimización, rendimiento, mantenimiento sencillo y automatización**.
+Desarrollado con **Astro** para generar un sitio puramente estático (SSG). Esto garantiza:
 
----
+- Alto rendimiento (Zero JS por defecto).
+- Seguridad (superficie de ataque reducida al no haber servidor de aplicaciones).
+- Costes operativos mínimos (alojamiento en S3 + CloudFront).
 
-## ✨ Características
-Secciones visibles del sitio web.  
-*(A definir en futuras versiones).*
+### 2. Infraestructura (Plataforma)
 
----
+El entorno de despliegue en AWS se gestiona en la carpeta `infra/` y comprende:
 
-## 🧱 Stack Tecnológico
-
-Principales tecnologías y herramientas utilizadas en el proyecto:
-
-### Frontend
-- **Astro** — Framework estático moderno basado en componentes.  
-- **TailwindCSS** — Librería de utilidades CSS para diseño rápido y responsive.  
-- **TypeScript** — Tipado estático para un desarrollo más seguro y mantenible.  
-- **Markdown/MDX** — Contenido estructurado y fácil de editar.  
-
-### Backend
-- **AWS Lambda (Node.js)** — Funcionalidades serverless futuras (contacto, integraciones).  
-- **API Gateway** — Gestión de endpoints serverless. *(uso futuro)*  
-
-### CI/CD
-- **GitHub Actions** — Orquestación del pipeline de build, test y despliegue.  
-- **OIDC** — Autenticación segura entre GitHub y AWS (sin claves estáticas).  
-
-### Infraestructura
-- **AWS S3** — Hosting del sitio estático.  
-- **AWS CloudFront** — CDN para distribución global y caching.  
-- **AWS Route 53** — Gestión de dominio y DNS.  
-- **AWS Certificate Manager (ACM)** — Certificados SSL/TLS.  
-- **Terraform** — Infraestructura como código (IaC) para definir y versionar recursos.
+- **Networking:** VPC personalizada en la región `eu-south-2` (Madrid) con segmentación de subredes (Públicas/Privadas/Database).
+- **Distribución:** CloudFront como CDN global, sirviendo contenido desde buckets S3 privados (OAC).
+- **Seguridad y Gestión:**
+  - Autenticación OIDC para despliegues seguros desde GitHub Actions.
+  - Logs de auditoría centralizados y reglas de AWS Config.
+  - Gestión de dominios (Route53) y certificados SSL/TLS (ACM).
 
 ---
 
-## 🏗 Arquitectura del Proyecto
+## 🛠 Stack Tecnológico
 
-Se estructura en varias capas que cubren desde la interfaz de usuario hasta la automatización del despliegue y la infraestructura en la nube.
-
-### Frontend
-Interfaz del sitio web desarrollada con **Astro** y **TailwindCSS**, generada como contenido estático optimizado en tiempo de build.  
-El resultado se publica como HTML, CSS y JS listos para distribución global mediante CDN.
-
-### Backend
-Actualmente el sitio no incluye un backend propio.  
-En futuras versiones se añadirá un **formulario de contacto** mediante **AWS API Gateway** y **Lambda (Node.js)**, manteniendo el enfoque serverless y de bajo coste.
-
-### Automatización y Entrega
-Los procesos de construcción, validación y despliegue se orquestan mediante **GitHub Actions**, garantizando un flujo automatizado desde el commit hasta la publicación del contenido.  
-
-### Despliegue e Infraestructura
-La infraestructura se gestiona con **Terraform** sobre **AWS**, definiendo recursos como **S3**, **CloudFront**, **Route 53** y **ACM**.  
-Este enfoque permite reproducir y versionar todo el entorno de forma controlada.
-
-> 🧩 Los módulos y configuraciones específicas se documentarán una vez implementados.
-
----
-
-## 💻 Instalación y Uso Local
-
-Guía básica para ejecutar el proyecto en entorno local.  
-*(Los pasos se completarán una vez definido el stack de desarrollo).*
-
-### Requisitos previos
-- Node.js LTS (versión a definir)
-- Gestor de paquetes (npm, pnpm o yarn)
-
-### Pasos iniciales
-```bash
-# 1. Clonar el repositorio
-git clone https://github.com/agevega/agevega.com.git
-cd agevega.com
-
-# 2. Instalar dependencias
-# (se especificará el gestor en futuras versiones)
-npm install
-
-# 3. Ejecutar en modo desarrollo
-npm run dev
-```
-> 🧩 Las instrucciones se actualizarán conforme avance el desarrollo del entorno y se definan los comandos oficiales.
+| Capa         | Tecnología                  | Función                                               |
+| :----------- | :-------------------------- | :---------------------------------------------------- |
+| **Frontend** | **Astro** + **TailwindCSS** | Desarrollo de interfaz y generación de contenido.     |
+| **IaC**      | **Terraform**               | Provisión y gestión del estado de la infraestructura. |
+| **Cloud**    | **AWS**                     | Proveedor de nube (S3, CloudFront, VPC, IAM, etc.).   |
+| **CI/CD**    | **GitHub Actions**          | Automatización de builds y despliegues.               |
 
 ---
 
 ## 📁 Estructura del Repositorio
-```
+
+```bash
 agevega.com/
-├── src/        # Código fuente (componentes, layouts, páginas)
-├── public/     # Recursos estáticos (favicons, imágenes, fuentes)
-├── infra/      # Infraestructura como código (Terraform)
-├── scripts/    # Scripts auxiliares (build, deploy, utilidades)
-├── .gitignore
-├── LICENSE
-└── README.md
+├── src/                # Código fuente del sitio web (Astro)
+│   ├── components/     # Componentes UI
+│   └── pages/          # Rutas y contenido
+├── infra/              # Definición de infraestructura
+│   ├── terraform/      # Código HCL de Terraform
+│   │   ├── 00-state/   # Backend remoto (S3 + DynamoDB)
+│   │   └── 01-net/     # Configuración de red (VPC)
+│   └── changelog/      # Registro de cambios de infraestructura
+├── public/             # Archivos estáticos
+└── scripts/            # Scripts de utilidad
 ```
-> 🧩 La estructura puede ampliarse conforme el proyecto evolucione (tests, workflows, configuración de CI/CD, etc.).
 
 ---
 
-## 🚀 Roadmap
+## 🚀 Uso y Despliegue
 
-Plan de desarrollo y evolución del proyecto:
+### Desarrollo Local (Frontend)
 
-- [x] **Definición del README.md** con la estructura base del repositorio.  
-- [ ] **Definición del stack tecnológico** y primeros archivos de configuración.  
-- [ ] **Diseño inicial** de la landing page (estructura y secciones principales).  
-- [ ] **Configuración del entorno local** de desarrollo.  
-- [ ] **Infraestructura base** para despliegue en AWS (S3, CloudFront, Route 53).  
-- [ ] **Automatización del despliegue** mediante Terraform y GitHub Actions.  
-- [ ] **Publicación de la versión inicial** en `agevega.com`.
+Para trabajar en el diseño y contenido del sitio web:
 
-> 🧭 El roadmap puede evolucionar conforme avance el desarrollo y se definan nuevas funcionalidades o necesidades.
+```bash
+# Instalar dependencias
+npm install
 
----
+# Iniciar servidor de desarrollo en http://localhost:4321
+npm run dev
+```
 
-## 🤝 Contribución
+### Despliegue de Infraestructura
 
-Este es un proyecto personal y actualmente no está abierto a contribuciones externas.  
-Si en el futuro se habilita la colaboración, se documentará el proceso y las pautas correspondientes en esta sección.
+Los cambios en la nube se aplican mediante Terraform. Se requiere tener configuradas las credenciales de AWS (o perfil SSO).
 
----
-
-## 📄 Licencia
-
-Este proyecto se distribuye bajo la licencia [MIT](./LICENSE).  
-Puedes consultar los términos completos en el archivo `LICENSE`.
-
-> ⚖️ Algunas dependencias del proyecto podrían estar sujetas a sus propias licencias. Consulta sus respectivos repositorios para más información.
+```bash
+cd infra/terraform/<modulo>
+terraform init
+terraform plan
+terraform apply
+```
 
 ---
 
-## 📬 Autor y Contacto
+## 🗺 Roadmap
 
-**Alejandro Vega**  
-🌐 [agevega.com](https://agevega.com) · 💼 [LinkedIn](https://www.linkedin.com/in/alejandro-vega94/) · ✉️ [agevega@gmail.com](mailto:agevega@gmail.com)
+Estado actual de las tareas principales y evolución prevista:
+
+- [x] **Seguridad y Observabilidad**: CloudTrail y AWS Config activos.
+- [x] **Infraestructura Core**: Configuración base de AWS, VPC y gestión de estado Terraform.
+- [ ] **Frontend Base**: Proyecto Astro inicializado.
+- [ ] **Automatización CI/CD**: Pipeline de despliegue continuo para infraestructura y código web.
+- [ ] **WAF y Seguridad Perimetral**: Reglas de filtrado en CloudFront.
+- [ ] **Funcionalidad Backend**: Implementación serverless para formulario de contacto.
+
+---
+
+## 📄 Licencia y Contacto
+
+**Alejandro Vega** - [agevega.com](https://agevega.com)
+Proyecto distribuido bajo licencia [MIT](./LICENSE).
