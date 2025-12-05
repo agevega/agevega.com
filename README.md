@@ -124,3 +124,5 @@ Estado actual de las tareas principales y evolución prevista:
 ## 📬 Autor y Contacto
 
 **Alejandro Vega** · 🌐 [agevega.com](https://agevega.com) · 💼 [LinkedIn](https://www.linkedin.com/in/alejandro-vega94/) · ✉️ [agevega@gmail.com](mailto:agevega@gmail.com)
+
+---
