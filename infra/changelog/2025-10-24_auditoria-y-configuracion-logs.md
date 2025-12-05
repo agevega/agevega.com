@@ -91,9 +91,9 @@ Con esta configuración, el entorno queda preparado para auditoría completa, tr
 
 ## 📊 Resumen general
 
-| Servicio       | Estado                    | Región     | Bucket                       | Coste estimado |
-| -------------- | ------------------------- | ---------- | ---------------------------- | -------------- |
-| **CloudTrail** | Activo + Validación ON    | eu-south-2 | `cloudtrail-logs-agevegacom` | ~0,05 €        |
-| **AWS Config** | Activo + Retención 7 años | eu-south-2 | `aws-config-logs-agevegacom` | ~0,60 €        |
+| Servicio       | Estado                     | Región     | Bucket                       | Coste estimado |
+| -------------- | -------------------------- | ---------- | ---------------------------- | -------------- |
+| **CloudTrail** | Activo + Validación ON     | eu-south-2 | `cloudtrail-logs-agevegacom` | ~0,05 €        |
+| **AWS Config** | Activo + Retención 90 días | eu-south-2 | `aws-config-logs-agevegacom` | ~0,60 €        |
 
 **Coste total estimado mensual:** ~0,65 €
