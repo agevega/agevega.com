@@ -1,0 +1,28 @@
+variable "aws_region" {
+  description = "AWS Region"
+  type        = string
+  default     = "eu-south-2"
+}
+
+variable "aws_profile" {
+  description = "AWS CLI profile to use for credentials"
+  type        = string
+  default     = "terraform"
+}
+
+variable "allowed_ssh_cidr_blocks" {
+  description = "List of CIDR blocks allowed to SSH into the bastion host"
+  type        = list(string)
+  default     = ["0.0.0.0/0"]
+}
+
+variable "public_key_path" {
+  description = "Path to the SSH Public Key file for the bastion host"
+  type        = string
+}
+
+variable "environment" {
+  description = "Environment name"
+  type        = string
+  default     = "lab"
+}
