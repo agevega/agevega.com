@@ -61,15 +61,15 @@ El entorno de despliegue en AWS se gestiona en la carpeta `infra/` y comprende:
 
 ```bash
 agevega.com/
-├── src/                # Código fuente del sitio web (Astro)
-│   ├── components/     # Componentes UI
-│   └── pages/          # Rutas y contenido
+├── frontend/           # Aplicación web (Astro + Tailwind)
+│   ├── src/            # Código fuente
+│   └── package.json    # Dependencias
 ├── infra/              # Definición de infraestructura
 │   ├── terraform/      # Código HCL de Terraform
 │   │   ├── 00-state/   # Backend remoto (S3 + DynamoDB)
 │   │   └── 01-net/     # Configuración de red (VPC)
 │   └── changelog/      # Registro de cambios de infraestructura
-├── public/             # Archivos estáticos
+├── public/             # Archivos estáticos globales
 └── scripts/            # Scripts de utilidad
 ```
 
@@ -82,6 +82,9 @@ agevega.com/
 Para trabajar en el diseño y contenido del sitio web:
 
 ```bash
+# Navegar al directorio frontend
+cd frontend
+
 # Instalar dependencias
 npm install
 
@@ -108,7 +111,7 @@ Estado actual de las tareas principales y evolución prevista:
 
 - [x] **Seguridad y Observabilidad**: CloudTrail y AWS Config activos.
 - [x] **Infraestructura Core**: Configuración base de AWS, VPC y gestión de estado Terraform.
-- [ ] **Frontend Base**: Proyecto Astro inicializado.
+- [x] **Frontend Base**: Proyecto Astro inicializado.
 - [ ] **Automatización CI/CD**: Pipeline de despliegue continuo para infraestructura y código web.
 - [ ] **WAF y Seguridad Perimetral**: Reglas de filtrado en CloudFront.
 - [ ] **Funcionalidad Backend**: Implementación serverless para formulario de contacto.
