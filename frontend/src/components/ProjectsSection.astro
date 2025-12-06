@@ -1,0 +1,43 @@
+---
+const projects = [
+  {
+    title: "agevega.com Cloud Infrastructure",
+    description: "Monorepo que define la infraestructura completa de mi sitio personal utilizando Terraform, AWS, CloudFront y S3 con prácticas de GitOps.",
+    tags: ["Terraform", "AWS", "GitHub Actions", "Astro"],
+    link: "https://github.com/agevega/agevega.com"
+  },
+  {
+    title: "Serverless Data Pipeline",
+    description: "Pipeline de procesamiento de datos ETL utilizando AWS Lambda, Step Functions y DynamoDB.",
+    tags: ["AWS Lambda", "Python", "DynamoDB"],
+    link: "#"
+  }
+];
+---
+
+<section id="projects" class="py-20 bg-slate-900/50">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-white mb-12">Proyectos Destacados</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {projects.map((project) => (
+                <div class="group bg-slate-900 rounded-xl overflow-hidden border border-slate-800 hover:border-indigo-500/50 transition-colors">
+                    <div class="p-8">
+                        <h3 class="text-xl font-bold text-white mb-3 group-hover:text-indigo-400 transition-colors">
+                            {project.title}
+                        </h3>
+                        <p class="text-slate-400 mb-6 leading-relaxed">
+                            {project.description}
+                        </p>
+                        <div class="flex flex-wrap gap-2">
+                            {project.tags.map((tag) => (
+                                <span class="text-xs font-medium text-slate-500 bg-slate-950 px-2 py-1 rounded">
+                                    {tag}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            ))}
+        </div>
+    </div>
+</section>
