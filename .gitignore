@@ -8,6 +8,7 @@ __pycache__/
 
 # Directorios de dependencias de Node
 */node_modules/
+*/.astro/
 
 # Distribution / packaging
 .Python
