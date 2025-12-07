@@ -54,3 +54,7 @@ docker run -d \
   "$IMAGE_NAME"
 
 echo "Frontend deployed successfully."
+
+# 4. Cleanup unused images
+echo "Pruning unused images..."
+docker image prune -a -f
