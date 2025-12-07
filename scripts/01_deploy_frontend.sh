@@ -11,7 +11,18 @@ if ! sudo test -d "$CERT_PATH"; then
     exit 1
 fi
 
-# 2. Re-deploy container
+# 2. Prepare Certificates (Dereference Symlinks)
+# Docker bind mounts usually cannot follow symlinks that point outside the mount.
+# We copy them to a staging directory to ensure the container gets actual files.
+STAGING_DIR="$HOME/agevega_certs"
+mkdir -p "$STAGING_DIR"
+
+echo "Staging certificates..."
+sudo cp -L "$CERT_PATH/fullchain.pem" "$STAGING_DIR/fullchain.pem"
+sudo cp -L "$CERT_PATH/privkey.pem" "$STAGING_DIR/privkey.pem"
+sudo chown -R $USER:$USER "$STAGING_DIR"
+
+# 3. Re-deploy container
 echo "Stopping old container..."
 docker stop frontend || true
 docker rm frontend || true
@@ -20,7 +31,7 @@ echo "Starting new container with SSL..."
 docker run -d \
   --restart always \
   -p 80:80 -p 443:443 \
-  -v "$CERT_PATH:/etc/nginx/certs:ro" \
+  -v "$STAGING_DIR:/etc/nginx/certs:ro" \
   --name frontend \
   "$IMAGE_NAME"
 
