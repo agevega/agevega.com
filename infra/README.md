@@ -19,6 +19,8 @@ infra/
 ├── terraform/
 │   ├── 00-terraform-state-S3/
 │   ├── 01-networking/
+│   ├── 02-bastion-EC2/
+│   ├── 03-ECR/
 └── README.md
 ```
 
@@ -82,3 +84,10 @@ infra/
 - Habilitación de tráfico **HTTP/HTTPS** y **SSH** seguro.
 - Integración de clave SSH local existente.
   ➡️ [Detalles](changelog/2025-12-06_despliegue-bastion-ec2.md)
+
+### 07/12/2025 — Despliegue de repositorio ECR (Módulo 03)
+
+- Despliegue del código en `infra/terraform/03-ECR` para gestión de imágenes Docker.
+- Creación de repositorio **ECR** `agevegacom-frontend` con escaneo de seguridad y políticas de ciclo de vida.
+- Integración con el sistema de despliegue mediante Terraform backend S3.
+  ➡️ [Detalles](changelog/2025-12-07_despliegue-ecr.md)
