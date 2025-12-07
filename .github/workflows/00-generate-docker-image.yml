@@ -1,4 +1,4 @@
-name: Generate Docker Image
+name: 00 Generate Docker Image
 
 on:
   push:
