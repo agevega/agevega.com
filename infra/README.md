@@ -80,7 +80,7 @@ infra/
 - Despliegue del código en `infra/terraform/02-bastion-EC2` con arquitectura dividida.
 - **00-security**: Despliegue de recursos persistentes (IP Elástica, Security Groups, Key Pair).
 - **01-instance**: Despliegue de recursos efímeros (Instancia EC2 t3.micro) para optimización de costes.
-- Configuración de **Docker** automática mediante User Data.
+- Configuración de **Docker** y **Git** automática mediante User Data.
 - Habilitación de tráfico **HTTP/HTTPS** y **SSH** seguro.
 - Integración de clave SSH local existente.
   ➡️ [Detalles](changelog/2025-12-06_despliegue-bastion-ec2.md)

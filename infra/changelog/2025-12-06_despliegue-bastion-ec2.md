@@ -18,7 +18,7 @@ Se ha implementado una estructura de doble estado para permitir la destrucción 
 
 2.  **01-instance (Efímero)**:
     - **EC2 Instance**: Instancia `t3.micro` con Amazon Linux 2023.
-    - **User Data**: Script de arranque que instala y configura **Docker** automáticamente.
+    - **User Data**: Script de arranque que instala y configura **Docker** y **Git** automáticamente.
     - **Asociación EIP**: Vinculación automática de la IP elástica persistente a la nueva instancia al levantarse.
 
 ### Configuración y Estandarización
@@ -44,7 +44,7 @@ terraform apply -var="public_key_path=~/.ssh/id_rsa.pub"
 ## ✅ Verificación
 
 ```bash
-ssh -i /home/agevega/.ssh/ssh_key_agevega.pub ec2-user@51.49.170.108
+ssh -A -i /home/agevega/.ssh/ssh_key_agevega.pub ec2-user@51.49.170.108
 docker info
 ```
 
