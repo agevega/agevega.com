@@ -47,3 +47,22 @@ terraform apply -var="public_key_path=~/.ssh/id_rsa.pub"
 ssh -i /home/agevega/.ssh/ssh_key_agevega.pub ec2-user@51.49.170.108
 docker info
 ```
+
+---
+
+### 💰 Coste estimado mensual
+
+| Recurso           | Estimado mensual | Notas                                                                                    |
+| :---------------- | :--------------- | :--------------------------------------------------------------------------------------- |
+| **EC2 t3.micro**  | ~7.60 €          | Coste si está encendida 24/7 (eu-south-2).                                               |
+| **Elastic IP**    | ~3.60 €          | **Gratis** si la instancia está corriendo. Se cobra si la instancia se destruye/detiene. |
+| **EBS (8GB gp3)** | ~0.64 €          | Almacenamiento persistente del root volume.                                              |
+| **Data Transfer** | Variable         | Coste por GB saliente a Internet.                                                        |
+
+**Escenarios de coste:**
+
+- **Activo 24/7**: ~8.24 €/mes (Instancia + EBS).
+- **Inactivo (Destruido)**: ~4.24 €/mes (EIP retenida + EBS si no se borra snapshot, o solo EIP).
+
+> [!NOTE]
+> Al destruir la instancia (`terraform destroy` en `01-instance`), se deja de pagar por la computación (~0.0104 €/h) pero se empieza a pagar por la IP Elástica reservada no utilizada (~0.005 €/h). El ahorro real es de aprox. **0.005 €/hora** (~3.5 €/mes de ahorro máximo).
