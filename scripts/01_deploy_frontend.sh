@@ -5,9 +5,9 @@ CERT_PATH="/etc/letsencrypt/live/$DOMAIN"
 IMAGE_NAME="frontend:latest" # Update this if using a different image tag/name
 
 # 1. Check for certificates
-if [ ! -d "$CERT_PATH" ]; then
+if ! sudo test -d "$CERT_PATH"; then
     echo "Error: Certificates not found at $CERT_PATH"
-    echo "Please run scripts/generate_cert.sh first."
+    echo "Please run scripts/00_generate_cert.sh first."
     exit 1
 fi
 
