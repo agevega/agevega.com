@@ -92,6 +92,33 @@ npm install
 npm run dev
 ```
 
+### Despliegue en Bastion (Docker)
+
+Para desplegar la aplicación en el bastion host utilizando Docker:
+
+1.  **Construir la imagen Docker**:
+    Navega a la carpeta del frontend y construye la imagen:
+
+    ```bash
+    cd frontend
+    docker build -t frontend:latest .
+    ```
+
+2.  **Generar Certificados SSL**:
+    Si es la primera vez, genera los certificados con Let's Encrypt:
+
+    ```bash
+    chmod +x scripts/00_generate_cert.sh
+    ./scripts/00_generate_cert.sh
+    ```
+
+3.  **Desplegar Contenedor**:
+    Inicia el contenedor con los volúmenes de certificados montados:
+    ```bash
+    chmod +x scripts/01_deploy_frontend.sh
+    ./scripts/01_deploy_frontend.sh
+    ```
+
 ### Despliegue de Infraestructura
 
 Los cambios en la nube se aplican mediante Terraform. Se requiere tener configuradas las credenciales de AWS (o perfil SSO).
