@@ -6,9 +6,24 @@ IMAGE_NAME="${1:-frontend:latest}" # Use first argument as image name, default t
 
 # 1. Check for certificates
 if ! sudo test -d "$CERT_PATH"; then
-    echo "Error: Certificates not found at $CERT_PATH"
-    echo "Please run scripts/00_generate_cert.sh first."
-    exit 1
+    echo "Certificates not found at $CERT_PATH"
+    echo "Attempting to generate certificates..."
+    
+    if [ -f "./00_generate_cert.sh" ]; then
+        chmod +x ./00_generate_cert.sh
+        # Run cert generation
+        ./00_generate_cert.sh
+        
+        # Verify again
+        if ! sudo test -d "$CERT_PATH"; then
+             echo "Error: Certificate generation failed. Certificates still not found."
+             exit 1
+        fi
+    else
+        echo "Error: 00_generate_cert.sh not found. Cannot generate certificates."
+        echo "Please run scripts/00_generate_cert.sh manually first."
+        exit 1
+    fi
 fi
 
 # 2. Prepare Certificates (Dereference Symlinks)
