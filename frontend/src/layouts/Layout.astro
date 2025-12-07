@@ -20,7 +20,13 @@ const { title } = Astro.props;
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 	</head>
-	<body class="bg-slate-950 text-slate-100 font-sans antialiased selection:bg-indigo-500/30">
+    <body class="bg-slate-950 text-slate-100 font-sans antialiased selection:bg-indigo-500/30 overflow-x-hidden relative">
+        <!-- Background Gradient Effects -->
+        <div class="fixed inset-0 z-[-1] pointer-events-none">
+            <div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-indigo-500/10 blur-[120px]"></div>
+            <div class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-purple-500/10 blur-[120px]"></div>
+            <div class="absolute top-[20%] right-[20%] w-[30%] h-[30%] rounded-full bg-blue-500/10 blur-[100px]"></div>
+        </div>
 		<slot />
 	</body>
 </html>
@@ -28,5 +34,22 @@ const { title } = Astro.props;
 <style is:global>
     html {
         font-family: 'Inter', system-ui, sans-serif;
+        scroll-behavior: smooth;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
+    ::-webkit-scrollbar-track {
+        background: #020617; /* slate-950 */
+    }
+    ::-webkit-scrollbar-thumb {
+        background: #334155; /* slate-700 */
+        border-radius: 5px;
+        border: 2px solid #020617;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: #475569; /* slate-600 */
     }
 </style>

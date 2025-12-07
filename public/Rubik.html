@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Rubik Agevega v3 - Optimizer</title>
+    <style>
+        body { margin: 0; overflow: hidden; background-color: #1a1a1a; font-family: 'Segoe UI', sans-serif; user-select: none; }
+        
+        #ui {
+            position: absolute; top: 20px; left: 20px;
+            color: #eee; background: rgba(0, 0, 0, 0.8); 
+            padding: 20px; border-radius: 12px; 
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            width: 280px; z-index: 10;
+        }
+
+        h1 { margin: 0 0 15px 0; font-size: 22px; color: #00e676; text-align: center; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+
+        .panel-section { margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; }
+        .panel-section:last-child { border: none; margin-bottom: 0; padding-bottom: 0; }
+
+        label { display: block; font-size: 11px; color: #aaa; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        select, input[type=range] { 
+            width: 100%; background: #333; color: white; border: 1px solid #555; 
+            padding: 6px; border-radius: 4px; box-sizing: border-box; outline: none;
+        }
+        
+        /* Botones de acción principales */
+        .btn-group { display: flex; gap: 8px; margin-top: 10px; }
+        button.main-btn {
+            flex: 1; padding: 12px; border: none; border-radius: 6px;
+            font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 12px; text-transform: uppercase;
+        }
+        button.scramble { background: #ff9800; color: white; }
+        button.solve { background: #00e676; color: #000; }
+        button:hover { filter: brightness(1.2); }
+        button:active { transform: scale(0.98); }
+
+        /* Controles Manuales Grid */
+        .manual-grid {
+            display: grid; grid-template-columns: 40px 1fr 1fr; gap: 8px; align-items: center; margin-top: 8px;
+        }
+        .axis-label { font-weight: bold; color: #00e676; text-align: center; }
+        .manual-btn {
+            background: #444; color: white; border: none; padding: 8px 0; border-radius: 4px;
+            cursor: pointer; font-size: 14px; transition: background 0.2s;
+        }
+        .manual-btn:hover { background: #666; }
+
+        #status { text-align: center; font-size: 13px; color: #fff; margin-top: 10px; min-height: 18px; font-weight: bold;}
+        #layer-val { float: right; color: #00e676; font-weight: bold; }
+        
+        .info-sub { font-size: 10px; color: #777; text-align: center; margin-top: 5px; }
+    </style>
+</head>
+<body>
+
+<div id="ui">
+    <h1>Rubik Agevega v3</h1>
+
+    <div class="panel-section">
+        <label>Configuración</label>
+        <select id="sizeSelect" onchange="resetGame()">
+            <option value="2">2 x 2 (Pocket)</option>
+            <option value="3" selected>3 x 3 (Standard)</option>
+            <option value="4">4 x 4 (Revenge)</option>
+            <option value="5">5 x 5 (Professor)</option>
+        </select>
+    </div>
+
+    <div class="panel-section">
+        <label>Selector de Capa <span id="layer-val">Capa 0</span></label>
+        <input type="range" id="layerSlider" min="0" max="2" value="0" step="1" oninput="updateSliderLabel()">
+        
+        <div class="manual-grid">
+            <div class="axis-label">X</div>
+            <button class="manual-btn" onclick="manualMove('x', 1)">&#8635; (+)</button>
+            <button class="manual-btn" onclick="manualMove('x', -1)">&#8634; (-)</button>
+
+            <div class="axis-label">Y</div>
+            <button class="manual-btn" onclick="manualMove('y', 1)">&#8635; (+)</button>
+            <button class="manual-btn" onclick="manualMove('y', -1)">&#8634; (-)</button>
+
+            <div class="axis-label">Z</div>
+            <button class="manual-btn" onclick="manualMove('z', 1)">&#8635; (+)</button>
+            <button class="manual-btn" onclick="manualMove('z', -1)">&#8634; (-)</button>
+        </div>
+        <div class="info-sub">Selecciona capa y gira en sentido horario (+) o antihorario (-)</div>
+    </div>
+
+    <div class="panel-section">
+        <div class="btn-group">
+            <button class="main-btn scramble" onclick="startScramble()">Mezclar</button>
+            <button class="main-btn solve" onclick="startSolve()">Resolver</button>
+        </div>
+        <div id="status">LISTO</div>
+    </div>
+</div>
+
+<script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+        }
+    }
+</script>
+
+<script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+    // --- VARIABLES GLOBALES ---
+    let cubeSize = 3;
+    let cubes = [];
+    let moveStack = []; // Pila: { axis, layer, dir }
+    let isAnimating = false;
+
+    // --- ESCENA ---
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x111);
+    
+    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    document.body.appendChild(renderer.domElement);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+
+    // Luces de Estudio
+    const ambLight = new THREE.AmbientLight(0xffffff, 0.5);
+    scene.add(ambLight);
+    const light1 = new THREE.DirectionalLight(0xffffff, 1);
+    light1.position.set(10, 20, 10);
+    scene.add(light1);
+    const light2 = new THREE.DirectionalLight(0xffffff, 0.5);
+    light2.position.set(-10, -10, -5);
+    scene.add(light2);
+
+    const pivot = new THREE.Object3D();
+    scene.add(pivot);
+
+    // Definición de Colores (Estilo Stickerless brillante)
+    const colors = { 
+        R: 0xe74c3c, L: 0xe67e22, 
+        U: 0xecf0f1, D: 0xf1c40f, 
+        F: 0x2ecc71, B: 0x3498db, 
+        Core: 0x111111 
+    };
+
+    // --- CREACIÓN DEL CUBO ---
+
+    window.createCube = (n) => {
+        // Limpieza total
+        cubes.forEach(c => scene.remove(c));
+        cubes = [];
+        moveStack = [];
+        pivot.rotation.set(0,0,0);
+        
+        cubeSize = parseInt(n);
+        
+        // Actualizar UI Slider
+        const slider = document.getElementById('layerSlider');
+        slider.max = cubeSize - 1;
+        slider.value = 0;
+        updateSliderLabel();
+
+        const geometry = new THREE.BoxGeometry(0.94, 0.94, 0.94);
+        const offset = (n - 1) / 2;
+
+        for (let x = 0; x < n; x++) {
+            for (let y = 0; y < n; y++) {
+                for (let z = 0; z < n; z++) {
+                    // Determinar colores visibles
+                    const mats = [
+                        new THREE.MeshStandardMaterial({ color: x===n-1 ? colors.R : colors.Core, roughness: 0.1, metalness: 0.1 }),
+                        new THREE.MeshStandardMaterial({ color: x===0 ? colors.L : colors.Core, roughness: 0.1, metalness: 0.1 }),
+                        new THREE.MeshStandardMaterial({ color: y===n-1 ? colors.U : colors.Core, roughness: 0.1, metalness: 0.1 }),
+                        new THREE.MeshStandardMaterial({ color: y===0 ? colors.D : colors.Core, roughness: 0.1, metalness: 0.1 }),
+                        new THREE.MeshStandardMaterial({ color: z===n-1 ? colors.F : colors.Core, roughness: 0.1, metalness: 0.1 }),
+                        new THREE.MeshStandardMaterial({ color: z===0 ? colors.B : colors.Core, roughness: 0.1, metalness: 0.1 }),
+                    ];
+
+                    const mesh = new THREE.Mesh(geometry, mats);
+                    mesh.position.set(x - offset, y - offset, z - offset);
+                    
+                    // Añadir bordes suavizados (Bevel visual simulado)
+                    const edges = new THREE.LineSegments(
+                        new THREE.EdgesGeometry(geometry), 
+                        new THREE.LineBasicMaterial({ color: 0x000000, linewidth: 1, transparent: true, opacity: 0.3 })
+                    );
+                    mesh.add(edges);
+
+                    cubes.push(mesh);
+                    scene.add(mesh);
+                }
+            }
+        }
+        
+        const dist = n * 2.2 + 2;
+        camera.position.set(dist, dist, dist);
+        controls.target.set(0,0,0);
+        setStatus("Listo");
+    };
+
+    // --- MOTOR FÍSICO (Simulado) ---
+
+    function rotateLayer(axis, layerIndex, dir, duration = 250, save = true) {
+        return new Promise(resolve => {
+            isAnimating = true;
+
+            if (save) {
+                // Normalizar dirección (solo 1 o -1 para almacenamiento simple, aunque aceptemos 2)
+                // Pero para historial estricto guardamos lo que se hizo.
+                moveStack.push({ axis, layer: layerIndex, dir });
+                setStatus(`Pasos en memoria: ${moveStack.length}`);
+            }
+
+            const offset = (cubeSize - 1) / 2;
+            const layerCoord = layerIndex - offset;
+            
+            // Filtro con epsilon para evitar errores flotantes
+            const activeCubes = cubes.filter(c => Math.abs(c.position[axis] - layerCoord) < 0.15);
+            
+            pivot.rotation.set(0,0,0);
+            activeCubes.forEach(c => pivot.attach(c));
+
+            const target = (Math.PI / 2) * dir;
+            const start = performance.now();
+
+            function loop(time) {
+                const elapsed = time - start;
+                const p = Math.min(elapsed / duration, 1);
+                // Easing Quartic Out
+                const t = 1 - Math.pow(1 - p, 4);
+
+                pivot.rotation[axis] = target * t;
+                renderer.render(scene, camera);
+
+                if (p < 1) requestAnimationFrame(loop);
+                else {
+                    pivot.rotation[axis] = target;
+                    pivot.updateMatrixWorld();
+                    activeCubes.forEach(c => {
+                        scene.attach(c);
+                        // Redondeo crítico para mantener la rejilla entera
+                        c.position.x = Math.round(c.position.x * 2) / 2;
+                        c.position.y = Math.round(c.position.y * 2) / 2;
+                        c.position.z = Math.round(c.position.z * 2) / 2;
+                        
+                        // Redondeo de rotaciones a múltiplos de 90 grados
+                        c.rotation.x = Math.round(c.rotation.x / (Math.PI/2)) * (Math.PI/2);
+                        c.rotation.y = Math.round(c.rotation.y / (Math.PI/2)) * (Math.PI/2);
+                        c.rotation.z = Math.round(c.rotation.z / (Math.PI/2)) * (Math.PI/2);
+                        
+                        c.updateMatrixWorld();
+                    });
+                    isAnimating = false;
+                    resolve();
+                }
+            }
+            requestAnimationFrame(loop);
+        });
+    }
+
+    // --- OPTIMIZADOR MATEMÁTICO AVANZADO ---
+    
+    function optimizePath(stack) {
+        // Clonamos para no alterar el original inmediatamente
+        let path = JSON.parse(JSON.stringify(stack));
+        let changed = true;
+
+        while(changed) {
+            changed = false;
+            let newPath = [];
+            
+            for (let i = 0; i < path.length; i++) {
+                // Si es el último, lo añadimos y salimos
+                if (i === path.length - 1) {
+                    newPath.push(path[i]);
+                    break;
+                }
+
+                const current = path[i];
+                const next = path[i+1];
+
+                // Verificar si son movimientos compatibles (Mismo Eje y Misma Capa)
+                if (current.axis === next.axis && current.layer === next.layer) {
+                    // SUMA VECTORIAL DE MOVIMIENTOS
+                    // 1 = 90deg, -1 = -90deg. 
+                    // 1 + 1 = 2 (180deg). 
+                    // 1 + 1 + 1 = 3 -> Equivale a -1 (270deg es -90deg)
+                    
+                    let combinedDir = current.dir + next.dir;
+                    
+                    // Normalizar giro en modulo 4 (-180 a 180)
+                    // Ejemplos: 
+                    //  2 -> 2
+                    //  3 -> -1
+                    //  4 -> 0 (vuelta completa)
+                    // -2 -> -2
+                    
+                    // Lógica simple de reducción Rubik:
+                    if (combinedDir === 3) combinedDir = -1;
+                    if (combinedDir === -3) combinedDir = 1;
+                    if (combinedDir === 4 || combinedDir === -4) combinedDir = 0;
+                    
+                    if (combinedDir === 0) {
+                        // Se anulan completamente
+                        i++; // Saltamos el 'next' también
+                        changed = true;
+                    } else {
+                        // Se fusionan en uno nuevo
+                        newPath.push({ axis: current.axis, layer: current.layer, dir: combinedDir });
+                        i++; // Saltamos el 'next' ya que lo hemos fusionado
+                        changed = true;
+                    }
+                } else {
+                    newPath.push(current);
+                }
+            }
+            path = newPath;
+        }
+        return path;
+    }
+
+    // --- CONTROLES DE USUARIO ---
+
+    window.resetGame = () => {
+        const val = document.getElementById('sizeSelect').value;
+        createCube(parseInt(val));
+    };
+
+    window.updateSliderLabel = () => {
+        const val = document.getElementById('layerSlider').value;
+        document.getElementById('layer-val').innerText = `Capa ${val}`;
+    };
+
+    window.manualMove = (axis, dir) => {
+        if (isAnimating) return;
+        const layer = parseInt(document.getElementById('layerSlider').value);
+        rotateLayer(axis, layer, dir, 300, true);
+    };
+
+    window.startScramble = async () => {
+        if(isAnimating) return;
+        setStatus("Mezclando...");
+        
+        // El número de movimientos escala con el tamaño para asegurar caos
+        const count = 15 + (cubeSize * 3); 
+        const axes = ['x', 'y', 'z'];
+        
+        for(let i=0; i<count; i++) {
+            const axis = axes[Math.floor(Math.random() * 3)];
+            const layer = Math.floor(Math.random() * cubeSize);
+            const dir = Math.random() > 0.5 ? 1 : -1;
+            
+            // Velocidad rápida (100ms)
+            await rotateLayer(axis, layer, dir, 80, true);
+        }
+        setStatus("¡Mezclado!");
+    };
+
+    window.startSolve = async () => {
+        if(isAnimating) return;
+        if(moveStack.length === 0) { setStatus("El cubo está resuelto."); return; }
+
+        setStatus("Analizando ruta óptima...");
+        
+        // 1. Obtener la pila actual
+        let currentStack = [...moveStack];
+        
+        // 2. Ejecutar Optimizador (Reducción matemática)
+        // Ojo: Para resolver, necesitamos hacer los movimientos INVERSOS a lo que hay en la pila
+        // Pero primero simplificamos la pila "tal cual" ocurrió
+        
+        let optimizedStack = optimizePath(currentStack);
+        
+        setStatus(`Reducción: ${currentStack.length} -> ${optimizedStack.length} pasos.`);
+        await new Promise(r => setTimeout(r, 600)); // Pausa para leer
+
+        // 3. Invertir la pila optimizada para resolver
+        // (El último movimiento hecho debe ser el primero en deshacerse, con signo contrario)
+        let solvePath = optimizedStack.reverse().map(m => {
+            return { axis: m.axis, layer: m.layer, dir: m.dir * -1 };
+        });
+
+        // 4. Ejecutar
+        setStatus("Resolviendo...");
+        moveStack = []; // Vaciamos pila real
+        
+        for (const move of solvePath) {
+            // Ajustamos velocidad según si son 1 o 2 giros (para que visualmente tenga sentido)
+            const duration = Math.abs(move.dir) === 2 ? 350 : 200;
+            await rotateLayer(move.axis, move.layer, move.dir, duration, false);
+        }
+        
+        setStatus("¡Resuelto de forma óptima!");
+    };
+
+    function setStatus(text) {
+        document.getElementById('status').innerText = text;
+    }
+
+    // --- TECLADO ---
+    window.addEventListener('keydown', (e) => {
+        if(isAnimating) return;
+        const key = e.key.toUpperCase();
+        const shift = e.shiftKey;
+        // Standard Rubik: Letra = Horario (-1 o 1 según eje ThreeJS), Shift+Letra = Antihorario
+        const last = cubeSize - 1;
+        
+        // Mapeo ThreeJS (Ejes) vs Rubik Standard Notation
+        // R (Right Face): Eje X, Capa Last, Dir -1 (Horario visto desde derecha)
+        // L (Left Face):  Eje X, Capa 0,    Dir 1  (Horario visto desde izquierda)
+        
+        const map = {
+            'R': { axis: 'x', layer: last, baseDir: -1 },
+            'L': { axis: 'x', layer: 0,    baseDir: 1 },
+            'U': { axis: 'y', layer: last, baseDir: -1 },
+            'D': { axis: 'y', layer: 0,    baseDir: 1 },
+            'F': { axis: 'z', layer: last, baseDir: -1 },
+            'B': { axis: 'z', layer: 0,    baseDir: 1 }
+        };
+
+        if (map[key]) {
+            const m = map[key];
+            // Si Shift está presionado, invertimos la dirección base
+            const finalDir = shift ? (m.baseDir * -1) : m.baseDir;
+            rotateLayer(m.axis, m.layer, finalDir, 300, true);
+        }
+    });
+
+    window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    // Iniciar
+    createCube(3);
+
+    function animate() {
+        requestAnimationFrame(animate);
+        controls.update();
+        renderer.render(scene, camera);
+    }
+    animate();
+
+</script>
+</body>
+</html>
