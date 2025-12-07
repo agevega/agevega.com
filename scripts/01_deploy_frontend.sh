@@ -42,6 +42,9 @@ echo "Stopping old container..."
 docker stop frontend || true
 docker rm frontend || true
 
+echo "Removing local image to force re-pull..."
+docker rmi -f "$IMAGE_NAME" || true
+
 echo "Starting new container with SSL..."
 docker run -d \
   --restart always \
