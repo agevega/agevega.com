@@ -1,0 +1,63 @@
+name: Deploy to EC2
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: 'Image tag to deploy (e.g., v0.1.3)'
+        required: true
+        default: 'latest'
+
+env:
+  AWS_REGION: eu-south-2
+  ECR_REPOSITORY: agevegacom-frontend
+  EC2_HOST: 51.49.170.108
+  EC2_USER: ec2-user
+
+jobs:
+  deploy:
+    name: Deploy to Bastion
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh/
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ env.EC2_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Copy deployment script
+        run: |
+          scp -i ~/.ssh/id_rsa scripts/01_deploy_frontend.sh scripts/00_generate_cert.sh ${{ env.EC2_USER }}@${{ env.EC2_HOST }}:~/
+          ssh -i ~/.ssh/id_rsa ${{ env.EC2_USER }}@${{ env.EC2_HOST }} "chmod +x ~/01_deploy_frontend.sh ~/00_generate_cert.sh"
+
+      - name: Deploy on EC2
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ inputs.image_tag }}
+        run: |
+          FULL_IMAGE_URI="$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+          echo "Deploying image: $FULL_IMAGE_URI"
+          
+          # Login to ECR on the remote instance (piping credentials)
+          aws ecr get-login-password --region $AWS_REGION | \
+          ssh -i ~/.ssh/id_rsa ${{ env.EC2_USER }}@${{ env.EC2_HOST }} \
+          "docker login --username AWS --password-stdin $ECR_REGISTRY"
+          
+          # Execute the deployment script
+          ssh -i ~/.ssh/id_rsa ${{ env.EC2_USER }}@${{ env.EC2_HOST }} \
+          "./01_deploy_frontend.sh $FULL_IMAGE_URI"
