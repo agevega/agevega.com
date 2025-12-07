@@ -37,12 +37,13 @@ Desarrollado con **Astro** para generar un sitio puramente estático (SSG). Esto
 
 El entorno de despliegue en AWS se gestiona en la carpeta `infra/` y comprende:
 
-- **Networking:** VPC personalizada en la región `eu-south-2` (Madrid) con segmentación de subredes (Públicas/Privadas/Database).
-- **Distribución:** CloudFront como CDN global, sirviendo contenido desde buckets S3 privados (OAC).
+- **Compute & Networking:** VPC personalizada en la región `eu-south-2` (Madrid) con segmentación de subredes (Públicas/Privadas/Database).
+- **Artifact Registry:** AWS ECR para almacenar las imágenes Docker del frontend.
+- **Distribución:** CloudFront como CDN global, sirviendo contenido estático y enrutando tráfico dinámico.
 - **Seguridad y Gestión:**
   - Autenticación OIDC para despliegues seguros desde GitHub Actions.
   - Logs de auditoría centralizados y reglas de AWS Config.
-  - Gestión de dominios (Route53) y certificados SSL/TLS (ACM).
+  - Gestión de dominios (Route53) y certificados SSL/TLS (ACM & Let's Encrypt).
 
 ---
 
@@ -53,7 +54,7 @@ El entorno de despliegue en AWS se gestiona en la carpeta `infra/` y comprende:
 | **Frontend** | **Astro** + **TailwindCSS** | Desarrollo de interfaz y generación de contenido.     |
 | **IaC**      | **Terraform**               | Provisión y gestión del estado de la infraestructura. |
 | **Cloud**    | **AWS**                     | Proveedor de nube (S3, CloudFront, VPC, IAM, etc.).   |
-| **CI/CD**    | **GitHub Actions**          | Automatización de builds y despliegues.               |
+| **CI/CD**    | **GitHub Actions**          | Build & Push a ECR, Despliegue a EC2.                 |
 
 ---
 
@@ -61,16 +62,20 @@ El entorno de despliegue en AWS se gestiona en la carpeta `infra/` y comprende:
 
 ```bash
 agevega.com/
+├── .github/            # CI/CD Workflows
+│   └── workflows/
 ├── frontend/           # Aplicación web (Astro + Tailwind)
 │   ├── src/            # Código fuente
 │   └── package.json    # Dependencias
 ├── infra/              # Definición de infraestructura
 │   ├── terraform/      # Código HCL de Terraform
 │   │   ├── 00-state/   # Backend remoto (S3 + DynamoDB)
-│   │   └── 01-net/     # Configuración de red (VPC)
+│   │   ├── 01-net/     # Configuración de red (VPC)
+│   │   ├── 02-bastion/ # Servidor Web (EC2 + Docker)
+│   │   └── 03-ECR/     # Registry de contenedores
 │   └── changelog/      # Registro de cambios de infraestructura
 ├── public/             # Archivos estáticos globales
-└── scripts/            # Scripts de utilidad
+└── scripts/            # Scripts de utilidad (Certificados, Despliegue)
 ```
 
 ---
@@ -92,36 +97,22 @@ npm install
 npm run dev
 ```
 
-### Despliegue en Bastion (Docker)
+### Despliegue (CI/CD)
 
-Para desplegar la aplicación en el bastion host utilizando Docker:
+El proyecto cuenta con workflows de GitHub Actions para gestionar el ciclo de vida de la aplicación:
 
-1.  **Construir la imagen Docker**:
-    Navega a la carpeta del frontend y construye la imagen:
+1.  **Build & Push**: Al pushear un tag (ej: `v1.0.0`), se construye la imagen Docker y se sube a **AWS ECR**.
+2.  **Deploy**: Se dispara manualmente (`workflow_dispatch`) desde la pestaña "Actions" en GitHub:
+    - Seleccionar el workflow **Deploy to EC2**.
+    - Introducir el tag de la imagen a desplegar.
+    - El pipeline conecta por SSH al Bastion, descarga la nueva imagen y reinicia el contenedor.
 
-    ```bash
-    cd frontend
-    docker build -t frontend:latest .
-    ```
-
-2.  **Generar Certificados SSL**:
-    Si es la primera vez, genera los certificados con Let's Encrypt:
-
-    ```bash
-    chmod +x scripts/00_generate_cert.sh
-    ./scripts/00_generate_cert.sh
-    ```
-
-3.  **Desplegar Contenedor**:
-    Inicia el contenedor con los volúmenes de certificados montados:
-    ```bash
-    chmod +x scripts/01_deploy_frontend.sh
-    ./scripts/01_deploy_frontend.sh
-    ```
+> [!NOTE]
+> Los scripts subyacentes `scripts/01_deploy_frontend.sh` y `scripts/00_generate_cert.sh` se ejecutan automáticamente en el servidor durante el despliegue, pero pueden usarse manualmente en caso de debug.
 
 ### Despliegue de Infraestructura
 
-Los cambios en la nube se aplican mediante Terraform. Se requiere tener configuradas las credenciales de AWS (o perfil SSO).
+Los cambios en la nube se aplican mediante Terraform.
 
 ```bash
 cd infra/terraform/<modulo>
@@ -139,7 +130,8 @@ Estado actual de las tareas principales y evolución prevista:
 - [x] **Seguridad y Observabilidad**: CloudTrail y AWS Config activos.
 - [x] **Infraestructura Core**: Configuración base de AWS, VPC y gestión de estado Terraform.
 - [x] **Frontend Base**: Proyecto Astro inicializado.
-- [ ] **Automatización CI/CD**: Pipeline de despliegue continuo para infraestructura y código web.
+- [x] **Automatización CI/CD**: Pipeline de despliegue continuo (Build, Push to ECR, Deploy to EC2).
+- [x] **Containerización**: Empaquetado de la aplicación con Docker y optimización con Nginx.
 - [ ] **WAF y Seguridad Perimetral**: Reglas de filtrado en CloudFront.
 - [ ] **Funcionalidad Backend**: Implementación serverless para formulario de contacto.
 
