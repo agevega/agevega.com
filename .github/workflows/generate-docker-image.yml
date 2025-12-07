@@ -16,6 +16,7 @@ jobs:
     permissions:
       id-token: write
       contents: read
+      actions: write
 
     steps:
       - name: Checkout code
@@ -46,3 +47,9 @@ jobs:
 
           # Push latest tag
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+
+      - name: Trigger Deploy to EC2
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh workflow run deploy-to-ec2.yml -f image_tag=${{ github.ref_name }}
