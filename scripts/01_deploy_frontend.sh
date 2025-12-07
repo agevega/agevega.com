@@ -2,7 +2,7 @@
 
 DOMAIN="agevega.com"
 CERT_PATH="/etc/letsencrypt/live/$DOMAIN"
-IMAGE_NAME="frontend:latest" # Update this if using a different image tag/name
+IMAGE_NAME="${1:-frontend:latest}" # Use first argument as image name, default to frontend:latest
 
 # 1. Check for certificates
 if ! sudo test -d "$CERT_PATH"; then
