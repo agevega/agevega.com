@@ -1,4 +1,4 @@
-# 07/12/2025 — Despliegue de repositorio ECR (Módulo 03)
+# 🧩 2025-12-07 — Despliegue de repositorio ECR (Módulo 03)
 
 Se ha creado un nuevo módulo Terraform (`infra/terraform/03-ECR`) para gestionar el repositorio de imágenes Docker del frontend.
 

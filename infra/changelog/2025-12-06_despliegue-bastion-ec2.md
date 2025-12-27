@@ -1,4 +1,4 @@
-# 06/12/2025 — Despliegue de Bastion EC2 (Módulo 02)
+# 🧩 2025-12-06 — Despliegue de Bastion EC2 (Módulo 02)
 
 Se ha creado y desplegado el módulo `02-bastion-EC2` para la gestión segura de accesos mediante un Bastion Host. El diseño sigue una arquitectura modular separando recursos persistentes de los efímeros para optimización de costes.
 
