@@ -1,4 +1,3 @@
-# Bucket para estado remoto de Terraform
 resource "aws_s3_bucket" "tf_state" {
   bucket        = var.state_bucket_name
   force_destroy = false
@@ -13,7 +12,6 @@ resource "aws_s3_bucket" "tf_state" {
   })
 }
 
-# Enforzar propiedad del bucket (sin ACLs)
 resource "aws_s3_bucket_ownership_controls" "tf_state" {
   bucket = aws_s3_bucket.tf_state.id
   rule {
@@ -21,7 +19,7 @@ resource "aws_s3_bucket_ownership_controls" "tf_state" {
   }
 }
 
-# Bloqueo de acceso público
+
 resource "aws_s3_bucket_public_access_block" "tf_state" {
   bucket                  = aws_s3_bucket.tf_state.id
   block_public_acls       = true
@@ -30,7 +28,6 @@ resource "aws_s3_bucket_public_access_block" "tf_state" {
   restrict_public_buckets = true
 }
 
-# Versionado obligatorio para historial de tfstate
 resource "aws_s3_bucket_versioning" "tf_state" {
   bucket = aws_s3_bucket.tf_state.id
   versioning_configuration {
@@ -38,7 +35,6 @@ resource "aws_s3_bucket_versioning" "tf_state" {
   }
 }
 
-# Cifrado del lado del servidor (SSE-S3).
 resource "aws_s3_bucket_server_side_encryption_configuration" "tf_state" {
   bucket = aws_s3_bucket.tf_state.id
   rule {
@@ -87,7 +83,6 @@ resource "aws_s3_bucket_lifecycle_configuration" "tf_state" {
   }
 }
 
-# Requerir TLS (bloquear peticiones sin HTTPS)
 data "aws_iam_policy_document" "require_tls" {
   statement {
     sid    = "DenyInsecureTransport"

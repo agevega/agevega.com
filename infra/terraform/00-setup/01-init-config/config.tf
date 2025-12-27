@@ -101,14 +101,6 @@ resource "aws_s3_bucket_policy" "config_logs" {
   policy = data.aws_iam_policy_document.config_logs.json
 }
 
-
-
-# However, importing the auto-created service linked role into Terraform is tricky/unnecessary.
-# Usually we use a data source or just refer to it.
-# But for correctness in a new setup, we might want to create a role if not using ServiceLinked.
-# Changelog says: "Rol de servicio generado automáticamente: AWSServiceRoleForConfig"
-# This suggests we should use that role.
-
 data "aws_iam_role" "config_role" {
   name = "AWSServiceRoleForConfig"
 }
