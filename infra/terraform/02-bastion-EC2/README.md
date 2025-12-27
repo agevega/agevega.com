@@ -35,10 +35,8 @@ Crea los grupos de seguridad, la clave SSH y reserva la IP elástica.
 ```bash
 cd infra/terraform/02-bastion-EC2/00-security
 terraform init
-terraform apply
+terraform apply -var="public_key_path=~/.ssh/id_rsa.pub"
 ```
-
-> **Nota:** Asegúrate de configurar correctamente `var.public_key_path` y `var.allowed_ssh_cidr_blocks` en tu `terraform.tfvars` o variables de entorno si difieren de los valores por defecto.
 
 ### Paso 2: Instancia (`01-instance`)
 
