@@ -63,6 +63,15 @@ public-c / private-c / db-c
 
 ---
 
+## 🔗 VPC Endpoints
+
+### ⚙️ Acciones realizadas
+
+- Desplegado **VPC Gateway Endpoint** para **S3**.
+- Incluido en las tablas de rutas privadas y de bases de datos para permitir acceso directo a S3 sin salir a Internet (coste 0).
+
+---
+
 ## 🏷️ Etiquetado global
 
 ### ⚙️ Detalles
@@ -101,7 +110,7 @@ Aplicadas etiquetas uniformes en todos los recursos:
 
 ### 🚧 Pendiente
 
-- [ ] Añadir **VPC Endpoints** para S3 y DynamoDB.
+- [ ] Añadir **VPC Endpoint** para DynamoDB.
 - [ ] Crear **Security Groups base** para instancias públicas y privadas.
 - [ ] Re-evaluar despliegue de NAT Gateway cuando el presupuesto lo permita (añadir rutas y EIP asociada).
 - [ ] Documentar bloques `variables.tf` y `outputs.tf` del módulo `01-networking`.
