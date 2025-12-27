@@ -1,91 +1,79 @@
 # 01-networking
 
-Este módulo crea la infraestructura de red base para el proyecto **agevegacom**: VPC principal, subredes públicas, privadas y de bases de datos, tablas de rutas y grupos de seguridad.  
-El estado remoto se almacena en el backend centralizado creado por `00-setup/00-backend-S3`.
+Este módulo crea la **red troncal (VPC)** para la infraestructura de `agevegacom`. Diseñada con una arquitectura de 3 capas para máxima seguridad y escalabilidad, manteniendo los costes al mínimo en entornos de laboratorio.
+
+El estado se guarda en `00-backend-S3` y el backend se configura en `backend.tf`.
 
 ![Architecture Diagram](../../diagrams/01-networking.png)
 
-> 💡 **NAT Gateway pospuesto:** los recursos están documentados pero comentados en `vpc.tf` para evitar el coste fijo (~33 €/mes). Descoméntalos cuando el presupuesto lo permita.
+---
+
+## 🏛️ Arquitectura de Red
+
+La red se despliega en la región **`eu-south-2` (España)** distribuida en **3 Zonas de Disponibilidad (AZs)** para alta disponibilidad.
+
+### Estrategia de Subredes (3-Tier)
+
+1.  **Public Tier (`10.0.1.0/24`, `...2.0`, `...3.0`)**
+
+    - **Acceso:** Salida directa a Internet (IGW).
+    - **Uso:** Load Balancers (ALB), Bastion Hosts, recursos públicos.
+    - **Auto-asignación IP:** Activada.
+
+2.  **Private Tier (`10.0.4.0/24`, `...5.0`, `...6.0`)**
+
+    - **Acceso:** Sin salida a Internet por defecto (para ahorrar costes).
+    - **Uso:** Servidores de aplicaciones (ECS/EC2), lógica de negocio.
+    - **Conectividad:** Requiere NAT Gateway para salir a Internet (ver nota de costes).
+
+3.  **Database Tier (`10.0.7.0/24`, `...8.0`, `...9.0`)**
+    - **Acceso:** Estrictamente aislado. Sin ruta a Internet.
+    - **Uso:** RDS, ElastiCache, bases de datos.
 
 ---
 
-## 🧩 Uso rápido
+## 💰 Optimización de Costes (Lab Mode)
+
+> 💡 **NAT Gateway Pospuesto (~33 €/mes AHORRO)**
+>
+> Por defecto, este módulo **NO despliega el NAT Gateway**.
+>
+> - **Consecuencia**: Las subredes privadas no tienen acceso a Internet (no pueden descargar parches/paquetes directamente).
+> - **Solución**: Los recursos están definidos pero comentados en `vpc.tf`. Descoméntalos solo cuando sea estrictamente necesario.
+
+Incluye **VPC Endpoints** (S3) gratuitos para que las instancias privadas puedan acceder a buckets sin salir a Internet.
+
+---
+
+## 🚀 Despliegue
 
 ```bash
 cd infra/terraform/01-networking
 terraform init
-terraform plan
 terraform apply
 ```
 
----
+### Prerrequisito
 
-## 🗂️ Prerrequisitos
-
-1. Haber desplegado previamente el backend remoto:
-   ```bash
-   cd infra/terraform/00-setup/00-backend-S3
-   terraform apply
-   ```
-2. Ese módulo crea:
-   - Bucket S3 `terraform-state-agevegacom` (estado remoto)
-   - Tabla DynamoDB `terraform-state-lock` (bloqueo de estado)
+Debe haberse ejecutado previamente el módulo `00-setup` para tener el backend de estado listo.
 
 ---
 
-## 🗄️ Backend de estado
+## 🔧 Variables Clave
 
-`backend.tf` apunta al bucket compartido y guarda el estado en:
-
-```
-envs/lab/agevegacom/terraform.tfstate
-```
-
-Modifica la clave si necesitas aislar otros entornos (por ejemplo, `envs/pre` o `envs/pro`).
+| Variable             | Descripción         | Valor por defecto         |
+| :------------------- | :------------------ | :------------------------ |
+| `vpc_cidr`           | Rango IP principal  | `10.0.0.0/16`             |
+| `resource_prefix`    | Prefijo de recursos | `agevegacom`              |
+| `availability_zones` | Alta disponibilidad | `eu-south-2a`, `2b`, `2c` |
 
 ---
 
-## ⚙️ Valores por defecto
+## 📤 Outputs Importantes
 
-- **Región:** `eu-south-2`
-- **Perfil AWS CLI:** `terraform`
-- **Prefijo de recursos:** `agevegacom`
-- **CIDR VPC:** `10.0.0.0/16`
-- **Subredes públicas/privadas/DB:** distribuidas en `eu-south-2a`, `eu-south-2b`, `eu-south-2c`
-- **NAT Gateway:** comentado por defecto (evita costes hasta que sea necesario)
+Al finalizar, el módulo exporta IDs críticos para otros módulos (como el Bastion o EKS/ECS):
 
----
-
-## 🔧 Variables principales
-
-- `aws_region` – Región de despliegue (defecto `eu-south-2`)
-- `aws_profile` – Perfil de credenciales CLI (defecto `terraform`)
-- `resource_prefix` – Prefijo para nombres/etiquetas (defecto `agevegacom`)
-- `common_tags` – Mapa de etiquetas estándar aplicadas a todos los recursos (`Project`, `Owner`, `Environment`, `IaC`)
-- `vpc_cidr` – CIDR principal de la VPC (defecto `10.0.0.0/16`)
-- `public_subnets` – Lista de subredes públicas
-- `private_subnets` – Lista de subredes privadas
-- `db_subnets` – Lista de subredes específicas para bases de datos (sin salida a Internet)
-- `availability_zones` – Zonas de disponibilidad usadas (`eu-south-2a/b/c`)
-
----
-
-## 📤 Salidas
-
-Revisa `outputs.tf` para consultar los IDs y valores expuestos (ej.: `vpc_id`, `subnet_public_*`, `route_table_*`, `security_group_id`).
-
----
-
-## 📋 Orden recomendado
-
-1. Crear el backend remoto:
-   ```bash
-   cd infra/terraform/00-setup/00-backend-S3
-   terraform apply
-   ```
-2. Desplegar la red base:
-   ```bash
-   cd 01-networking
-   terraform init
-   terraform apply
-   ```
+- `vpc_id`
+- `subnet_public_ids`
+- `subnet_private_ids`
+- `subnet_db_ids`
