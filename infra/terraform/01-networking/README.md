@@ -1,7 +1,9 @@
 # 01-networking
 
 Este módulo crea la infraestructura de red base para el proyecto **agevegacom**: VPC principal, subredes públicas, privadas y de bases de datos, tablas de rutas y grupos de seguridad.  
-El estado remoto se almacena en el backend centralizado creado por `00-terraform-state-S3`.
+El estado remoto se almacena en el backend centralizado creado por `00-setup/00-backend-S3`.
+
+![Architecture Diagram](../../diagrams/01-networking.png)
 
 > 💡 **NAT Gateway pospuesto:** los recursos están documentados pero comentados en `vpc.tf` para evitar el coste fijo (~33 €/mes). Descoméntalos cuando el presupuesto lo permita.
 
@@ -22,13 +24,12 @@ terraform apply
 
 1. Haber desplegado previamente el backend remoto:
    ```bash
-   cd infra/terraform/00-terraform-state-S3
+   cd infra/terraform/00-setup/00-backend-S3
    terraform apply
    ```
 2. Ese módulo crea:
    - Bucket S3 `terraform-state-agevegacom` (estado remoto)
    - Tabla DynamoDB `terraform-state-lock` (bloqueo de estado)
-
 
 ---
 
@@ -67,9 +68,6 @@ Modifica la clave si necesitas aislar otros entornos (por ejemplo, `envs/pre` o 
 - `db_subnets` – Lista de subredes específicas para bases de datos (sin salida a Internet)
 - `availability_zones` – Zonas de disponibilidad usadas (`eu-south-2a/b/c`)
 
-El módulo crea un security group de pruebas (`${var.resource_prefix}-test-alltraffic-sg`) para facilitar el acceso a los recursos del entorno.
-
-
 ---
 
 ## 📤 Salidas
@@ -82,12 +80,12 @@ Revisa `outputs.tf` para consultar los IDs y valores expuestos (ej.: `vpc_id`, `
 
 1. Crear el backend remoto:
    ```bash
-   cd infra/terraform/00-terraform-state-S3
+   cd infra/terraform/00-setup/00-backend-S3
    terraform apply
    ```
 2. Desplegar la red base:
    ```bash
-   cd ../01-networking
+   cd 01-networking
    terraform init
    terraform apply
    ```
