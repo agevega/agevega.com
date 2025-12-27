@@ -2,8 +2,6 @@
 
 Este módulo crea la **red troncal (VPC)** para la infraestructura de `agevegacom`. Diseñada con una arquitectura de 3 capas para máxima seguridad y escalabilidad, manteniendo los costes al mínimo en entornos de laboratorio.
 
-El estado se guarda en `00-backend-S3` y el backend se configura en `backend.tf`.
-
 ![Architecture Diagram](../../diagrams/01-networking.png)
 
 ---
