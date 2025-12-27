@@ -2,7 +2,7 @@
 
 ### 🗂️ Descripción
 
-Despliegue del código contenido en `infra/terraform/00-terraform-state-S3`, encargado de configurar el almacenamiento remoto del estado de Terraform y su mecanismo de bloqueo mediante servicios gestionados de AWS.  
+Despliegue del código contenido en `infra/terraform/00-setup/00-backend-S3`, encargado de configurar el almacenamiento remoto del estado de Terraform y su mecanismo de bloqueo mediante servicios gestionados de AWS.  
 Con esta implementación, la infraestructura queda preparada para operar de forma segura y consistente con **estado centralizado, versionado y protegido frente a accesos no cifrados**.
 
 ---
