@@ -16,11 +16,6 @@ variable "resource_prefix" {
   default     = "agevegacom"
 }
 
-variable "test_keypair_public_key" {
-  description = "Ruta al archivo .pub del keypair de pruebas"
-  type        = string
-}
-
 variable "state_bucket_name" {
   description = "Nombre globalmente único del bucket S3 para el estado de Terraform"
   type        = string
