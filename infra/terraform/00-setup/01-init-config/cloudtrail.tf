@@ -33,6 +33,23 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "cloudtrail_logs" 
   }
 }
 
+resource "aws_s3_bucket_lifecycle_configuration" "cloudtrail_logs" {
+  bucket = aws_s3_bucket.cloudtrail_logs.id
+
+  rule {
+    id     = "expire-logs-90-days"
+    status = "Enabled"
+
+    filter {
+      prefix = ""
+    }
+
+    expiration {
+      days = 90
+    }
+  }
+}
+
 data "aws_iam_policy_document" "cloudtrail_logs" {
   statement {
     sid    = "AWSCloudTrailAclCheck"

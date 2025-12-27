@@ -31,6 +31,23 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "config_logs" {
   }
 }
 
+resource "aws_s3_bucket_lifecycle_configuration" "config_logs" {
+  bucket = aws_s3_bucket.config_logs.id
+
+  rule {
+    id     = "expire-logs-90-days"
+    status = "Enabled"
+
+    filter {
+      prefix = ""
+    }
+
+    expiration {
+      days = 90
+    }
+  }
+}
+
 data "aws_iam_policy_document" "config_logs" {
   statement {
     sid    = "AWSConfigBucketPermissionsCheck"
