@@ -43,7 +43,7 @@ terraform apply -var="public_key_path=~/.ssh/id_rsa.pub"
 Lanza la instancia y le asigna los recursos de seguridad.
 
 ```bash
-cd ../01-instance
+cd 01-instance
 terraform init
 terraform apply
 ```
