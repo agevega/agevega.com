@@ -87,8 +87,3 @@ output "db_route_table_3_id" {
   description = "ID de la tercera tabla de enrutamiento para bases de datos"
   value       = aws_route_table.db_route_table_3.id
 }
-
-output "security_group_id" {
-  description = "ID del grupo de seguridad principal"
-  value       = aws_security_group.test_alltraffic_sg.id
-}
