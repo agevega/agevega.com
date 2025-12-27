@@ -1,5 +1,7 @@
 # 00-setup
 
+![Architecture Diagram](../../diagrams/00-terraform-state-S3.png)
+
 Este módulo gestiona el setup inicial de la infraestructura (backend y auditoría).
 
 Está dividido en dos submódulos críticos que deben ejecutarse en orden:
