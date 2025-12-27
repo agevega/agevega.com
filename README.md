@@ -62,20 +62,20 @@ El entorno de despliegue en AWS se gestiona en la carpeta `infra/` y comprende:
 
 ```bash
 agevega.com/
-├── .github/            # CI/CD Workflows
+├── .github/                # CI/CD Workflows
 │   └── workflows/
-├── frontend/           # Aplicación web (Astro + Tailwind)
-│   ├── src/            # Código fuente
-│   └── package.json    # Dependencias
-├── infra/              # Definición de infraestructura
-│   ├── terraform/      # Código HCL de Terraform
-│   │   ├── 00-state/   # Backend remoto (S3 + DynamoDB)
-│   │   ├── 01-net/     # Configuración de red (VPC)
-│   │   ├── 02-bastion/ # Servidor Web (EC2 + Docker)
-│   │   └── 03-ECR/     # Registry de contenedores
-│   └── changelog/      # Registro de cambios de infraestructura
-├── public/             # Archivos estáticos globales
-└── scripts/            # Scripts de utilidad (Certificados, Despliegue)
+├── frontend/               # Aplicación web (Astro + Tailwind)
+│   ├── src/                # Código fuente
+│   └── package.json        # Dependencias
+├── infra/                  # Definición de infraestructura
+│   ├── terraform/          # Código HCL de Terraform
+│   │   ├── 00-setup/       # Bootstrap (S3+Dynamo) + Auditoría
+│   │   ├── 01-networking/  # Red (VPC 3-tier)
+│   │   ├── 02-bastion-EC2/ # Bastion Host (Split Architecture)
+│   │   └── 03-ECR/         # Registry de contenedores
+│   └── changelog/          # Registro de cambios de infraestructura
+├── public/                 # Archivos estáticos globales
+└── scripts/                # Scripts de utilidad (Certificados, Despliegue)
 ```
 
 ---
@@ -101,11 +101,9 @@ npm run dev
 
 El proyecto cuenta con workflows de GitHub Actions para gestionar el ciclo de vida de la aplicación:
 
-1.  **Build & Push**: Al pushear un tag (ej: `v1.0.0`), se construye la imagen Docker y se sube a **AWS ECR**.
-2.  **Deploy**: Se dispara manualmente (`workflow_dispatch`) desde la pestaña "Actions" en GitHub:
-    - Seleccionar el workflow **Deploy to EC2**.
-    - Introducir el tag de la imagen a desplegar.
-    - El pipeline conecta por SSH al Bastion, descarga la nueva imagen y reinicia el contenedor.
+1.  **Build & Push**: Al pushear un tag (`v*.*.*`), se construye la imagen y se sube a **AWS ECR**.
+2.  **Deploy Automático**: El workflow anterior dispara automáticamente el despliegue (`01-deploy-to-ec2`), actualizando el Bastion Host con la nueva versión.
+3.  **Manual (Opcional)**: Se puede forzar un despliegue manual (`workflow_dispatch`) si es necesario rollbackear o redesplegar una versión específica.
 
 > [!NOTE]
 > Los scripts subyacentes `scripts/01_deploy_frontend.sh` y `scripts/00_generate_cert.sh` se ejecutan automáticamente en el servidor durante el despliegue, pero pueden usarse manualmente en caso de debug.
