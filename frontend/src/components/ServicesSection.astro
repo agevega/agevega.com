@@ -1,0 +1,98 @@
+---
+interface Service {
+  title: string;
+  description: string;
+  icon: "cloud" | "code" | "shield";
+}
+
+const services: Service[] = [
+  {
+    title: "Arquitectura Cloud AWS",
+    description:
+      "Diseño de soluciones nativas en la nube resilientes, escalables y rentables. Especializado en migraciones, arquitecturas serverless y optimización de costes (FinOps).",
+    icon: "cloud",
+  },
+  {
+    title: "Infraestructura como Código",
+    description:
+      "Automatización total de la infraestructura mediante Terraform y Ansible. Eliminación de cambios manuales y adopción de prácticas GitOps para una gestión predecible.",
+    icon: "code",
+  },
+  {
+    title: "DevSecOps & CI/CD",
+    description:
+      "Implementación de pipelines de despliegue continuo seguros y eficientes (GitHub Actions, Jenkins). Integración de seguridad en cada etapa del ciclo de vida del software.",
+    icon: "shield",
+  },
+];
+---
+
+<section id="services" class="py-20 relative">
+  <div class="container mx-auto px-4 relative z-10">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {
+          services.map((service) => (
+            <div class="bg-slate-900/50 backdrop-blur-sm p-8 rounded-2xl border border-white/10 hover:border-indigo-500/30 transition-all hover:-translate-y-1 group">
+              <div class="w-12 h-12 rounded-lg bg-indigo-500/10 flex items-center justify-center mb-6 group-hover:bg-indigo-500/20 transition-colors">
+                {service.icon === "cloud" && (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="w-6 h-6 text-indigo-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="1.5"
+                      d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"
+                    />
+                  </svg>
+                )}
+                {service.icon === "code" && (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="w-6 h-6 text-indigo-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="1.5"
+                      d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
+                    />
+                  </svg>
+                )}
+                {service.icon === "shield" && (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="w-6 h-6 text-indigo-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="1.5"
+                      d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                    />
+                  </svg>
+                )}
+              </div>
+
+              <h3 class="text-xl font-bold text-white mb-3">{service.title}</h3>
+              <p class="text-slate-400 leading-relaxed text-sm">
+                {service.description}
+              </p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>

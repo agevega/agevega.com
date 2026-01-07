@@ -1,43 +1,61 @@
 ---
-const projects = [
+interface Project {
+  title: string;
+  description: string;
+  tags: string[];
+  link: string;
+}
+
+const projects: Project[] = [
   {
-    title: "agevega.com Cloud Infrastructure",
-    description: "Monorepo que define la infraestructura completa de mi sitio personal utilizando Terraform, AWS, CloudFront y S3 con prácticas de GitOps.",
-    tags: ["Terraform", "AWS", "GitHub Actions", "Astro"],
-    link: "https://github.com/agevega/agevega.com"
+    title: "Santander Digital Services",
+    description:
+      "Ingeniero DevSecOps Senior. Desarrollo de aplicaciones IA Cloud-Native, IaC con Terraform Enterprise y seguridad en serverless (Lambda/Fargate). Implementación de clusters EKS y gestión de API Gateway.",
+    tags: ["AWS", "Terraform Enterprise", "EKS", "GitHub Actions", "Python"],
+    link: "#",
   },
   {
-    title: "Serverless Data Pipeline",
-    description: "Pipeline de procesamiento de datos ETL utilizando AWS Lambda, Step Functions y DynamoDB.",
-    tags: ["AWS Lambda", "Python", "DynamoDB"],
-    link: "#"
-  }
+    title: "Coches.com",
+    description:
+      "Ingeniero DevOps. Automatización de pipelines CI/CD y administración de Kubernetes (Helm/ArgoCD). Optimización de costes y observabilidad con Prometheus/ELK. Gestión de bases de datos RDS/DocumentDB.",
+    tags: ["AWS", "Kubernetes", "Jenkins", "GitLab CI", "Elasticsearch"],
+    link: "#",
+  },
+  {
+    title: "Ericsson",
+    description:
+      "Consultor DevOps. Coordinación de equipos internacionales para integración 4G/5G. Mantenimiento de flujos CI/CD y desarrollo de herramientas de automatización en Python y Groovy.",
+    tags: ["Python", "Groovy", "Jenkins", "Bash"],
+    link: "#",
+  },
 ];
 ---
 
 <section id="projects" class="py-20 bg-slate-900/50">
-    <div class="container mx-auto px-4">
-        <h2 class="text-3xl font-bold text-white mb-12">Proyectos Destacados</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {projects.map((project) => (
-                <div class="group bg-slate-900 rounded-xl overflow-hidden border border-slate-800 hover:border-indigo-500/50 transition-colors">
-                    <div class="p-8">
-                        <h3 class="text-xl font-bold text-white mb-3 group-hover:text-indigo-400 transition-colors">
-                            {project.title}
-                        </h3>
-                        <p class="text-slate-400 mb-6 leading-relaxed">
-                            {project.description}
-                        </p>
-                        <div class="flex flex-wrap gap-2">
-                            {project.tags.map((tag) => (
-                                <span class="text-xs font-medium text-slate-500 bg-slate-950 px-2 py-1 rounded">
-                                    {tag}
-                                </span>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-            ))}
-        </div>
+  <div class="container mx-auto px-4">
+    <h2 class="text-3xl font-bold text-white mb-12">Experiencia Destacada</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {
+        projects.map((project) => (
+          <div class="group bg-slate-900 rounded-xl overflow-hidden border border-slate-800 hover:border-indigo-500/50 transition-colors h-full flex flex-col">
+            <div class="p-8 flex flex-col flex-grow">
+              <h3 class="text-xl font-bold text-white mb-3 group-hover:text-indigo-400 transition-colors">
+                {project.title}
+              </h3>
+              <p class="text-slate-400 mb-6 leading-relaxed flex-grow text-sm">
+                {project.description}
+              </p>
+              <div class="flex flex-wrap gap-2 mt-auto">
+                {project.tags.map((tag) => (
+                  <span class="text-xs font-medium text-slate-500 bg-slate-950 px-2 py-1 rounded border border-slate-800">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        ))
+      }
     </div>
+  </div>
 </section>

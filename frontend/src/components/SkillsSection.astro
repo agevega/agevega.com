@@ -5,20 +5,37 @@ interface SkillGroup {
 }
 
 const skills: SkillGroup[] = [
-  { category: "Cloud", items: ["AWS", "Azure", "GCP"] },
   {
-    category: "IaC & Automation",
-    items: ["Terraform", "Ansible", "CloudFormation", "Pulumi"],
+    category: "Cloud & Infra",
+    items: ["AWS", "Terraform Enterprise", "Ansible", "CloudFormation"],
   },
-  { category: "Containers", items: ["Docker", "Kubernetes", "EKS", "ECS"] },
-  { category: "CI/CD", items: ["GitHub Actions", "GitLab CI", "Jenkins"] },
-  { category: "Dev", items: ["Python", "Go", "TypeScript", "Astro"] },
+  {
+    category: "Containers & Orchestration",
+    items: ["Kubernetes (EKS)", "Helm", "ArgoCD", "Docker"],
+  },
+  {
+    category: "CI/CD & DevOps",
+    items: ["GitHub Actions", "Jenkins", "GitLab CI", "Git"],
+  },
+  {
+    category: "Observability",
+    items: ["Prometheus", "Grafana", "ELK Stack", "CloudWatch"],
+  },
+  {
+    category: "Languages & Tools",
+    items: ["Python", "Bash/Shell", "Groovy", "Linux"],
+  },
 ];
 ---
 
 <section id="skills" class="py-20 bg-slate-900/50">
   <div class="container mx-auto px-4">
-    <h2 class="text-3xl font-bold text-white mb-12">Stack Tecnológico</h2>
+    <h2 class="text-3xl font-bold text-white mb-6">Stack Tecnológico</h2>
+    <p class="text-slate-400 mb-12 max-w-3xl text-lg">
+      Mi caja de herramientas se centra en tecnologías probadas para entornos de
+      producción. Domino el ciclo de vida completo del desarrollo de software,
+      desde el código hasta el despliegue y la monitorización.
+    </p>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       {
         skills.map((group) => (
