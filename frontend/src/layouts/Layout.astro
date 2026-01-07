@@ -3,8 +3,19 @@ interface Props {
   title: string;
 }
 
-const { title } = Astro.props;
 import Navigation from "../components/Navigation.astro";
+import "@fontsource/inter/300.css";
+import "@fontsource/inter/400.css";
+import "@fontsource/inter/500.css";
+import "@fontsource/inter/600.css";
+import "@fontsource/inter/700.css";
+
+const { title } = Astro.props;
+const description = "Alejandro Vega - Cloud Architect & DevOps Engineer";
+const opengraph = {
+  image: "/og-image.png", // Ensure this image exists in public/ or update path
+  type: "website",
+};
 ---
 
 <!doctype html>
@@ -19,12 +30,22 @@ import Navigation from "../components/Navigation.astro";
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
-    <!-- Font: Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
-      rel="stylesheet"
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content={opengraph.type} />
+    <meta property="og:url" content={Astro.url} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(opengraph.image, Astro.url)} />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={Astro.url} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta
+      property="twitter:image"
+      content={new URL(opengraph.image, Astro.url)}
     />
   </head>
   <body
