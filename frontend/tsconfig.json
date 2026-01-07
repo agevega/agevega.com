@@ -13,7 +13,8 @@
     "verbatimModuleSyntax": true,
     "allowJs": true,
     "jsx": "preserve",
-    "jsxImportSource": "astro"
+    "jsxImportSource": "astro",
+    "lib": ["dom", "dom.iterable", "esnext"]
   },
   "include": ["src/**/*", "env.d.ts", ".astro/types.d.ts", "worker-configuration.d.ts"],
   "exclude": ["node_modules"]
