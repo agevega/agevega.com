@@ -1,0 +1,218 @@
+---
+
+---
+
+<nav class="fixed top-0 w-full z-50 transition-all duration-300" id="navbar">
+  <div
+    class="absolute inset-0 bg-slate-950/80 backdrop-blur-md border-b border-white/10 shadow-lg"
+  >
+  </div>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+    <div class="flex items-center justify-between h-16">
+      <!-- Logo -->
+      <div
+        class="flex-shrink-0 cursor-pointer"
+        onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
+      >
+        <span
+          class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400"
+        >
+          AV
+        </span>
+      </div>
+
+      <!-- Desktop Menu -->
+      <div class="hidden md:block">
+        <div class="ml-10 flex items-baseline space-x-4">
+          <a
+            href="#home"
+            class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 transition-all"
+            >Inicio</a
+          >
+          <a
+            href="#about"
+            class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 transition-all"
+            >Sobre Mí</a
+          >
+          <a
+            href="#projects"
+            class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 transition-all"
+            >Proyectos</a
+          >
+          <a
+            href="#skills"
+            class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 transition-all"
+            >Skills</a
+          >
+          <a
+            href="#lab"
+            class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 transition-all"
+            >Laboratorio</a
+          >
+          <a
+            href="#contact"
+            class="nav-link px-3 py-2 rounded-md text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-500 shadow-lg shadow-indigo-500/20 transition-all"
+            >Contacto</a
+          >
+        </div>
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <div class="-mr-2 flex md:hidden">
+        <button
+          type="button"
+          id="mobile-menu-btn"
+          class="inline-flex items-center justify-center p-2 rounded-md text-slate-400 hover:text-white hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
+          aria-controls="mobile-menu"
+          aria-expanded="false"
+        >
+          <span class="sr-only">Abrir menú</span>
+          <!-- Icon: Menu -->
+          <svg
+            class="block h-6 w-6"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            aria-hidden="true"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+          <!-- Icon: X (hidden) -->
+          <svg
+            class="hidden h-6 w-6"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            aria-hidden="true"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div
+    class="md:hidden hidden bg-slate-950/95 backdrop-blur-xl border-b border-white/10"
+    id="mobile-menu"
+  >
+    <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+      <a
+        href="#home"
+        class="mobile-nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-white/5"
+        >Inicio</a
+      >
+      <a
+        href="#about"
+        class="mobile-nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-white/5"
+        >Sobre Mí</a
+      >
+      <a
+        href="#projects"
+        class="mobile-nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-white/5"
+        >Proyectos</a
+      >
+      <a
+        href="#skills"
+        class="mobile-nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-white/5"
+        >Skills</a
+      >
+      <a
+        href="#lab"
+        class="mobile-nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-white/5"
+        >Laboratorio</a
+      >
+      <a
+        href="#contact"
+        class="mobile-nav-link block px-3 py-2 rounded-md text-base font-medium text-white bg-indigo-600 hover:bg-indigo-500"
+        >Contacto</a
+      >
+    </div>
+  </div>
+</nav>
+
+<script>
+  const navbar = document.getElementById("navbar");
+  const mobileMenuBtn = document.getElementById("mobile-menu-btn");
+  const mobileMenu = document.getElementById("mobile-menu");
+  const menuIcons = mobileMenuBtn?.querySelectorAll("svg");
+  const mobileLinks = document.querySelectorAll(".mobile-nav-link");
+
+  // Toggle Mobile Menu
+  mobileMenuBtn?.addEventListener("click", () => {
+    const isExpanded = mobileMenuBtn.getAttribute("aria-expanded") === "true";
+    mobileMenuBtn.setAttribute("aria-expanded", (!isExpanded).toString());
+    mobileMenu?.classList.toggle("hidden");
+
+    // Toggle Icons
+    menuIcons?.forEach((icon) => icon.classList.toggle("hidden"));
+    menuIcons?.forEach((icon) => icon.classList.toggle("block"));
+  });
+
+  // Close mobile menu on link click
+  mobileLinks.forEach((link) => {
+    link.addEventListener("click", () => {
+      mobileMenu?.classList.add("hidden");
+      mobileMenuBtn?.setAttribute("aria-expanded", "false");
+      // Reset icons
+      menuIcons?.[0].classList.remove("hidden");
+      menuIcons?.[0].classList.add("block");
+      menuIcons?.[1].classList.add("hidden");
+      menuIcons?.[1].classList.remove("block");
+    });
+  });
+
+  // Active Link Highlighting on Scroll (Intersection Observer)
+  const sections = document.querySelectorAll("section");
+  const navLinks = document.querySelectorAll(".nav-link");
+
+  const observerOptions = {
+    root: null,
+    rootMargin: "0px",
+    threshold: 0.3, // Trigger when 30% of section is visible
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        // Remove active class from all links
+        navLinks.forEach((link) => {
+          link.classList.remove("text-white", "bg-white/5");
+          link.classList.add("text-slate-300");
+          // Keep the button style for Contact separate if needed, but for now simple highlight
+        });
+
+        // Add active class to corresponding link
+        const id = entry.target.getAttribute("id");
+        const activeLink = document.querySelector(`.nav-link[href="#${id}"]`);
+        if (activeLink && !activeLink.classList.contains("bg-indigo-600")) {
+          // Don't override primary button style
+          activeLink?.classList.remove("text-slate-300");
+          activeLink?.classList.add("text-white", "bg-white/5");
+        }
+      }
+    });
+  }, observerOptions);
+
+  sections.forEach((section) => observer.observe(section));
+
+  // Navbar background on scroll
+  window.addEventListener("scroll", () => {
+    if (window.scrollY > 20) {
+      navbar?.classList.add("py-2");
+    } else {
+      navbar?.classList.remove("py-2");
+    }
+  });
+</script>
