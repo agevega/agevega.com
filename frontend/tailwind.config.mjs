@@ -9,7 +9,6 @@ export default {
                 'slide-up': 'slideUp 0.8s ease-out forwards',
                 'slide-up-delayed': 'slideUp 0.8s ease-out 0.2s forwards',
                 'gradient-x': 'gradient 15s ease infinite',
-                'blob': 'blob 7s infinite',
             },
             keyframes: {
                 fadeIn: {
@@ -34,13 +33,7 @@ export default {
                         'background-position': 'right center'
                     },
                 },
-                blob: {
-                    '0%': { transform: 'translate(0px, 0px) scale(1)' },
-                    '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
-                    '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
-                    '100%': { transform: 'translate(0px, 0px) scale(1)' },
                 }
-            }
         },
 	},
 	plugins: [],
