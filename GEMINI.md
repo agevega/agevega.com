@@ -23,6 +23,3 @@
 - [ ] **WAF**: Seguridad perimetral en CloudFront.
 - [ ] **Contacto**: Formulario Serverless (Lambda/API Gateway).
 - [ ] **Monitorización**: CloudWatch Dashboards.
-
-@frontend/GEMINI.md
-@infra/GEMINI.md
