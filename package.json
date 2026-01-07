@@ -1,0 +1,7 @@
+{
+  "name": "agevega.com-root",
+  "private": true,
+  "workspaces": [
+    "frontend"
+  ]
+}
