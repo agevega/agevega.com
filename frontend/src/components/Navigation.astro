@@ -152,7 +152,7 @@
   // Toggle Mobile Menu
   mobileMenuBtn?.addEventListener("click", () => {
     const isExpanded = mobileMenuBtn.getAttribute("aria-expanded") === "true";
-    mobileMenuBtn.setAttribute("aria-expanded", String(!isExpanded));
+    mobileMenuBtn.setAttribute("aria-expanded", `${!isExpanded}`);
     mobileMenu?.classList.toggle("hidden");
 
     // Toggle Icons
