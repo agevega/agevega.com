@@ -4,25 +4,130 @@
 
 <section id="about" class="py-20">
   <div class="container mx-auto px-4">
-    <div class="max-w-4xl">
-      <h2 class="text-3xl font-bold text-white mb-8">Sobre mí</h2>
-      <div class="prose prose-invert prose-lg text-slate-400">
-        <p>
-          Ingeniero DevSecOps Senior con doble nacionalidad
-          (Española/Estadounidense) y más de 5 años de experiencia liderando la
-          transformación cloud en entornos críticos. He trabajado en proyectos
-          de gran escala como <strong class="text-slate-200"
-            >Santander Digital Services</strong
-          > y <strong class="text-slate-200">Coches.com</strong>, implementando
-          soluciones nativas en AWS y orquestación con Kubernetes.
-        </p>
-        <p>
-          Mi enfoque técnico prioriza la ingeniería sólida: infraestructura
-          inmutable, seguridad desde el diseño y observabilidad total. Me
-          especializo en resolver problemas complejos de escalabilidad evitando
-          las "cajas negras" y manteniendo el control total sobre la
-          arquitectura.
-        </p>
+    <div class="max-w-6xl mx-auto">
+      <h2 class="text-3xl font-bold text-white mb-12">Sobre Mí</h2>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 text-slate-400">
+        <!-- Columna Izquierda: Intro & Foto -->
+        <div class="space-y-8">
+          <div class="flex flex-col sm:flex-row items-center gap-6">
+            <!-- Placeholder para Foto -->
+            <div
+              class="w-32 h-32 rounded-full bg-slate-800 border-2 border-indigo-500/30 flex items-center justify-center flex-shrink-0"
+            >
+              <span class="text-xs text-indigo-400">FOTO</span>
+            </div>
+            <div>
+              <h3 class="text-xl font-semibold text-white mb-2">
+                ¡Hola! Soy Alejandro
+              </h3>
+              <p class="leading-relaxed">
+                Ingeniero DevSecOps con más de 5 años transformando
+                infraestructuras críticas. Me apasiona simplificar lo complejo y
+                automatizar lo manual.
+              </p>
+            </div>
+          </div>
+
+          <div class="prose prose-invert">
+            <p>
+              Cuento con doble nacionalidad (Española/Estadounidense) y una
+              sólida trayectoria en grandes corporaciones como <strong
+                class="text-indigo-400">Santander Digital Services</strong
+              > y <strong class="text-indigo-400">Coches.com</strong>.
+            </p>
+            <p>
+              Mi enfoque se basa en la <strong>Ingeniería Sólida</strong>:
+              diseñar sistemas que no solo funcionen hoy, sino que escalen
+              mañana. Infraestructura inmutable, seguridad desde el diseño
+              (Security by Design) y observabilidad total son mis pilares.
+            </p>
+          </div>
+
+          <div class="pt-4">
+            <a
+              href="#"
+              class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 transition-colors"
+            >
+              Descargar CV Completo
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 ml-2"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                  clip-rule="evenodd"></path>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Columna Derecha: Educación y Certificaciones -->
+        <div class="space-y-8">
+          <div>
+            <h3
+              class="text-xl font-bold text-white mb-4 border-b border-white/10 pb-2"
+            >
+              Educación
+            </h3>
+            <ul class="space-y-4">
+              <li class="bg-white/5 p-4 rounded-lg">
+                <h4 class="text-white font-medium">
+                  Grado en Ingeniería Informática
+                </h4>
+                <p class="text-sm text-slate-500">Unir</p>
+              </li>
+              <li class="bg-white/5 p-4 rounded-lg">
+                <h4 class="text-white font-medium">
+                  Desarrollo de Aplicaciones Web (DAW)
+                </h4>
+                <p class="text-sm text-slate-500">U-tad</p>
+              </li>
+              <li class="bg-white/5 p-4 rounded-lg">
+                <h4 class="text-white font-medium">
+                  Administarción de Sistemas en Red (ASIR)
+                </h4>
+                <p class="text-sm text-slate-500">U-tad</p>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h3
+              class="text-xl font-bold text-white mb-4 border-b border-white/10 pb-2"
+            >
+              Certificaciones
+            </h3>
+            <ul class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <li
+                class="border border-slate-700 rounded p-3 text-sm hover:border-indigo-500/50 transition-colors"
+              >
+                <span class="block text-indigo-300 font-semibold mb-1">AWS</span
+                >
+                Solutions Architect Associate
+              </li>
+              <li
+                class="border border-slate-700 rounded p-3 text-sm hover:border-indigo-500/50 transition-colors"
+              >
+                <span class="block text-indigo-300 font-semibold mb-1"
+                  >Kubernetes</span
+                >
+                CKA: Certified Kubernetes Administrator
+              </li>
+              <li
+                class="border border-slate-700 rounded p-3 text-sm hover:border-indigo-500/50 transition-colors"
+              >
+                <span class="block text-indigo-300 font-semibold mb-1"
+                  >Terraform</span
+                >
+                HashiCorp Certified: Terraform Associate
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   </div>

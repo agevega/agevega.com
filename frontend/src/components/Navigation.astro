@@ -12,7 +12,7 @@
       <!-- Logo -->
       <div
         class="flex-shrink-0 cursor-pointer"
-        onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
+        onclick="window.location.href='/'"
       >
         <span
           class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400"
@@ -25,32 +25,32 @@
       <div class="hidden md:block">
         <div class="ml-10 flex items-baseline space-x-4">
           <a
-            href="#home"
+            href="/"
             class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 transition-all"
             >Inicio</a
           >
           <a
-            href="#about"
+            href="/about"
             class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 transition-all"
             >Sobre Mí</a
           >
           <a
-            href="#projects"
+            href="/projects"
             class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 transition-all"
             >Proyectos</a
           >
           <a
-            href="#skills"
+            href="/skills"
             class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 transition-all"
             >Skills</a
           >
           <a
-            href="#lab"
+            href="/laboratory"
             class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 transition-all"
             >Laboratorio</a
           >
           <a
-            href="#contact"
+            href="/contact"
             class="nav-link px-3 py-2 rounded-md text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-500 shadow-lg shadow-indigo-500/20 transition-all"
             >Contacto</a
           >
@@ -109,32 +109,32 @@
   >
     <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
       <a
-        href="#home"
+        href="/"
         class="mobile-nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-white/5"
         >Inicio</a
       >
       <a
-        href="#about"
+        href="/about"
         class="mobile-nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-white/5"
         >Sobre Mí</a
       >
       <a
-        href="#projects"
+        href="/projects"
         class="mobile-nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-white/5"
         >Proyectos</a
       >
       <a
-        href="#skills"
+        href="/skills"
         class="mobile-nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-white/5"
         >Skills</a
       >
       <a
-        href="#lab"
+        href="/laboratory"
         class="mobile-nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-white/5"
         >Laboratorio</a
       >
       <a
-        href="#contact"
+        href="/contact"
         class="mobile-nav-link block px-3 py-2 rounded-md text-base font-medium text-white bg-indigo-600 hover:bg-indigo-500"
         >Contacto</a
       >
@@ -173,39 +173,41 @@
     });
   });
 
-  // Active Link Highlighting on Scroll (Intersection Observer)
-  const sections = document.querySelectorAll("section");
+  // Highlight active link based on current page
   const navLinks = document.querySelectorAll(".nav-link");
+  const mobileNavLinks = document.querySelectorAll(".mobile-nav-link");
 
-  const observerOptions = {
-    root: null,
-    rootMargin: "0px",
-    threshold: 0.3, // Trigger when 30% of section is visible
-  };
+  function setActiveLink(linkHref: string | null) {
+    if (!linkHref) return;
 
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        // Remove active class from all links
-        navLinks.forEach((link) => {
-          link.classList.remove("text-white", "bg-white/5");
-          link.classList.add("text-slate-300");
-          // Keep the button style for Contact separate if needed, but for now simple highlight
-        });
+    const normalize = (path: string) =>
+      path === "/" || path === "" ? "/" : path.replace(/\/$/, "");
+    const current = normalize(linkHref);
 
-        // Add active class to corresponding link
-        const id = entry.target.getAttribute("id");
-        const activeLink = document.querySelector(`.nav-link[href="#${id}"]`);
-        if (activeLink && !activeLink.classList.contains("bg-indigo-600")) {
-          // Don't override primary button style
-          activeLink?.classList.remove("text-slate-300");
-          activeLink?.classList.add("text-white", "bg-white/5");
+    const updateLinks = (links: NodeListOf<Element>) => {
+      links.forEach((link) => {
+        const href = link.getAttribute("href");
+        if (href && normalize(href) === current) {
+          if (!link.classList.contains("bg-indigo-600")) {
+            link.classList.remove("text-slate-300");
+            link.classList.add("text-white", "bg-white/5");
+          }
+        } else {
+          if (!link.classList.contains("bg-indigo-600")) {
+            link.classList.remove("text-white", "bg-white/5");
+            link.classList.add("text-slate-300");
+          }
         }
-      }
-    });
-  }, observerOptions);
+      });
+    };
 
-  sections.forEach((section) => observer.observe(section));
+    updateLinks(navLinks);
+    updateLinks(mobileNavLinks);
+  }
+
+  // Check if we are on a specific page
+  const currentPath = window.location.pathname;
+  setActiveLink(currentPath);
 
   // Navbar background on scroll
   window.addEventListener("scroll", () => {
