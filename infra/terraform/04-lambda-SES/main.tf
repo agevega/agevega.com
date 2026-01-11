@@ -59,8 +59,10 @@ resource "aws_lambda_function" "contact_form" {
   role             = aws_iam_role.lambda_role.arn
   handler          = "lambda_function.lambda_handler"
   runtime          = "python3.11"
+  architectures    = ["arm64"]
   source_code_hash = data.archive_file.lambda_zip.output_base64sha256
   timeout          = 5
+  memory_size      = 128
 
   environment {
     variables = {
@@ -101,7 +103,7 @@ resource "aws_apigatewayv2_stage" "default" {
 # ------------------------------------------------------------------------------
 resource "aws_cloudwatch_log_group" "lambda_logs" {
   name              = "/aws/lambda/${aws_lambda_function.contact_form.function_name}"
-  retention_in_days = 14
+  retention_in_days = 1
 }
 
 resource "aws_apigatewayv2_integration" "lambda_integration" {
