@@ -9,7 +9,7 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 # Initialize SES client
-ses_client = boto3.client('ses', region_name=os.environ['AWS_REGION'])
+ses_client = boto3.client('ses', region_name=os.environ['SES_REGION'])
 
 def lambda_handler(event, context):
     logger.info("Received event: %s", json.dumps(event))

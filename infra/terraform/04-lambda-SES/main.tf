@@ -2,7 +2,8 @@
 # SES Identity
 # ------------------------------------------------------------------------------
 resource "aws_ses_email_identity" "default" {
-  email = var.sender_email
+  provider = aws.ses
+  email    = var.sender_email
 }
 
 # ------------------------------------------------------------------------------
@@ -68,6 +69,7 @@ resource "aws_lambda_function" "contact_form" {
     variables = {
       SENDER_EMAIL    = var.sender_email
       RECIPIENT_EMAIL = var.recipient_email
+      SES_REGION      = var.ses_region
     }
   }
 }

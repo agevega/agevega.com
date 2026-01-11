@@ -4,6 +4,12 @@ variable "aws_region" {
   default     = "eu-south-2"
 }
 
+variable "ses_region" {
+  description = "AWS region for SES (must support SES)"
+  type        = string
+  default     = "eu-west-1"
+}
+
 variable "aws_profile" {
   description = "AWS profile"
   type        = string
