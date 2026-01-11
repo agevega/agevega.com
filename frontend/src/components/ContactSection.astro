@@ -102,7 +102,7 @@
         <button
           type="submit"
           id="submit-btn"
-          class="w-full bg-indigo-600 hovered:bg-indigo-700 text-white font-semibold py-4 px-8 rounded-lg hover:bg-indigo-700 transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-indigo-500/25 disabled:opacity-50 disabled:cursor-not-allowed"
+          class="w-full bg-indigo-600 text-white font-semibold py-4 px-8 rounded-lg hover:bg-indigo-700 transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-indigo-500/25 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Enviar Mensaje
         </button>
@@ -153,7 +153,7 @@
 
       // Reset feedback
       feedback.classList.add("hidden");
-      feedback.textContent = "";
+      feedback.innerHTML = ""; // Clear content completely
       feedback.classList.remove(
         "text-red-400",
         "text-green-400",
