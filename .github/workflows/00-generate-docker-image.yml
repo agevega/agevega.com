@@ -48,6 +48,8 @@ jobs:
           tags: |
             ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.ref_name }}
             ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:latest
+          build-args: |
+            PUBLIC_APP_VERSION=${{ github.ref_name }}
           provenance: false
 
       - name: Trigger Deploy to EC2

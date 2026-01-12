@@ -3,6 +3,10 @@ FROM node:lts-alpine as build
 
 WORKDIR /app
 
+# Arguments
+ARG PUBLIC_APP_VERSION
+ENV PUBLIC_APP_VERSION=$PUBLIC_APP_VERSION
+
 COPY package*.json ./
 RUN npm install
 
