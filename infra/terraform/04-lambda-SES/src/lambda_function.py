@@ -14,17 +14,7 @@ ses_client = boto3.client('ses', region_name=os.environ['SES_REGION'])
 def lambda_handler(event, context):
     logger.info("Received event: %s", json.dumps(event))
     
-    # CORS Preflight (handled by API Gateway usually, but good to have safeguards)
-    if event.get('routeKey') == 'OPTIONS /send':
-         return {
-            'statusCode': 200,
-            'headers': {
-                'Access-Control-Allow-Origin': 'https://agevega.com',
-                'Access-Control-Allow-Methods': 'POST, OPTIONS',
-                'Access-Control-Allow-Headers': 'Content-Type'
-            },
-            'body': ''
-        }
+
 
     try:
         # Parse body
