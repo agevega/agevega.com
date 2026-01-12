@@ -13,7 +13,7 @@ variable "aws_profile" {
 variable "instance_type" {
   description = "EC2 Instance Type"
   type        = string
-  default     = "t3.micro"
+  default     = "t4g.nano"
 }
 
 variable "environment" {
