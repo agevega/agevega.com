@@ -9,6 +9,7 @@
   - **Simplicidad**: Menos es más. Mantenibilidad sobre complejidad.
   - **AWS Nativo**: Uso de servicios gestionados de AWS (IaaS/CaaS). Evitar PaaS externos (Vercel, Netlify).
   - **IaC Total**: Toda la infraestructura se define en Terraform. Cero cambios manuales en consola.
+  - **Commits**: Nunca realizar commits. El usuario es el único responsable de versionar el código.
 
 ## 🌍 Arquitectura Global
 
