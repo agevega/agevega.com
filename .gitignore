@@ -1,17 +1,34 @@
-__pycache__/
-*.py[codz]
-*$py.class
+# General / OS
+.DS_Store
+Thumbs.db
+*.log
+*.zip
 
-*.so
+# Secrets & Environment
+.env
+.envrc
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
 
+# Node.js / Astro
 node_modules/
 */node_modules/
 */.astro/
+/site
+.webassets-cache
 
-.Python
+# Python Core & Build
+__pycache__/
+*.py[codz]
+*$py.class
+*.so
 build/
-develop-eggs/
 dist/
+develop-eggs/
 downloads/
 eggs/
 .eggs/
@@ -26,16 +43,10 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
-
-.gemini/*
-!.gemini/GEMINI.md
-
 *.manifest
 *.spec
 
-pip-log.txt
-pip-delete-this-directory.txt
-
+# Testing & Quality
 htmlcov/
 .tox/
 .nox/
@@ -49,74 +60,14 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 cover/
-
-*.mo
-*.pot
-
-*.log
-local_settings.py
-db.sqlite3
-db.sqlite3-journal
-
-instance/
-.webassets-cache
-
-.scrapy
-
-docs/_build/
-
-.pybuilder/
-target/
-
-.ipynb_checkpoints
-
-profile_default/
-ipython_config.py
-
-.pdm-python
-.pdm-build/
-
-.pixi
-
-__pypackages__/
-
-celerybeat-schedule
-celerybeat.pid
-
-*.sage.py
-
-.env
-.envrc
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
-
-.spyderproject
-.spyproject
-
-.ropeproject
-
-/site
-
+.ruff_cache/
 .mypy_cache/
 .dmypy.json
 dmypy.json
-
 .pyre/
-
 .pytype/
 
-cython_debug/
-
-.abstra/
-
-.ruff_cache/
-
-.pypirc
-
+# Infrastructure (Terraform)
 .terraform/
 *.tfstate
 *.tfstate.*
@@ -128,11 +79,50 @@ override.tf
 override.tf.json
 *_override.tf
 *_override.tf.json
+
+# IDEs & Editors
+.idea/
+.vscode/
 .cursorignore
 .cursorindexingignore
+.spyderproject
+.spyproject
+.ropeproject
+.pdm-python
+.pdm-build/
 
+# Web Frameworks (Django/Flask/Scrapy)
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+instance/
+.scrapy
+
+# Data Science / Jupyter
+.ipynb_checkpoints
+profile_default/
+ipython_config.py
+*.sage.py
 marimo/_static/
 marimo/_lsp/
 __marimo__/
 
-*.zip
+# Other Python Tools
+pip-log.txt
+pip-delete-this-directory.txt
+*.mo
+*.pot
+docs/_build/
+.pybuilder/
+target/
+.pixi
+__pypackages__/
+celerybeat-schedule
+celerybeat.pid
+.abstra/
+.pypirc
+cython_debug/
+
+# Gemini AI
+.gemini/*
+!.gemini/GEMINI.md
