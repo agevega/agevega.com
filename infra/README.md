@@ -21,6 +21,7 @@ infra/
 │   ├── 01-networking/
 │   ├── 02-bastion-EC2/
 │   ├── 03-ECR/
+│   ├── 04-lambda-SES/
 └── README.md
 ```
 
@@ -91,3 +92,11 @@ infra/
 - Creación de repositorio **ECR** `agevegacom-frontend` con escaneo de seguridad y políticas de ciclo de vida.
 - Integración con el sistema de despliegue mediante Terraform backend S3.
   ➡️ [Detalles](changelog/2025-12-07_despliegue-ecr.md)
+
+### 11/01/2026 — Despliegue de Serverless Contact Form (Módulo 04)
+
+- Despliegue del módulo `04-lambda-SES` para gestionar el formulario de contacto.
+- Arquitectura **Serverless** pura (Lambda Python + API Gateway) para coste cero.
+- Configuración **Multi-Región** para SES (Irlanda) integrada con infraestructura en España.
+- Optimización extrema de costes (ARM64, Logs 1 día, Throttling).
+  ➡️ [Detalles](changelog/2026-01-11_despliegue-serverless-contact-form.md)
