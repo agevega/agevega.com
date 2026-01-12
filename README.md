@@ -49,12 +49,13 @@ El entorno de despliegue en AWS se gestiona en la carpeta `infra/` y comprende:
 
 ## 🛠 Stack Tecnológico
 
-| Capa         | Tecnología                  | Función                                               |
-| :----------- | :-------------------------- | :---------------------------------------------------- |
-| **Frontend** | **Astro** + **TailwindCSS** | Desarrollo de interfaz y generación de contenido.     |
-| **IaC**      | **Terraform**               | Provisión y gestión del estado de la infraestructura. |
-| **Cloud**    | **AWS**                     | Proveedor de nube (S3, CloudFront, VPC, IAM, etc.).   |
-| **CI/CD**    | **GitHub Actions**          | Build & Push a ECR, Despliegue a EC2.                 |
+| Capa           | Tecnología                   | Función                                               |
+| :------------- | :--------------------------- | :---------------------------------------------------- |
+| **Frontend**   | **Astro** + **TailwindCSS**  | Desarrollo de interfaz y generación de contenido.     |
+| **IaC**        | **Terraform**                | Provisión y gestión del estado de la infraestructura. |
+| **Serverless** | **Lambda** + **API Gateway** | Lógica de negocio (backend) y gestión de APIs.        |
+| **Cloud**      | **AWS**                      | Proveedor de nube (S3, CloudFront, VPC, SES, IAM).    |
+| **CI/CD**      | **GitHub Actions**           | Build & Push a ECR, Despliegue a EC2.                 |
 
 ---
 
@@ -72,7 +73,8 @@ agevega.com/
 │   │   ├── 00-setup/       # Bootstrap (S3+Dynamo) + Auditoría
 │   │   ├── 01-networking/  # Red (VPC 3-tier)
 │   │   ├── 02-bastion-EC2/ # Bastion Host (Split Architecture)
-│   │   └── 03-ECR/         # Registry de contenedores
+│   │   ├── 03-ECR/         # Registry de contenedores
+│   │   └── 04-lambda-SES/  # Backend Serverless (Contact Form)
 │   └── changelog/          # Registro de cambios de infraestructura
 ├── public/                 # Archivos estáticos globales
 └── scripts/                # Scripts de utilidad (Certificados, Despliegue)
@@ -131,7 +133,7 @@ Estado actual de las tareas principales y evolución prevista:
 - [x] **Automatización CI/CD**: Pipeline de despliegue continuo (Build, Push to ECR, Deploy to EC2).
 - [x] **Containerización**: Empaquetado de la aplicación con Docker y optimización con Nginx.
 - [ ] **WAF y Seguridad Perimetral**: Reglas de filtrado en CloudFront.
-- [ ] **Funcionalidad Backend**: Implementación serverless para formulario de contacto.
+- [x] **Funcionalidad Backend**: Implementación serverless para formulario de contacto.
 
 ---
 

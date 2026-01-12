@@ -96,7 +96,7 @@ infra/
 ### 11/01/2026 — Despliegue de Serverless Contact Form (Módulo 04)
 
 - Despliegue del módulo `04-lambda-SES` para gestionar el formulario de contacto.
-- Arquitectura **Serverless** pura (Lambda Python + API Gateway) para coste cero.
+- Arquitectura **Serverless** (Lambda Python + API Gateway) para coste mínimo.
 - Configuración **Multi-Región** para SES (Irlanda) integrada con infraestructura en España.
-- Optimización extrema de costes (ARM64, Logs 1 día, Throttling).
+- Optimización de costes (ARM64, Logs 1 día, Throttling).
   ➡️ [Detalles](changelog/2026-01-11_despliegue-serverless-contact-form.md)
