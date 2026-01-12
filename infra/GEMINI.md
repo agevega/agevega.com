@@ -17,5 +17,6 @@
   - Security Groups estrictos (Whitelisting).
 - **Recursos Principales**:
   - **VPC**: 3 capas (Public, Private, Data).
-  - **Bastion**: EC2 t4g (ARM) con acceso restringido.
+  - **Bastion**: EC2 t4g.nano (ARM) con acceso restringido.
   - **CDN**: CloudFront con OAC para S3 (si aplica) o Proxy a EC2.
+  - **Serverless**: Lambda (Python ARM64) + API Gateway para lógica backend.

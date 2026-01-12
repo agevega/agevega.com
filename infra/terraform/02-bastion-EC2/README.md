@@ -18,7 +18,7 @@ El módulo se estructura en dos pasos lógicos:
     - **Key Pair:** Sube tu clave pública SSH a AWS.
 
 2.  **`01-instance`**: Despliega el cómputo.
-    - **EC2 Instance:** `t3.micro` con Amazon Linux 2023.
+    - **EC2 Instance:** `t4g.nano` (ARM64) con Amazon Linux 2023.
     - **Ubicación:** Subred pública 1 (creada en `01-networking`).
     - **Asociación:** Vincula la EIP y el Security Group creados en el paso anterior.
 
@@ -72,7 +72,7 @@ Este módulo depende del estado remoto de los módulos anteriores:
 
 | Variable        | Descripción           | Valor por defecto |
 | :-------------- | :-------------------- | :---------------- |
-| `instance_type` | Tipo de instancia EC2 | `t3.micro`        |
+| `instance_type` | Tipo de instancia EC2 | `t4g.nano`        |
 | `environment`   | Etiqueta de entorno   | `lab`             |
 
 ---

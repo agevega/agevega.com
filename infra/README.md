@@ -100,3 +100,10 @@ infra/
 - Configuración **Multi-Región** para SES (Irlanda) integrada con infraestructura en España.
 - Optimización de costes (ARM64, Logs 1 día, Throttling).
   ➡️ [Detalles](changelog/2026-01-11_despliegue-serverless-contact-form.md)
+
+### 12/01/2026 — Optimización de Costes EC2 (Migración a ARM64)
+
+- Migración del Bastion Host a instancia **`t4g.nano`** (Graviton2).
+- Actualización de AMI y workflows de CI/CD para soporte **Multi-Arch (ARM64/AMD64)**.
+- Reducción de costes operativos al mínimo absoluto (~3€/mes).
+  ➡️ [Detalles](changelog/2026-01-12_optimizacion-ec2-arm.md)
