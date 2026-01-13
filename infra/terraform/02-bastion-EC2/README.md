@@ -14,7 +14,7 @@ El módulo se estructura en dos pasos lógicos:
 1.  **`00-security`**: Prepara los componentes de identidad y red.
 
     - **Elastic IP (EIP):** IP estática reservada para el Bastion.
-    - **Security Group:** Permite SSH (22) solo desde IPs confiables, y HTTP/HTTPS (80/443).
+    - **Security Group:** Permite SSH (22) solo desde IPs confiables. HTTP/HTTPS restringido a **CloudFront** (vía Managed Prefix List).
     - **Key Pair:** Sube tu clave pública SSH a AWS.
 
 2.  **`01-instance`**: Despliega el cómputo.

@@ -10,7 +10,7 @@ Implementación completa de la capa de distribución de contenido (CDN) y seguri
   - **Origen**: IP Elástica del Bastion EC2 (`02-bastion-EC2`) vía DNS Público de AWS.
   - **SSL/TLS**: Terminación en el borde con certificado ACM (`*.agevega.com`).
   - **Protocolo Origen**: HTTP (Puerto 80).
-    - _Nota_: Se utiliza HTTP hacia el origen para evitar fallos de validación SNI, ya que el EC2 no posee un certificado válido para su hostname interno de AWS. La conexión viaja por la red interna segura de AWS.
+    - _Nota_: Se utiliza HTTP hacia el origen para evitar fallos de validación SNI. La conexión viaja por la red interna segura de AWS.
 - **AWS WAF**: Firewall de aplicación web asociado a CloudFront.
   - Reglas: `AWSManagedRulesCommonRuleSet` (OWASP Top 10).
 - **Frontend (Nginx)**:

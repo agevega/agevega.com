@@ -39,11 +39,11 @@ El entorno de despliegue en AWS se gestiona en la carpeta `infra/` y comprende:
 
 - **Compute & Networking:** VPC personalizada en la región `eu-south-2` (Madrid) con segmentación de subredes (Públicas/Privadas/Database).
 - **Artifact Registry:** AWS ECR para almacenar las imágenes Docker del frontend.
-- **Distribución:** CloudFront como CDN global, sirviendo contenido estático y enrutando tráfico dinámico.
+- **Distribución:** CloudFront como CDN global, con terminación SSL/TLS y WAF asociado.
 - **Seguridad y Gestión:**
   - Autenticación OIDC para despliegues seguros desde GitHub Actions.
   - Logs de auditoría centralizados y reglas de AWS Config.
-  - Gestión de dominios (Route53) y certificados SSL/TLS (ACM & Let's Encrypt).
+  - Gestión de dominios (Route53) y certificados SSL/TLS (ACM).
 
 ---
 
@@ -132,7 +132,7 @@ Estado actual de las tareas principales y evolución prevista:
 - [x] **Frontend Base**: Proyecto Astro inicializado.
 - [x] **Automatización CI/CD**: Pipeline de despliegue continuo (Build, Push to ECR, Deploy to EC2).
 - [x] **Containerización**: Empaquetado de la aplicación con Docker y optimización con Nginx.
-- [ ] **WAF y Seguridad Perimetral**: Reglas de filtrado en CloudFront.
+- [x] **WAF y Seguridad Perimetral**: Reglas de filtrado en CloudFront.
 - [x] **Funcionalidad Backend**: Implementación serverless para formulario de contacto.
 
 ---
