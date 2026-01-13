@@ -76,6 +76,7 @@ agevega.com/
 │       └── 01-deploy...yml    # Deploy to EC2
 ├── frontend/                  # Aplicación web (Astro + Tailwind)
 │   ├── src/                   # Código fuente
+│   ├── public/                # Archivos estáticos
 │   ├── Dockerfile             # Definición de la imagen
 │   ├── nginx.conf             # Servidor web optimizado
 │   └── package.json           # Dependencias
@@ -88,7 +89,6 @@ agevega.com/
 │   │   ├── 04-lambda-SES/     # Backend Serverless (Contact Form)
 │   │   └── 05-cloudfront-waf/ # CDN + Seguridad Perimetral (WAF)
 │   └── changelog/             # Registro de cambios de infraestructura
-├── public/                    # Archivos estáticos globales
 └── scripts/                   # Scripts de utilidad (Certificados, Despliegue)
 ```
 
