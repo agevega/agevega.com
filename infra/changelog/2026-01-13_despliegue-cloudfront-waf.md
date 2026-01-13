@@ -2,7 +2,7 @@
 
 ## 📝 Descripción
 
-Implementación completa de la capa de distribución de contenido (CDN) y seguridad perimetral (WAF) para `agevega.com`. Se ha añadido el módulo `05-cloudfront-waf` y se ha refactorizado la seguridad del Bastion para un cierre total ("Hardening").
+Implementación completa de la capa de distribución de contenido (CDN) y seguridad perimetral (WAF) para `agevega.com`. Se ha añadido el módulo `05-cloudfront-waf`. **Nota:** El componente WAF se ha provisionado pero se mantiene desactivado por defecto para optimización de costes.
 
 ## 🏗 Arquitectura Final
 
@@ -11,8 +11,8 @@ Implementación completa de la capa de distribución de contenido (CDN) y seguri
   - **SSL/TLS**: Terminación en el borde con certificado ACM (`*.agevega.com`).
   - **Protocolo Origen**: HTTP (Puerto 80).
     - _Nota_: Se utiliza HTTP hacia el origen para evitar fallos de validación SNI. La conexión viaja por la red interna segura de AWS.
-- **AWS WAF**: Firewall de aplicación web asociado a CloudFront.
-  - Reglas: `AWSManagedRulesCommonRuleSet` (OWASP Top 10).
+- **AWS WAF**: Firewall de aplicación web asociado a CloudFront (Desactivado/Opcional).
+  - Configuración preparada con reglas `AWSManagedRulesCommonRuleSet` (OWASP Top 10), pero no asociada a la distribución para evitar costes fijos.
 - **Frontend (Nginx)**:
   - Configurado como `default_server`.
   - Escucha en puerto 80 sin redirección a HTTPS (para evitar bucles con CloudFront).

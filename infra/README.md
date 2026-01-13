@@ -113,6 +113,6 @@ infra/
 
 - Despliegue del módulo `05-cloudfront-waf`.
 - Implementación de **CloudFront** como CDN global con terminación SSL/TLS.
-- Implementación de **AWS WAF** con reglas Core de AWS para seguridad perimetral.
+- Implementación de **AWS WAF** (Desactivado para ahorro de costes) con reglas Core de AWS para seguridad perimetral.
 - Integración con EC2 a través de Security Group dinámico (Prefix List).
   ➡️ [Detalles](changelog/2026-01-13_despliegue-cloudfront-waf.md)
