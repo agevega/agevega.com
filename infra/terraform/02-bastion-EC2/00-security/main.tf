@@ -21,25 +21,7 @@ resource "aws_security_group_rule" "ingress_ssh" {
   security_group_id = aws_security_group.bastion_sg.id
 }
 
-resource "aws_security_group_rule" "ingress_http" {
-  type              = "ingress"
-  description       = "HTTP from anywhere"
-  from_port         = 80
-  to_port           = 80
-  protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = aws_security_group.bastion_sg.id
-}
 
-resource "aws_security_group_rule" "ingress_https" {
-  type              = "ingress"
-  description       = "HTTPS from anywhere"
-  from_port         = 443
-  to_port           = 443
-  protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = aws_security_group.bastion_sg.id
-}
 
 resource "aws_security_group_rule" "egress_all" {
   type              = "egress"
