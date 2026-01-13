@@ -13,7 +13,7 @@ output "acm_certificate_validation_options" {
   value       = aws_acm_certificate.cert.domain_validation_options
 }
 
-output "waf_web_acl_id" {
-  description = "The ID of the WAF Web ACL"
-  value       = aws_wafv2_web_acl.main.id
-}
+# output "waf_web_acl_id" {
+#   description = "The ID of the WAF Web ACL"
+#   value       = aws_wafv2_web_acl.main.id
+# }
