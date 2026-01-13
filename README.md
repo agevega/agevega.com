@@ -68,8 +68,12 @@ El entorno de despliegue en AWS se gestiona en la carpeta `infra/` y comprende:
 
 ```bash
 agevega.com/
-├── .github/
-│   └── workflows/             # CI/CD Workflows
+├── .gemini/                   # Contexto y Memoria del Proyecto para Gemini
+│   └── GEMINI.md
+├── .github/                   # CI/CD Workflows
+│   └── workflows/
+│       ├── 00-generate...yml  # Build & Push Docker
+│       └── 01-deploy...yml    # Deploy to EC2
 ├── frontend/                  # Aplicación web (Astro + Tailwind)
 │   ├── src/                   # Código fuente
 │   └── package.json           # Dependencias
@@ -80,7 +84,7 @@ agevega.com/
 │   │   ├── 02-bastion-EC2/    # Compute (Bastion ARM64)
 │   │   ├── 03-ECR/            # Registry de contenedores
 │   │   ├── 04-lambda-SES/     # Backend Serverless (Contact Form)
-│   │   └── 05-cloudfront-waf/ # CDN + Seguridad Perimetral
+│   │   └── 05-cloudfront-waf/ # CDN + Seguridad Perimetral (WAF)
 │   └── changelog/             # Registro de cambios de infraestructura
 ├── public/                    # Archivos estáticos globales
 └── scripts/                   # Scripts de utilidad (Certificados, Despliegue)
