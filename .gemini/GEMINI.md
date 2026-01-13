@@ -28,4 +28,3 @@
 
 - [x] **WAF**: Seguridad perimetral en CloudFront (Implementado pero desactivado por coste).
 - [x] **Contacto**: Formulario Serverless (Lambda/API Gateway).
-- [ ] **Monitorización**: CloudWatch Dashboards.
