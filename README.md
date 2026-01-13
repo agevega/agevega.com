@@ -76,6 +76,8 @@ agevega.com/
 │       └── 01-deploy...yml    # Deploy to EC2
 ├── frontend/                  # Aplicación web (Astro + Tailwind)
 │   ├── src/                   # Código fuente
+│   ├── Dockerfile             # Definición de la imagen
+│   ├── nginx.conf             # Servidor web optimizado
 │   └── package.json           # Dependencias
 ├── infra/                     # Definición de infraestructura
 │   ├── terraform/             # Código HCL de Terraform
