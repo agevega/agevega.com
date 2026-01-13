@@ -37,25 +37,30 @@ Desarrollado con **Astro** para generar un sitio puramente estático (SSG). Esto
 
 El entorno de despliegue en AWS se gestiona en la carpeta `infra/` y comprende:
 
-- **Compute & Networking:** VPC personalizada en la región `eu-south-2` (Madrid) con segmentación de subredes (Públicas/Privadas/Database).
+- **Compute & Networking:**
+  - VPC personalizada en `eu-south-2` (Madrid) con arquitectura 3-Tier.
+  - Instancias EC2 **Graviton2 (ARM64)** para eficiencia de costes.
+- **Distribución & Seguridad:**
+  - **CloudFront**: CDN global con terminación SSL/TLS.
+  - **WAF**: Firewall perimetral (desactivado por defecto para optimización de costes).
+- **Serverless Backend:**
+  - Lambda (Python) + API Gateway para gestión de formularios.
 - **Artifact Registry:** AWS ECR para almacenar las imágenes Docker del frontend.
-- **Distribución:** CloudFront como CDN global, con terminación SSL/TLS y WAF asociado.
-- **Seguridad y Gestión:**
-  - Autenticación OIDC para despliegues seguros desde GitHub Actions.
-  - Logs de auditoría centralizados y reglas de AWS Config.
+- **Gestión:**
+  - Despliegues desde GitHub Actions.
   - Gestión de dominios (Route53) y certificados SSL/TLS (ACM).
 
 ---
 
 ## 🛠 Stack Tecnológico
 
-| Capa           | Tecnología                   | Función                                               |
-| :------------- | :--------------------------- | :---------------------------------------------------- |
-| **Frontend**   | **Astro** + **TailwindCSS**  | Desarrollo de interfaz y generación de contenido.     |
-| **IaC**        | **Terraform**                | Provisión y gestión del estado de la infraestructura. |
-| **Serverless** | **Lambda** + **API Gateway** | Lógica de negocio (backend) y gestión de APIs.        |
-| **Cloud**      | **AWS**                      | Proveedor de nube (S3, CloudFront, VPC, SES, IAM).    |
-| **CI/CD**      | **GitHub Actions**           | Build & Push a ECR, Despliegue a EC2.                 |
+| Capa           | Tecnología                   | Función                                                 |
+| :------------- | :--------------------------- | :------------------------------------------------------ |
+| **Frontend**   | **Astro** + **TailwindCSS**  | Desarrollo de interfaz "Zero JS" y generación estática. |
+| **IaC**        | **Terraform**                | Provisión y gestión del estado de la infraestructura.   |
+| **Serverless** | **Lambda** + **API Gateway** | Backend y gestión de APIs.                              |
+| **Cloud**      | **AWS**                      | Proveedor Cloud (S3, CloudFront, VPC, SES, IAM...).     |
+| **CI/CD**      | **GitHub Actions**           | Build & Push a ECR, Despliegue a EC2.                   |
 
 ---
 
@@ -63,21 +68,22 @@ El entorno de despliegue en AWS se gestiona en la carpeta `infra/` y comprende:
 
 ```bash
 agevega.com/
-├── .github/                # CI/CD Workflows
-│   └── workflows/
-├── frontend/               # Aplicación web (Astro + Tailwind)
-│   ├── src/                # Código fuente
-│   └── package.json        # Dependencias
-├── infra/                  # Definición de infraestructura
-│   ├── terraform/          # Código HCL de Terraform
-│   │   ├── 00-setup/       # Bootstrap (S3+Dynamo) + Auditoría
-│   │   ├── 01-networking/  # Red (VPC 3-tier)
-│   │   ├── 02-bastion-EC2/ # Bastion Host (Split Architecture)
-│   │   ├── 03-ECR/         # Registry de contenedores
-│   │   └── 04-lambda-SES/  # Backend Serverless (Contact Form)
-│   └── changelog/          # Registro de cambios de infraestructura
-├── public/                 # Archivos estáticos globales
-└── scripts/                # Scripts de utilidad (Certificados, Despliegue)
+├── .github/
+│   └── workflows/             # CI/CD Workflows
+├── frontend/                  # Aplicación web (Astro + Tailwind)
+│   ├── src/                   # Código fuente
+│   └── package.json           # Dependencias
+├── infra/                     # Definición de infraestructura
+│   ├── terraform/             # Código HCL de Terraform
+│   │   ├── 00-setup/          # Bootstrap (S3+Dynamo) + Auditoría
+│   │   ├── 01-networking/     # Red (VPC 3-tier)
+│   │   ├── 02-bastion-EC2/    # Compute (Bastion ARM64)
+│   │   ├── 03-ECR/            # Registry de contenedores
+│   │   ├── 04-lambda-SES/     # Backend Serverless (Contact Form)
+│   │   └── 05-cloudfront-waf/ # CDN + Seguridad Perimetral
+│   └── changelog/             # Registro de cambios de infraestructura
+├── public/                    # Archivos estáticos globales
+└── scripts/                   # Scripts de utilidad (Certificados, Despliegue)
 ```
 
 ---
