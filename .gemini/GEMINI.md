@@ -21,6 +21,6 @@
 
 ## � Roadmap de Alto Nivel
 
-- [ ] **WAF**: Seguridad perimetral en CloudFront.
+- [x] **WAF**: Seguridad perimetral en CloudFront.
 - [ ] **Contacto**: Formulario Serverless (Lambda/API Gateway).
 - [ ] **Monitorización**: CloudWatch Dashboards.

@@ -22,6 +22,7 @@ infra/
 │   ├── 02-bastion-EC2/
 │   ├── 03-ECR/
 │   ├── 04-lambda-SES/
+│   ├── 05-cloudfront-waf/
 └── README.md
 ```
 
@@ -107,3 +108,11 @@ infra/
 - Actualización de AMI y workflows de CI/CD para soporte **Multi-Arch (ARM64/AMD64)**.
 - Reducción de costes operativos al mínimo absoluto (~3€/mes).
   ➡️ [Detalles](changelog/2026-01-12_optimizacion-ec2-arm.md)
+
+### 13/01/2026 — Despliegue de CloudFront y WAF (Módulo 05)
+
+- Despliegue del módulo `05-cloudfront-waf`.
+- Implementación de **CloudFront** como CDN global con terminación SSL/TLS.
+- Implementación de **AWS WAF** con reglas Core de AWS para seguridad perimetral.
+- Integración con EC2 a través de Security Group dinámico (Prefix List).
+  ➡️ [Detalles](changelog/2026-01-13_despliegue-cloudfront-waf.md)
