@@ -84,7 +84,7 @@ resource "aws_cloudfront_distribution" "distribution" {
     custom_origin_config {
       http_port              = 80
       https_port             = 443
-      origin_protocol_policy = "https-only" # End-to-End HTTPS
+      origin_protocol_policy = "http-only" # Connect to EC2 via HTTP (Port 80)
       origin_ssl_protocols   = ["TLSv1.2"]
     }
   }
