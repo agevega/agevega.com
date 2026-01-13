@@ -2,7 +2,7 @@
 
 Este módulo despliega la capa de distribución y seguridad perimetral para `agevega.com`.
 
-![Architecture Diagram](../../diagrams/05-cloudfront-waf.png)
+<!-- ![Architecture Diagram](../../diagrams/05-cloudfront-waf.png) -->
 
 ---
 
