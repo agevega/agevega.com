@@ -16,7 +16,7 @@ Este módulo despliega la capa de distribución y seguridad perimetral para `age
     - **Origen**: IP Elástica del Bastion EC2 (vía DNS Público).
     - **Protocolo Viewer**: HTTPS forzado (`redirect-to-https`).
     - **Protocolo Origin**: HTTP (Puerto 80).
-      - _Nota_: Se utiliza `http-only` hacia el origen para evitar conflictos de validación de certificados SNI, ya que el EC2 no posee un certificado válido para su nombre de host interno de AWS. La conexión viaja por la red interna segura de AWS.
+      - _Nota_: Se utiliza `http-only` hacia el origen para evitar conflictos de validación de certificados SNI. La conexión viaja por la red interna segura de AWS.
 
 2.  **AWS WAF (Web Application Firewall)**:
 
