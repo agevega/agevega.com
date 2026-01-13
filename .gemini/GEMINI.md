@@ -18,9 +18,14 @@
   - CI/CD vía GitHub Actions.
   - Frontend empaquetado en Docker -> ECR -> EC2 Bastion.
   - Infraestructura gestionada por Terraform (Backend S3 remoto).
+- **Seguridad Perimetral**:
+  - **CloudFront**: Terminación SSL (HTTPS) y Caché.
+  - **WAF**: AWS Managed Rules.
+  - **EC2**: Solo accesible vía CloudFront (Security Group restringido) y SSH.
+  - **Protocolo**: HTTPS (Viewer) -> HTTP (Origin) para evitar conflictos SNI.
 
 ## � Roadmap de Alto Nivel
 
 - [x] **WAF**: Seguridad perimetral en CloudFront.
-- [ ] **Contacto**: Formulario Serverless (Lambda/API Gateway).
+- [x] **Contacto**: Formulario Serverless (Lambda/API Gateway).
 - [ ] **Monitorización**: CloudWatch Dashboards.
