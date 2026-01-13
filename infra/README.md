@@ -106,7 +106,7 @@ infra/
 
 - Migración del Bastion Host a instancia **`t4g.nano`** (Graviton2).
 - Actualización de AMI y workflows de CI/CD para soporte **Multi-Arch (ARM64/AMD64)**.
-- Reducción de costes operativos al mínimo absoluto (~3€/mes).
+- Reducción de costes operativos al mínimo (~3€/mes).
   ➡️ [Detalles](changelog/2026-01-12_optimizacion-ec2-arm.md)
 
 ### 13/01/2026 — Despliegue de CloudFront y WAF (Módulo 05)
