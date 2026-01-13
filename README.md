@@ -132,7 +132,7 @@ Estado actual de las tareas principales y evolución prevista:
 - [x] **Frontend Base**: Proyecto Astro inicializado.
 - [x] **Automatización CI/CD**: Pipeline de despliegue continuo (Build, Push to ECR, Deploy to EC2).
 - [x] **Containerización**: Empaquetado de la aplicación con Docker y optimización con Nginx.
-- [x] **WAF y Seguridad Perimetral**: Reglas de filtrado en CloudFront.
+- [x] **WAF y Seguridad Perimetral**: Reglas de filtrado en CloudFront (Desactivado para ahorro).
 - [x] **Funcionalidad Backend**: Implementación serverless para formulario de contacto.
 
 ---

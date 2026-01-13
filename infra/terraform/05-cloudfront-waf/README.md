@@ -18,8 +18,9 @@ Este módulo despliega la capa de distribución y seguridad perimetral para `age
     - **Protocolo Origin**: HTTP (Puerto 80).
       - _Nota_: Se utiliza `http-only` hacia el origen para evitar conflictos de validación de certificados SNI. La conexión viaja por la red interna segura de AWS.
 
-2.  **AWS WAF (Web Application Firewall)**:
+2.  **AWS WAF (Opcional - DESACTIVADO)**:
 
+    - _Desactivado actualmente para ahorro de costes (~6€/mes)._
     - Asociado a la distribución de CloudFront.
     - Utiliza el conjunto de reglas gestionadas `AWSManagedRulesCommonRuleSet` (OWASP Top 10, protección contra exploits comunes).
 

@@ -15,49 +15,49 @@ resource "aws_acm_certificate" "cert" {
 }
 
 # ------------------------------------------------------------------------------
-# WAFWebACL (Global/US-East-1)
+# WAFWebACL (Global/US-East-1) - DISABLED FOR COST SAVINGS (~$6/month)
 # ------------------------------------------------------------------------------
-resource "aws_wafv2_web_acl" "main" {
-  provider    = aws.us_east_1
-  name        = "${var.project_name}-waf-cloudfront"
-  description = "WAF for CloudFront distribution protection"
-  scope       = "CLOUDFRONT"
-
-  default_action {
-    allow {}
-  }
-
-  visibility_config {
-    cloudwatch_metrics_enabled = true
-    metric_name                = "${var.project_name}-waf-cloudfront"
-    sampled_requests_enabled   = true
-  }
-
-  # AWS Managed Rules - Core Rule Set
-  rule {
-    name     = "AWS-AWSManagedRulesCommonRuleSet"
-    priority = 10
-
-    override_action {
-      none {} # Use default action configured in the rule group
-    }
-
-    statement {
-      managed_rule_group_statement {
-        name        = "AWSManagedRulesCommonRuleSet"
-        vendor_name = "AWS"
-      }
-    }
-
-    visibility_config {
-      cloudwatch_metrics_enabled = true
-      metric_name                = "AWS-AWSManagedRulesCommonRuleSet"
-      sampled_requests_enabled   = true
-    }
-  }
-
-  tags = var.common_tags
-}
+# resource "aws_wafv2_web_acl" "main" {
+#   provider    = aws.us_east_1
+#   name        = "${var.project_name}-waf-cloudfront"
+#   description = "WAF for CloudFront distribution protection"
+#   scope       = "CLOUDFRONT"
+#
+#   default_action {
+#     allow {}
+#   }
+#
+#   visibility_config {
+#     cloudwatch_metrics_enabled = true
+#     metric_name                = "${var.project_name}-waf-cloudfront"
+#     sampled_requests_enabled   = true
+#   }
+#
+#   # AWS Managed Rules - Core Rule Set
+#   rule {
+#     name     = "AWS-AWSManagedRulesCommonRuleSet"
+#     priority = 10
+#
+#     override_action {
+#       none {} # Use default action configured in the rule group
+#     }
+#
+#     statement {
+#       managed_rule_group_statement {
+#         name        = "AWSManagedRulesCommonRuleSet"
+#         vendor_name = "AWS"
+#       }
+#     }
+#
+#     visibility_config {
+#       cloudwatch_metrics_enabled = true
+#       metric_name                = "AWS-AWSManagedRulesCommonRuleSet"
+#       sampled_requests_enabled   = true
+#     }
+#   }
+#
+#   tags = var.common_tags
+# }
 
 
 
@@ -73,7 +73,7 @@ resource "aws_cloudfront_distribution" "distribution" {
   is_ipv6_enabled     = true
   comment             = "Distribution for ${var.domain_name}"
   default_root_object = "" # Not needed for proxy to EC2
-  web_acl_id          = aws_wafv2_web_acl.main.arn
+  # web_acl_id          = aws_wafv2_web_acl.main.arn # DISABLED for cost savings
 
   aliases = [var.domain_name, "www.${var.domain_name}"]
 

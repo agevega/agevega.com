@@ -46,5 +46,5 @@ Implementación completa de la capa de distribución de contenido (CDN) y seguri
 ## 💰 Impacto en Costes
 
 - **CloudFront**: Capa gratuita (1TB data out). Coste 0€.
-- **WAF**: ~$5/mes (Web ACL) + $1/mes (Reglas). Estimado: ~6€/mes.
+- **WAF**: Desactivado para ahorro (~6€/mes). Código mantenido como referencia.
 - **ACM**: Gratuito.
