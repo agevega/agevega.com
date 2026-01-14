@@ -68,28 +68,29 @@ El entorno de despliegue en AWS se gestiona en la carpeta `infra/` y comprende:
 
 ```bash
 agevega.com/
-├── .gemini/                   # Contexto y Memoria del Proyecto para Gemini
+├── .gemini/                      # Contexto y Memoria del Proyecto para Gemini
 │   └── GEMINI.md
-├── .github/                   # CI/CD Workflows
+├── .github/                      # CI/CD Workflows
 │   └── workflows/
-│       ├── 00-generate...yml  # Build & Push Docker
-│       └── 01-deploy...yml    # Deploy to EC2
-├── frontend/                  # Aplicación web (Astro + Tailwind)
-│   ├── src/                   # Código fuente
-│   ├── public/                # Archivos estáticos
-│   ├── Dockerfile             # Definición de la imagen
-│   ├── nginx.conf             # Servidor web optimizado
-│   └── package.json           # Dependencias
-├── infra/                     # Definición de infraestructura
-│   ├── terraform/             # Código HCL de Terraform
-│   │   ├── 00-setup/          # Bootstrap (S3+Dynamo) + Auditoría
-│   │   ├── 01-networking/     # Red (VPC 3-tier)
-│   │   ├── 02-bastion-EC2/    # Compute (Bastion ARM64)
-│   │   ├── 03-ECR/            # Registry de contenedores
-│   │   ├── 04-lambda-SES/     # Backend Serverless (Contact Form)
-│   │   └── 05-cloudfront-waf/ # CDN + Seguridad Perimetral (WAF)
-│   └── changelog/             # Registro de cambios de infraestructura
-└── scripts/                   # Scripts de utilidad (Certificados, Despliegue)
+│       ├── 00-generate...yml     # Build & Push Docker
+│       └── 01-deploy...yml       # Deploy to EC2
+├── frontend/                     # Aplicación web (Astro + Tailwind)
+│   ├── src/                      # Código fuente
+│   ├── public/                   # Archivos estáticos
+│   ├── Dockerfile                # Definición de la imagen
+│   ├── nginx.conf                # Servidor web optimizado
+│   └── package.json              # Dependencias
+├── infra/                        # Definición de infraestructura
+│   ├── terraform/                # Código HCL de Terraform
+│   │   ├── 00-setup/             # Bootstrap (S3+Dynamo) + Auditoría
+│   │   ├── 01-networking/        # Red (VPC 3-tier)
+│   │   ├── 02-bastion-EC2/       # Compute (Bastion ARM64)
+│   │   ├── 03-ECR/               # Registry de contenedores
+│   │   ├── 04-lambda-SES/        # Backend Serverless (Contact Form)
+│   │   ├── 04-lambda-SES/        # Backend Serverless (Contact Form)
+│   │   └── 05-cloudfront-WAF-S3/ # CDN + WAF + S3 Assets
+│   └── changelog/                # Registro de cambios de infraestructura
+└── scripts/                      # Scripts de utilidad (Certificados, Despliegue)
 ```
 
 ---

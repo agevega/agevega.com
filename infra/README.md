@@ -22,7 +22,8 @@ infra/
 │   ├── 02-bastion-EC2/
 │   ├── 03-ECR/
 │   ├── 04-lambda-SES/
-│   ├── 05-cloudfront-waf/
+│   ├── 04-lambda-SES/
+│   ├── 05-cloudfront-WAF-S3/
 └── README.md
 ```
 
@@ -116,3 +117,9 @@ infra/
 - Implementación de **AWS WAF** (Desactivado para ahorro de costes) con reglas Core de AWS para seguridad perimetral.
 - Integración con EC2 a través de Security Group dinámico (Prefix List).
   ➡️ [Detalles](changelog/2026-01-13_despliegue-cloudfront-waf.md)
+
+### 14/01/2026 — Consolidación de Assets y CloudFront (Módulo 05)
+
+- Fusión de S3 Assets dentro del módulo de CloudFront (`05-cloudfront-WAF-S3`).
+- Implementación de **OAC (Origin Access Control)** para acceso seguro a documentos privados (CV).
+  ➡️ [Detalles](changelog/2026-01-14_consolidacion-s3-cloudfront.md)
