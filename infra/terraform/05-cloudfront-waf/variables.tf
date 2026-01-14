@@ -26,3 +26,9 @@ variable "common_tags" {
     Module      = "05-cloudfront-waf"
   }
 }
+
+variable "assets_bucket_name" {
+  description = "Name of the S3 bucket for assets"
+  type        = string
+  default     = "agevegacom-assets-private"
+}
