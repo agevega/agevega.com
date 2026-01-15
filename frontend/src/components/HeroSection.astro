@@ -1,72 +1,125 @@
 ---
-const version = import.meta.env.PUBLIC_APP_VERSION || "dev";
+const version = import.meta.env.PUBLIC_APP_VERSION || "v1.0.0";
 ---
 
 <section
   id="home"
   class="min-h-screen flex items-center relative py-20 overflow-hidden"
 >
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-    <div class="max-w-3xl">
-      <!-- Badge -->
-      <div
-        class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 backdrop-blur-md mb-8 animate-fade-in"
-      >
-        <span class="relative flex h-2 w-2">
-          <span
-            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"
-          ></span>
-          <span class="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"
-          ></span>
-        </span>
-        <span class="text-sm font-medium text-indigo-300">Open to Work</span>
-      </div>
-
-      <h1
-        class="text-5xl md:text-7xl font-bold tracking-tight mb-6 animate-slide-up"
-      >
-        Hola, soy <br class="hidden md:block" />
-        <span
-          class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-indigo-400 animate-gradient-x bg-[length:200%_auto]"
-          >Alejandro Vega</span
-        >
-      </h1>
-
-      <p
-        class="text-xl text-slate-400 mb-10 leading-relaxed max-w-2xl animate-slide-up-delayed"
-      >
-        <span class="text-slate-100 font-medium"
-          >Cloud Architect & DevOps Engineer</span
-        >. Transformo requisitos complejos en infraestructuras AWS eficientes y
-        seguras. Especialista en Terraform, Kubernetes y automatización
-        avanzada.
-      </p>
-
-      <div class="flex flex-wrap gap-4 animate-fade-in-up">
-        <a
-          href="#projects"
-          class="px-8 py-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-medium transition-all shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:-translate-y-1"
-        >
-          Ver Proyectos
-        </a>
-        <a
-          href="/about-this-web"
-          class="px-8 py-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-medium border border-slate-700 transition-all hover:-translate-y-1"
-        >
-          Sobre esta web
-        </a>
-        <a
-          href="#contact"
-          class="px-8 py-4 rounded-xl bg-white/5 hover:bg-white/10 text-white font-medium border border-white/10 backdrop-blur-md transition-all hover:-translate-y-1"
-        >
-          Contactar
-        </a>
-      </div>
+  <!-- Background Effects -->
+  <div class="absolute inset-0 z-0">
+    <div
+      class="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-500/10 blur-[100px] rounded-full mix-blend-screen"
+    >
+    </div>
+    <div
+      class="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-500/10 blur-[100px] rounded-full mix-blend-screen"
+    >
     </div>
   </div>
-  <div
-    class="absolute bottom-0 left-0 translate-y-24 -translate-x-24 w-80 h-80 bg-cyan-500/10 blur-3xl rounded-full pointer-events-none"
-  >
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+    <div class="grid lg:grid-cols-2 gap-12 items-center">
+      <div class="max-w-3xl">
+        <!-- Badge -->
+        <div
+          class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800/50 border border-slate-700/50 backdrop-blur-md mb-8"
+        >
+          <span class="relative flex h-2 w-2">
+            <span
+              class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"
+            ></span>
+            <span
+              class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"
+            ></span>
+          </span>
+          <span
+            class="text-xs font-medium text-slate-300 tracking-wide uppercase"
+            >Available for projects</span
+          >
+        </div>
+
+        <h1
+          class="text-5xl md:text-7xl font-bold tracking-tight mb-6 text-white leading-tight"
+        >
+          Alejandro Vega
+          <span
+            class="block text-4xl md:text-5xl mt-2 bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400"
+          >
+            Senior DevOps Engineer
+          </span>
+        </h1>
+
+        <p class="text-xl text-slate-400 mb-10 leading-relaxed max-w-xl">
+          <span class="text-slate-100 font-medium"
+            >Cloud Architect & DevOps Engineer</span
+          >. Transformo requisitos complejos en infraestructuras AWS eficientes
+          y seguras. Especialista en Terraform, Kubernetes y automatización.
+        </p>
+
+        <div class="flex flex-wrap gap-4">
+          <a
+            href="/about-this-web"
+            class="px-8 py-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-medium transition-all shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:-translate-y-1 flex items-center gap-2"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+            </svg>
+            Sobre esta web
+          </a>
+          <a
+            href="/contact"
+            class="px-8 py-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-medium border border-slate-700 transition-all hover:-translate-y-1"
+          >
+            Contactar
+          </a>
+        </div>
+      </div>
+
+      <!-- Hero Visual (Right Side) -->
+      <div class="hidden lg:block relative">
+        <!-- Abstract Code/Infra Visual Representation could go here -->
+        <div
+          class="relative bg-slate-900/50 border border-white/10 rounded-2xl p-6 backdrop-blur-xl"
+        >
+          <div
+            class="flex items-center gap-2 mb-4 border-b border-white/5 pb-4"
+          >
+            <div class="w-3 h-3 rounded-full bg-red-500/50"></div>
+            <div class="w-3 h-3 rounded-full bg-yellow-500/50"></div>
+            <div class="w-3 h-3 rounded-full bg-green-500/50"></div>
+            <div class="ml-auto text-xs text-slate-500 font-mono">
+              deploy.tf
+            </div>
+          </div>
+          <pre
+            class="font-mono text-xs leading-relaxed overflow-x-auto">
+<code class="language-hcl"><span class="text-purple-400">module</span> <span class="text-green-400">"cloud_infrastructure"</span> &#123;
+  <span class="text-blue-400">source</span> = <span class="text-amber-400">"./modules/aws-architecture"</span>
+
+  <span class="text-blue-400">environment</span> = <span class="text-green-400">"production"</span>
+  <span class="text-blue-400">region</span>      = <span class="text-green-400">"eu-south-2"</span>
+  
+  <span class="text-slate-500"># High Availability & Scalability</span>
+  <span class="text-blue-400">min_size</span>    = <span class="text-orange-400">2</span>
+  <span class="text-blue-400">max_size</span>    = <span class="text-orange-400">10</span>
+  
+  <span class="text-blue-400">security_level</span> = <span class="text-green-400">"strict"</span>
+&#125;</code>
+            </pre>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Version Tag -->
