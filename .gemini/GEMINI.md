@@ -16,15 +16,17 @@
 - **Monorepo**: Frontend y Infraestructura en un mismo repositorio.
 - **Despliegue**:
   - CI/CD vía GitHub Actions.
-  - Frontend empaquetado en Docker -> ECR -> EC2 Bastion.
+  - Frontend empaquetado en Docker -> ECR -> EC2 Bastion / Nginx.
   - Infraestructura gestionada por Terraform (Backend S3 remoto).
 - **Seguridad Perimetral**:
   - **CloudFront**: Terminación SSL (HTTPS) y Caché.
-  - **WAF**: AWS Managed Rules.
-  - **EC2**: Solo accesible vía CloudFront (Security Group restringido) y SSH.
+  - **WAF**: AWS Managed Rules (Provisionado pero desactivado por coste).
+  - **Assets Privados**: S3 Bucket integrado en CloudFront con OAC (`05-cloudfront-WAF-S3`).
+  - **EC2**: Aislado. Solo accesible vía CloudFront (Security Group restringido a Prefix List) y SSH (IP whitelist).
   - **Protocolo**: HTTPS (Viewer) -> HTTP (Origin) para evitar conflictos SNI.
 
-## � Roadmap de Alto Nivel
+## 📍 Roadmap de Alto Nivel
 
-- [x] **WAF**: Seguridad perimetral en CloudFront (Implementado pero desactivado por coste).
+- [x] **WAF/CDN**: Distribución Global y Seguridad (CloudFront + WAF).
 - [x] **Contacto**: Formulario Serverless (Lambda/API Gateway).
+- [x] **Privacidad**: Hosting seguro de documentos (CV) vía S3 OAC.
