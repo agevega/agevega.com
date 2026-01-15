@@ -1,66 +1,34 @@
 ---
-interface Project {
-  title: string;
-  description: string;
-  tags: string[];
-  link: string;
-}
 
-const projects: Project[] = [
-  {
-    title: "Santander Digital Services",
-    description:
-      "Ingeniero DevSecOps Senior. Desarrollo de aplicaciones IA Cloud-Native, IaC con Terraform Enterprise y seguridad en serverless (Lambda/Fargate). Implementación de clusters EKS y gestión de API Gateway.",
-    tags: ["AWS", "Terraform Enterprise", "EKS", "GitHub Actions", "Python"],
-    link: "#",
-  },
-  {
-    title: "Coches.com",
-    description:
-      "Ingeniero DevOps. Automatización de pipelines CI/CD y administración de Kubernetes (Helm/ArgoCD). Optimización de costes y observabilidad con Prometheus/ELK. Gestión de bases de datos RDS/DocumentDB.",
-    tags: ["AWS", "Kubernetes", "Jenkins", "GitLab CI", "Elasticsearch"],
-    link: "#",
-  },
-  {
-    title: "Ericsson",
-    description:
-      "Consultor DevOps. Coordinación de equipos internacionales para integración 4G/5G. Mantenimiento de flujos CI/CD y desarrollo de herramientas de automatización en Python y Groovy.",
-    tags: ["Python", "Groovy", "Jenkins", "Bash"],
-    link: "#",
-  },
-];
 ---
 
 <section id="projects" class="py-20">
   <div class="container mx-auto px-4">
-    <h2 class="text-3xl font-bold text-white mb-6">Experiencia Profesional</h2>
-    <p class="text-slate-400 mb-12 max-w-3xl text-lg">
-      Mi trayectoria se ha centrado en roles de alta responsabilidad técnica,
-      gestionando infraestructuras críticas y liderando equipos en la adopción
-      de metodologías Cloud Native y DevOps.
-    </p>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      {
-        projects.map((project) => (
-          <div class="group bg-slate-900 rounded-xl overflow-hidden border border-slate-800 hover:border-indigo-500/50 transition-colors h-full flex flex-col">
-            <div class="p-8 flex flex-col flex-grow">
-              <h3 class="text-xl font-bold text-white mb-3 group-hover:text-indigo-400 transition-colors">
-                {project.title}
-              </h3>
-              <p class="text-slate-400 mb-6 leading-relaxed flex-grow text-sm">
-                {project.description}
-              </p>
-              <div class="flex flex-wrap gap-2 mt-auto">
-                {project.tags.map((tag) => (
-                  <span class="text-xs font-medium text-slate-500 bg-slate-950 px-2 py-1 rounded border border-slate-800">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-        ))
-      }
+    <div class="max-w-4xl mx-auto text-center">
+      <h2 class="text-3xl font-bold text-white mb-6">Proyectos</h2>
+      <div
+        class="p-12 bg-slate-900/50 rounded-2xl border border-white/10 backdrop-blur-sm"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-16 w-16 text-indigo-500 mx-auto mb-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1.5"
+            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+          ></path>
+        </svg>
+        <h3 class="text-xl font-semibold text-white mb-3">Próximamente</h3>
+        <p class="text-slate-400">
+          Estoy preparando una selección de mis proyectos personales y
+          colaboraciones open source más destacadas.
+        </p>
+      </div>
     </div>
   </div>
 </section>
