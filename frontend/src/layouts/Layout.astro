@@ -50,7 +50,7 @@ const opengraph = {
     />
   </head>
   <body
-    class="bg-slate-950 text-slate-100 font-sans antialiased selection:bg-indigo-500/30 overflow-x-hidden relative"
+    class="bg-slate-950 text-slate-100 font-sans antialiased selection:bg-indigo-500/30 overflow-x-hidden relative flex flex-col min-h-screen"
   >
     <!-- Background Gradient Effects -->
     <div class="fixed inset-0 z-[-1] pointer-events-none">
@@ -68,7 +68,9 @@ const opengraph = {
       </div>
     </div>
     <Navigation />
-    <slot />
+    <div class="flex-grow">
+      <slot />
+    </div>
     <Footer />
   </body>
 </html>
