@@ -2,258 +2,569 @@
 
 ---
 
-<section id="architecture" class="py-20">
-  <!-- Featured Project: agevega.com -->
-  <div class="max-w-6xl mx-auto mb-20 pt-10">
-    <div class="flex flex-col md:flex-row gap-8 items-start mb-12">
-      <div class="flex-grow">
-        <h2 class="text-3xl font-bold text-white mb-4">
-          Sobre esta web: <span class="text-indigo-400">agevega.com</span>
-        </h2>
-        <p class="text-slate-400 text-lg leading-relaxed max-w-2xl">
-          Este portfolio no es solo un escaparate, es una demostración técnica
-          viva. Diseñado siguiendo principios <strong>GitOps</strong> y un ciclo de
-          vida <strong>DevOps</strong> completo, implementando una arquitectura 100%
-          inmutable y automatizada en AWS.
-        </p>
-      </div>
-      <div class="flex-shrink-0">
-        <a
-          href="https://github.com/agevega/agevega.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="inline-flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition-colors border border-slate-700"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
-            fill="currentColor"
-            viewBox="0 0 24 24"
+<section id="architecture" class="py-20 relative overflow-hidden">
+  <!-- Background Elements -->
+  <div
+    class="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none"
+  >
+    <div
+      class="absolute top-1/4 left-1/4 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl"
+    >
+    </div>
+    <div
+      class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"
+    >
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- SUBSECTION 1: Engineering Pillars (New Content) -->
+    <div class="mb-32">
+      <div class="flex flex-col md:flex-row gap-8 items-start mb-16">
+        <div class="flex-grow">
+          <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">
+            Under the Hood: <span
+              class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400"
+              >Ingeniería & Artesanía</span
+            >
+          </h2>
+          <p class="text-slate-400 text-lg leading-relaxed max-w-3xl">
+            Este portfolio es una demostración técnica viva. Diseñado desde cero
+            siguiendo principios <strong>Cloud Native</strong>, <strong
+              >Zero-Trust Security</strong
+            > y eficiencia de costes <strong>FinOps</strong>. Aquí no hay "cajas
+            negras", solo código limpio e infraestructura inmutable.
+          </p>
+        </div>
+        <div class="flex-shrink-0">
+          <a
+            href="https://github.com/agevega/agevega.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-800/50 hover:bg-slate-700/50 text-white rounded-full transition-all border border-slate-700 hover:border-indigo-500/50 backdrop-blur-sm group"
           >
-            <path
-              d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
-            ></path>
-          </svg>
-          Ver Código
-        </a>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 text-indigo-400 group-hover:text-indigo-300 transition-colors"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+              ></path>
+            </svg>
+            <span class="font-medium">Ver Repositorio</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- The 4 Pillars Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- 1. Infraestructura -->
+        <div
+          class="bg-slate-900/40 rounded-2xl p-8 border border-indigo-500/20 hover:border-indigo-500/40 transition-all duration-300 group"
+        >
+          <div class="flex items-center gap-4 mb-6">
+            <div
+              class="w-12 h-12 rounded-xl bg-indigo-500/10 flex items-center justify-center border border-indigo-500/20 group-hover:scale-110 transition-transform duration-300"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6 text-indigo-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                ></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-white">
+              1. Infraestructura (IaC)
+            </h3>
+          </div>
+          <ul class="space-y-4">
+            <li class="flex items-start gap-3">
+              <span
+                class="mt-1.5 w-1.5 h-1.5 rounded-full bg-indigo-400 flex-shrink-0"
+              ></span>
+              <p class="text-slate-400 text-sm leading-relaxed">
+                <strong class="text-slate-200">Aprovisionamiento Total:</strong> 100%
+                Terraform. Estado remoto en S3 con bloqueo DynamoDB.
+              </p>
+            </li>
+            <li class="flex items-start gap-3">
+              <span
+                class="mt-1.5 w-1.5 h-1.5 rounded-full bg-indigo-400 flex-shrink-0"
+              ></span>
+              <p class="text-slate-400 text-sm leading-relaxed">
+                <strong class="text-slate-200">Networking 3-Tier:</strong> VPC en
+                Madrid (eu-south-2). Segmentación estricta (Public/Private/Data).
+              </p>
+            </li>
+            <li class="flex items-start gap-3">
+              <span
+                class="mt-1.5 w-1.5 h-1.5 rounded-full bg-indigo-400 flex-shrink-0"
+              ></span>
+              <p class="text-slate-400 text-sm leading-relaxed">
+                <strong class="text-slate-200">Seguridad Perimetral:</strong> CloudFront
+                (CDN) + OAC para assets privados en S3.
+              </p>
+            </li>
+            <li class="flex items-start gap-3">
+              <span
+                class="mt-1.5 w-1.5 h-1.5 rounded-full bg-indigo-400 flex-shrink-0"
+              ></span>
+              <p class="text-slate-400 text-sm leading-relaxed">
+                <strong class="text-slate-200">Cómputo Aislado:</strong> EC2 en subred
+                privada. Acceso solo vía CloudFront (Prefix Lists).
+              </p>
+            </li>
+            <li class="flex items-start gap-3">
+              <span
+                class="mt-1.5 w-1.5 h-1.5 rounded-full bg-indigo-400 flex-shrink-0"
+              ></span>
+              <p class="text-slate-400 text-sm leading-relaxed">
+                <strong class="text-slate-200">Backend Serverless:</strong> Lambda
+                (Python) + API Gateway.
+              </p>
+            </li>
+          </ul>
+        </div>
+
+        <!-- 2. CI/CD -->
+        <div
+          class="bg-slate-900/40 rounded-2xl p-8 border border-purple-500/20 hover:border-purple-500/40 transition-all duration-300 group"
+        >
+          <div class="flex items-center gap-4 mb-6">
+            <div
+              class="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center border border-purple-500/20 group-hover:scale-110 transition-transform duration-300"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6 text-purple-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                ></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-white">2. CI/CD (Automation)</h3>
+          </div>
+          <ul class="space-y-4">
+            <li class="flex items-start gap-3">
+              <span
+                class="mt-1.5 w-1.5 h-1.5 rounded-full bg-purple-400 flex-shrink-0"
+              ></span>
+              <p class="text-slate-400 text-sm leading-relaxed">
+                <strong class="text-slate-200">GitHub Actions:</strong> Pipeline completo
+                de Build, Test y Deploy sin intervención manual.
+              </p>
+            </li>
+            <li class="flex items-start gap-3">
+              <span
+                class="mt-1.5 w-1.5 h-1.5 rounded-full bg-purple-400 flex-shrink-0"
+              ></span>
+              <p class="text-slate-400 text-sm leading-relaxed">
+                <strong class="text-slate-200">Container Registry:</strong> AWS ECR
+                con escaneo de vulnerabilidades y políticas de limpieza.
+              </p>
+            </li>
+            <li class="flex items-start gap-3">
+              <span
+                class="mt-1.5 w-1.5 h-1.5 rounded-full bg-purple-400 flex-shrink-0"
+              ></span>
+              <p class="text-slate-400 text-sm leading-relaxed">
+                <strong class="text-slate-200">Build Multi-Arch:</strong> Docker builds
+                optimizados para ARM64 (compatible con Graviton).
+              </p>
+            </li>
+            <li class="flex items-start gap-3">
+              <span
+                class="mt-1.5 w-1.5 h-1.5 rounded-full bg-purple-400 flex-shrink-0"
+              ></span>
+              <p class="text-slate-400 text-sm leading-relaxed">
+                <strong class="text-slate-200">Despliegue Atómico:</strong> Updates
+                sin downtime en Bastion Host mediante scripts de rotación.
+              </p>
+            </li>
+          </ul>
+        </div>
+
+        <!-- 3. Frontend -->
+        <div
+          class="bg-slate-900/40 rounded-2xl p-8 border border-amber-500/20 hover:border-amber-500/40 transition-all duration-300 group"
+        >
+          <div class="flex items-center gap-4 mb-6">
+            <div
+              class="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center border border-amber-500/20 group-hover:scale-110 transition-transform duration-300"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6 text-amber-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-white">
+              3. Frontend (Performance)
+            </h3>
+          </div>
+          <ul class="space-y-4">
+            <li class="flex items-start gap-3">
+              <span
+                class="mt-1.5 w-1.5 h-1.5 rounded-full bg-amber-400 flex-shrink-0"
+              ></span>
+              <p class="text-slate-400 text-sm leading-relaxed">
+                <strong class="text-slate-200">Arquitectura de Islas:</strong> Astro
+                v5 (SSG). Zero JS por defecto, interactividad on-demand.
+              </p>
+            </li>
+            <li class="flex items-start gap-3">
+              <span
+                class="mt-1.5 w-1.5 h-1.5 rounded-full bg-amber-400 flex-shrink-0"
+              ></span>
+              <p class="text-slate-400 text-sm leading-relaxed">
+                <strong class="text-slate-200">Estilado Atómico:</strong> TailwindCSS.
+                Bundle CSS mínimo purgado en producción.
+              </p>
+            </li>
+            <li class="flex items-start gap-3">
+              <span
+                class="mt-1.5 w-1.5 h-1.5 rounded-full bg-amber-400 flex-shrink-0"
+              ></span>
+              <p class="text-slate-400 text-sm leading-relaxed">
+                <strong class="text-slate-200">Nginx Server:</strong> Imagen Docker
+                customizada. Cabeceras de caché eficientes y seguridad.
+              </p>
+            </li>
+          </ul>
+        </div>
+
+        <!-- 4. FinOps -->
+        <div
+          class="bg-slate-900/40 rounded-2xl p-8 border border-emerald-500/20 hover:border-emerald-500/40 transition-all duration-300 group"
+        >
+          <div class="flex items-center gap-4 mb-6">
+            <div
+              class="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 group-hover:scale-110 transition-transform duration-300"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6 text-emerald-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                ></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-white">4. FinOps (Cost & Ops)</h3>
+          </div>
+          <ul class="space-y-4">
+            <li class="flex items-start gap-3">
+              <span
+                class="mt-1.5 w-1.5 h-1.5 rounded-full bg-emerald-400 flex-shrink-0"
+              ></span>
+              <p class="text-slate-400 text-sm leading-relaxed">
+                <strong class="text-slate-200">Eficiencia Graviton:</strong> Migración
+                a instancias ARM64 (t4g.nano). Mejor ratio precio/rendimiento.
+              </p>
+            </li>
+            <li class="flex items-start gap-3">
+              <span
+                class="mt-1.5 w-1.5 h-1.5 rounded-full bg-emerald-400 flex-shrink-0"
+              ></span>
+              <p class="text-slate-400 text-sm leading-relaxed">
+                <strong class="text-slate-200">Control Presupuestario:</strong> AWS
+                Budgets con alertas granulares (Diaria $1 / Mensual $10).
+              </p>
+            </li>
+            <li class="flex items-start gap-3">
+              <span
+                class="mt-1.5 w-1.5 h-1.5 rounded-full bg-emerald-400 flex-shrink-0"
+              ></span>
+              <p class="text-slate-400 text-sm leading-relaxed">
+                <strong class="text-slate-200">Gestión de Assets:</strong> Lifecycle
+                Policies en S3 (Glacier) y Logs efímeros (24h).
+              </p>
+            </li>
+            <li class="flex items-start gap-3">
+              <span
+                class="mt-1.5 w-1.5 h-1.5 rounded-full bg-emerald-400 flex-shrink-0"
+              ></span>
+              <p class="text-slate-400 text-sm leading-relaxed">
+                <strong class="text-slate-200">WAF On-Demand:</strong> Firewall perimetral
+                provisionado pero desactivado (ahorro de coste) hasta ataque.
+              </p>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
 
-    <!-- DevOps Cycle Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      <!-- PLAN -->
-      <div
-        class="bg-slate-900/40 p-6 rounded-xl border border-indigo-500/20 hover:border-indigo-500/40 transition-colors group"
-      >
-        <div class="flex items-center gap-3 mb-3">
-          <span
-            class="w-8 h-8 rounded-lg bg-indigo-500/10 flex items-center justify-center text-indigo-400 font-bold text-xs border border-indigo-500/20 group-hover:bg-indigo-500/20 transition-colors"
-          >
-            01
-          </span>
-          <h3 class="text-white font-bold">PLAN</h3>
-        </div>
-        <p class="text-sm text-slate-400 leading-relaxed">
-          Diseño de arquitectura inmutable. Definición completa de recursos como
-          código (IaC) modular y escalable.
+    <!-- VISUAL DIVIDER -->
+    <div class="relative py-8">
+      <div class="absolute inset-0 flex items-center" aria-hidden="true">
+        <div class="w-full border-t border-slate-800"></div>
+      </div>
+      <div class="relative flex justify-center">
+        <span class="bg-slate-950 px-4 text-sm text-slate-500"
+          >DevOps Lifecycle</span
+        >
+      </div>
+    </div>
+
+    <!-- SUBSECTION 2: Original DevOps Cycle (Restored) -->
+    <div class="mt-16">
+      <div class="mb-12">
+        <h2 class="text-2xl md:text-3xl font-bold text-white mb-4">
+          Ciclo de Vida <span class="text-indigo-400">DevOps</span>
+        </h2>
+        <p class="text-slate-400 leading-relaxed max-w-2xl">
+          Visión detallada de cada fase del ciclo de vida del desarrollo
+          software implementada en este proyecto.
         </p>
-        <div class="mt-4 flex gap-2">
-          <span
-            class="text-[10px] px-2 py-1 bg-slate-950 rounded text-slate-500 border border-slate-800"
-            >Terraform</span
-          >
-        </div>
       </div>
 
-      <!-- CODE -->
-      <div
-        class="bg-slate-900/40 p-6 rounded-xl border border-indigo-500/20 hover:border-indigo-500/40 transition-colors group"
-      >
-        <div class="flex items-center gap-3 mb-3">
-          <span
-            class="w-8 h-8 rounded-lg bg-indigo-500/10 flex items-center justify-center text-indigo-400 font-bold text-xs border border-indigo-500/20 group-hover:bg-indigo-500/20 transition-colors"
-          >
-            02
-          </span>
-          <h3 class="text-white font-bold">CODE</h3>
+      <!-- DevOps Cycle Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- PLAN -->
+        <div
+          class="bg-slate-900/40 p-6 rounded-xl border border-indigo-500/20 hover:border-indigo-500/40 transition-colors group"
+        >
+          <div class="flex items-center gap-3 mb-3">
+            <span
+              class="w-8 h-8 rounded-lg bg-indigo-500/10 flex items-center justify-center text-indigo-400 font-bold text-xs border border-indigo-500/20 group-hover:bg-indigo-500/20 transition-colors"
+            >
+              01
+            </span>
+            <h3 class="text-white font-bold">PLAN</h3>
+          </div>
+          <p class="text-sm text-slate-400 leading-relaxed">
+            Diseño de arquitectura inmutable. Definición completa de recursos
+            como código (IaC) modular y escalable.
+          </p>
+          <div class="mt-4 flex gap-2">
+            <span
+              class="text-[10px] px-2 py-1 bg-slate-950 rounded text-slate-500 border border-slate-800"
+              >Terraform</span
+            >
+          </div>
         </div>
-        <p class="text-sm text-slate-400 leading-relaxed">
-          Frontend optimizado con Astro v5 (Zero-JS). Estilizado con
-          TailwindCSS. Backend Serverless en Python.
-        </p>
-        <div class="mt-4 flex gap-2">
-          <span
-            class="text-[10px] px-2 py-1 bg-slate-950 rounded text-slate-500 border border-slate-800"
-            >Astro</span
-          >
-          <span
-            class="text-[10px] px-2 py-1 bg-slate-950 rounded text-slate-500 border border-slate-800"
-            >Python</span
-          >
-        </div>
-      </div>
 
-      <!-- BUILD -->
-      <div
-        class="bg-slate-900/40 p-6 rounded-xl border border-purple-500/20 hover:border-purple-500/40 transition-colors group"
-      >
-        <div class="flex items-center gap-3 mb-3">
-          <span
-            class="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-400 font-bold text-xs border border-purple-500/20 group-hover:bg-purple-500/20 transition-colors"
-          >
-            03
-          </span>
-          <h3 class="text-white font-bold">BUILD</h3>
+        <!-- CODE -->
+        <div
+          class="bg-slate-900/40 p-6 rounded-xl border border-indigo-500/20 hover:border-indigo-500/40 transition-colors group"
+        >
+          <div class="flex items-center gap-3 mb-3">
+            <span
+              class="w-8 h-8 rounded-lg bg-indigo-500/10 flex items-center justify-center text-indigo-400 font-bold text-xs border border-indigo-500/20 group-hover:bg-indigo-500/20 transition-colors"
+            >
+              02
+            </span>
+            <h3 class="text-white font-bold">CODE</h3>
+          </div>
+          <p class="text-sm text-slate-400 leading-relaxed">
+            Frontend optimizado con Astro v5 (Zero-JS). Estilizado con
+            TailwindCSS. Backend Serverless en Python.
+          </p>
+          <div class="mt-4 flex gap-2">
+            <span
+              class="text-[10px] px-2 py-1 bg-slate-950 rounded text-slate-500 border border-slate-800"
+              >Astro</span
+            >
+            <span
+              class="text-[10px] px-2 py-1 bg-slate-950 rounded text-slate-500 border border-slate-800"
+              >Python</span
+            >
+          </div>
         </div>
-        <p class="text-sm text-slate-400 leading-relaxed">
-          Construcción de imágenes Docker Multi-stage. Optimización para
-          arquitectura ARM64 (AWS Graviton).
-        </p>
-        <div class="mt-4 flex gap-2">
-          <span
-            class="text-[10px] px-2 py-1 bg-slate-950 rounded text-slate-500 border border-slate-800"
-            >Docker</span
-          >
-          <span
-            class="text-[10px] px-2 py-1 bg-slate-950 rounded text-slate-500 border border-slate-800"
-            >ARM64</span
-          >
-        </div>
-      </div>
 
-      <!-- TEST -->
-      <div
-        class="bg-slate-900/40 p-6 rounded-xl border border-purple-500/20 hover:border-purple-500/40 transition-colors group"
-      >
-        <div class="flex items-center gap-3 mb-3">
-          <span
-            class="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-400 font-bold text-xs border border-purple-500/20 group-hover:bg-purple-500/20 transition-colors"
-          >
-            04
-          </span>
-          <h3 class="text-white font-bold">TEST</h3>
+        <!-- BUILD -->
+        <div
+          class="bg-slate-900/40 p-6 rounded-xl border border-purple-500/20 hover:border-purple-500/40 transition-colors group"
+        >
+          <div class="flex items-center gap-3 mb-3">
+            <span
+              class="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-400 font-bold text-xs border border-purple-500/20 group-hover:bg-purple-500/20 transition-colors"
+            >
+              03
+            </span>
+            <h3 class="text-white font-bold">BUILD</h3>
+          </div>
+          <p class="text-sm text-slate-400 leading-relaxed">
+            Construcción de imágenes Docker Multi-stage. Optimización para
+            arquitectura ARM64 (AWS Graviton).
+          </p>
+          <div class="mt-4 flex gap-2">
+            <span
+              class="text-[10px] px-2 py-1 bg-slate-950 rounded text-slate-500 border border-slate-800"
+              >Docker</span
+            >
+            <span
+              class="text-[10px] px-2 py-1 bg-slate-950 rounded text-slate-500 border border-slate-800"
+              >ARM64</span
+            >
+          </div>
         </div>
-        <p class="text-sm text-slate-400 leading-relaxed">
-          Validación de tipos estáticos. Linting de código y seguridad (Security
-          Scans) en CI Pipeline.
-        </p>
-        <div class="mt-4 flex gap-2">
-          <span
-            class="text-[10px] px-2 py-1 bg-slate-950 rounded text-slate-500 border border-slate-800"
-            >CI/CD</span
-          >
-        </div>
-      </div>
 
-      <!-- RELEASE -->
-      <div
-        class="bg-slate-900/40 p-6 rounded-xl border border-emerald-500/20 hover:border-emerald-500/40 transition-colors group"
-      >
-        <div class="flex items-center gap-3 mb-3">
-          <span
-            class="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400 font-bold text-xs border border-emerald-500/20 group-hover:bg-emerald-500/20 transition-colors"
-          >
-            05
-          </span>
-          <h3 class="text-white font-bold">RELEASE</h3>
+        <!-- TEST -->
+        <div
+          class="bg-slate-900/40 p-6 rounded-xl border border-purple-500/20 hover:border-purple-500/40 transition-colors group"
+        >
+          <div class="flex items-center gap-3 mb-3">
+            <span
+              class="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-400 font-bold text-xs border border-purple-500/20 group-hover:bg-purple-500/20 transition-colors"
+            >
+              04
+            </span>
+            <h3 class="text-white font-bold">TEST</h3>
+          </div>
+          <p class="text-sm text-slate-400 leading-relaxed">
+            Validación de tipos estáticos. Linting de código y seguridad
+            (Security Scans) en CI Pipeline.
+          </p>
+          <div class="mt-4 flex gap-2">
+            <span
+              class="text-[10px] px-2 py-1 bg-slate-950 rounded text-slate-500 border border-slate-800"
+              >CI/CD</span
+            >
+          </div>
         </div>
-        <p class="text-sm text-slate-400 leading-relaxed">
-          Versionado Semántico (Git Tags). Publicación de artefactos inmutables
-          en AWS ECR.
-        </p>
-        <div class="mt-4 flex gap-2">
-          <span
-            class="text-[10px] px-2 py-1 bg-slate-950 rounded text-slate-500 border border-slate-800"
-            >Git</span
-          >
-          <span
-            class="text-[10px] px-2 py-1 bg-slate-950 rounded text-slate-500 border border-slate-800"
-            >ECR</span
-          >
-        </div>
-      </div>
 
-      <!-- DEPLOY -->
-      <div
-        class="bg-slate-900/40 p-6 rounded-xl border border-emerald-500/20 hover:border-emerald-500/40 transition-colors group"
-      >
-        <div class="flex items-center gap-3 mb-3">
-          <span
-            class="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400 font-bold text-xs border border-emerald-500/20 group-hover:bg-emerald-500/20 transition-colors"
-          >
-            06
-          </span>
-          <h3 class="text-white font-bold">DEPLOY</h3>
+        <!-- RELEASE -->
+        <div
+          class="bg-slate-900/40 p-6 rounded-xl border border-emerald-500/20 hover:border-emerald-500/40 transition-colors group"
+        >
+          <div class="flex items-center gap-3 mb-3">
+            <span
+              class="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400 font-bold text-xs border border-emerald-500/20 group-hover:bg-emerald-500/20 transition-colors"
+            >
+              05
+            </span>
+            <h3 class="text-white font-bold">RELEASE</h3>
+          </div>
+          <p class="text-sm text-slate-400 leading-relaxed">
+            Versionado Semántico (Git Tags). Publicación de artefactos
+            inmutables en AWS ECR.
+          </p>
+          <div class="mt-4 flex gap-2">
+            <span
+              class="text-[10px] px-2 py-1 bg-slate-950 rounded text-slate-500 border border-slate-800"
+              >Git</span
+            >
+            <span
+              class="text-[10px] px-2 py-1 bg-slate-950 rounded text-slate-500 border border-slate-800"
+              >ECR</span
+            >
+          </div>
         </div>
-        <p class="text-sm text-slate-400 leading-relaxed">
-          Despliegue automatizado en Amazon EC2 (Spot). Sincronización de Assets
-          estáticos en S3 + CloudFront.
-        </p>
-        <div class="mt-4 flex gap-2">
-          <span
-            class="text-[10px] px-2 py-1 bg-slate-950 rounded text-slate-500 border border-slate-800"
-            >EC2</span
-          >
-          <span
-            class="text-[10px] px-2 py-1 bg-slate-950 rounded text-slate-500 border border-slate-800"
-            >S3</span
-          >
-        </div>
-      </div>
 
-      <!-- OPERATE -->
-      <div
-        class="bg-slate-900/40 p-6 rounded-xl border border-cyan-500/20 hover:border-cyan-500/40 transition-colors group"
-      >
-        <div class="flex items-center gap-3 mb-3">
-          <span
-            class="w-8 h-8 rounded-lg bg-cyan-500/10 flex items-center justify-center text-cyan-400 font-bold text-xs border border-cyan-500/20 group-hover:bg-cyan-500/20 transition-colors"
-          >
-            07
-          </span>
-          <h3 class="text-white font-bold">OPERATE</h3>
+        <!-- DEPLOY -->
+        <div
+          class="bg-slate-900/40 p-6 rounded-xl border border-emerald-500/20 hover:border-emerald-500/40 transition-colors group"
+        >
+          <div class="flex items-center gap-3 mb-3">
+            <span
+              class="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400 font-bold text-xs border border-emerald-500/20 group-hover:bg-emerald-500/20 transition-colors"
+            >
+              06
+            </span>
+            <h3 class="text-white font-bold">DEPLOY</h3>
+          </div>
+          <p class="text-sm text-slate-400 leading-relaxed">
+            Despliegue automatizado en Amazon EC2 (Spot). Sincronización de
+            Assets estáticos en S3 + CloudFront.
+          </p>
+          <div class="mt-4 flex gap-2">
+            <span
+              class="text-[10px] px-2 py-1 bg-slate-950 rounded text-slate-500 border border-slate-800"
+              >EC2</span
+            >
+            <span
+              class="text-[10px] px-2 py-1 bg-slate-950 rounded text-slate-500 border border-slate-800"
+              >S3</span
+            >
+          </div>
         </div>
-        <p class="text-sm text-slate-400 leading-relaxed">
-          Hardening de sistema operativo (Amazon Linux 2023). Gestión de
-          seguridad perimetral (WAF/Security Groups).
-        </p>
-        <div class="mt-4 flex gap-2">
-          <span
-            class="text-[10px] px-2 py-1 bg-slate-950 rounded text-slate-500 border border-slate-800"
-            >Linux</span
-          >
-          <span
-            class="text-[10px] px-2 py-1 bg-slate-950 rounded text-slate-500 border border-slate-800"
-            >WAF</span
-          >
-        </div>
-      </div>
 
-      <!-- MONITOR -->
-      <div
-        class="bg-slate-900/40 p-6 rounded-xl border border-cyan-500/20 hover:border-cyan-500/40 transition-colors group"
-      >
-        <div class="flex items-center gap-3 mb-3">
-          <span
-            class="w-8 h-8 rounded-lg bg-cyan-500/10 flex items-center justify-center text-cyan-400 font-bold text-xs border border-cyan-500/20 group-hover:bg-cyan-500/20 transition-colors"
-          >
-            08
-          </span>
-          <h3 class="text-white font-bold">MONITOR</h3>
+        <!-- OPERATE -->
+        <div
+          class="bg-slate-900/40 p-6 rounded-xl border border-cyan-500/20 hover:border-cyan-500/40 transition-colors group"
+        >
+          <div class="flex items-center gap-3 mb-3">
+            <span
+              class="w-8 h-8 rounded-lg bg-cyan-500/10 flex items-center justify-center text-cyan-400 font-bold text-xs border border-cyan-500/20 group-hover:bg-cyan-500/20 transition-colors"
+            >
+              07
+            </span>
+            <h3 class="text-white font-bold">OPERATE</h3>
+          </div>
+          <p class="text-sm text-slate-400 leading-relaxed">
+            Hardening de sistema operativo (Amazon Linux 2023). Gestión de
+            seguridad perimetral (WAF/Security Groups).
+          </p>
+          <div class="mt-4 flex gap-2">
+            <span
+              class="text-[10px] px-2 py-1 bg-slate-950 rounded text-slate-500 border border-slate-800"
+              >Linux</span
+            >
+            <span
+              class="text-[10px] px-2 py-1 bg-slate-950 rounded text-slate-500 border border-slate-800"
+              >WAF</span
+            >
+          </div>
         </div>
-        <p class="text-sm text-slate-400 leading-relaxed">
-          Observabilidad nativa con CloudWatch. Estrategias FinOps para
-          optimización continua de costes.
-        </p>
-        <div class="mt-4 flex gap-2">
-          <span
-            class="text-[10px] px-2 py-1 bg-slate-950 rounded text-slate-500 border border-slate-800"
-            >CloudWatch</span
-          >
-          <span
-            class="text-[10px] px-2 py-1 bg-slate-950 rounded text-slate-500 border border-slate-800"
-            >FinOps</span
-          >
+
+        <!-- MONITOR -->
+        <div
+          class="bg-slate-900/40 p-6 rounded-xl border border-cyan-500/20 hover:border-cyan-500/40 transition-colors group"
+        >
+          <div class="flex items-center gap-3 mb-3">
+            <span
+              class="w-8 h-8 rounded-lg bg-cyan-500/10 flex items-center justify-center text-cyan-400 font-bold text-xs border border-cyan-500/20 group-hover:bg-cyan-500/20 transition-colors"
+            >
+              08
+            </span>
+            <h3 class="text-white font-bold">MONITOR</h3>
+          </div>
+          <p class="text-sm text-slate-400 leading-relaxed">
+            Observabilidad nativa con CloudWatch. Estrategias FinOps para
+            optimización continua de costes.
+          </p>
+          <div class="mt-4 flex gap-2">
+            <span
+              class="text-[10px] px-2 py-1 bg-slate-950 rounded text-slate-500 border border-slate-800"
+              >CloudWatch</span
+            >
+            <span
+              class="text-[10px] px-2 py-1 bg-slate-950 rounded text-slate-500 border border-slate-800"
+              >FinOps</span
+            >
+          </div>
         </div>
       </div>
     </div>
