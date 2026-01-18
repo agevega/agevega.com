@@ -1,5 +1,7 @@
 ---
-const version = import.meta.env.PUBLIC_APP_VERSION || "dev";
+import { PUBLIC_APP_VERSION } from "astro:env/client";
+
+const version = PUBLIC_APP_VERSION;
 ---
 
 <section
