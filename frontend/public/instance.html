@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Instance Diagnostics | Agevega</title>
+    <style>
+      :root {
+        --bg-color: #0d1117;
+        --terminal-bg: #161b22;
+        --text-color: #c9d1d9;
+        --accent-color: #2ea043;
+        --accent-dim: rgba(46, 160, 67, 0.15);
+        --border-color: #30363d;
+        --font-mono: "JetBrains Mono", "Fira Code", "Consolas", monospace;
+      }
+
+      body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        font-family: var(--font-mono);
+        margin: 0;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        line-height: 1.6;
+      }
+
+      .terminal-window {
+        width: 100%;
+        max-width: 800px;
+        background: var(--terminal-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        overflow: hidden;
+        animation: fadeIn 0.5s ease-out;
+      }
+
+      .terminal-header {
+        background: #010409;
+        padding: 10px 15px;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+      }
+
+      .red {
+        background-color: #ff5f56;
+      }
+      .yellow {
+        background-color: #ffbd2e;
+      }
+      .green {
+        background-color: #27c93f;
+      }
+
+      .title {
+        margin-left: 10px;
+        font-size: 14px;
+        color: #8b949e;
+      }
+
+      .terminal-body {
+        padding: 24px;
+      }
+
+      h1,
+      h2 {
+        margin: 0 0 16px 0;
+        color: var(--accent-color);
+      }
+
+      h1 {
+        font-size: 24px;
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 8px;
+      }
+      h2 {
+        font-size: 18px;
+        margin-top: 24px;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 16px;
+      }
+
+      .metric-card {
+        background: rgba(255, 255, 255, 0.03);
+        padding: 12px;
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+      }
+
+      .label {
+        font-size: 12px;
+        color: #8b949e;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 4px;
+      }
+
+      .value {
+        font-size: 16px;
+        font-weight: bold;
+      }
+
+      .value.highlight {
+        color: #58a6ff;
+      }
+
+      .status-indicator {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        background-color: #3fb950;
+        border-radius: 50%;
+        margin-right: 6px;
+        box-shadow: 0 0 8px rgba(63, 185, 80, 0.4);
+      }
+
+      .log-area {
+        margin-top: 20px;
+        background: #0d1117;
+        border: 1px solid var(--border-color);
+        padding: 12px;
+        border-radius: 4px;
+        height: 150px;
+        overflow-y: auto;
+        font-size: 12px;
+      }
+
+      .log-entry {
+        margin-bottom: 4px;
+      }
+      .log-time {
+        color: #8b949e;
+        margin-right: 8px;
+      }
+      .log-msg {
+        color: #c9d1d9;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Scan line effect */
+      .scan-line {
+        width: 100%;
+        height: 100px;
+        z-index: 10;
+        background: linear-gradient(
+          0deg,
+          rgba(0, 0, 0, 0) 0%,
+          rgba(46, 160, 67, 0.05) 50%,
+          rgba(0, 0, 0, 0) 100%
+        );
+        opacity: 0.1;
+        position: absolute;
+        bottom: 100%;
+        animation: scanline 10s linear infinite;
+        pointer-events: none;
+      }
+
+      @keyframes scanline {
+        0% {
+          bottom: 100%;
+        }
+        100% {
+          bottom: -100px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="terminal-window">
+      <!-- Scanline Effect -->
+      <div class="scan-line"></div>
+
+      <div class="terminal-header">
+        <div class="dot red" onclick="window.close()"></div>
+        <div class="dot yellow"></div>
+        <div class="dot green"></div>
+        <div class="title">admin@agevega-instance:~/diagnostics</div>
+      </div>
+
+      <div class="terminal-body">
+        <h1>SYSTEM DIAGNOSTICS</h1>
+
+        <!-- Static Infrastructure Info -->
+        <h2>_INFRASTRUCTURE</h2>
+        <div class="grid">
+          <div class="metric-card">
+            <div class="label">Cloud Provider</div>
+            <div class="value highlight">AWS</div>
+          </div>
+          <div class="metric-card">
+            <div class="label">Region</div>
+            <div class="value">eu-south-2 (Spain)</div>
+          </div>
+          <div class="metric-card">
+            <div class="label">Instance Type</div>
+            <div class="value">t4g.nano</div>
+          </div>
+          <div class="metric-card">
+            <div class="label">Architecture</div>
+            <div class="value text-green">ARM64 (Graviton2)</div>
+          </div>
+          <div class="metric-card">
+            <div class="label">Orchestration</div>
+            <div class="value">Docker / Nginx</div>
+          </div>
+          <div class="metric-card">
+            <div class="label">IaC State</div>
+            <div class="value">Terraform Managed</div>
+          </div>
+        </div>
+
+        <!-- Dynamic Client Info -->
+        <h2>_CLIENT_TELEMETRY</h2>
+        <div class="grid">
+          <div class="metric-card">
+            <div class="label">Your IP (Visible to Edge)</div>
+            <div class="value" id="client-ip">Resolving...</div>
+          </div>
+          <div class="metric-card">
+            <div class="label">Edge Latency</div>
+            <div class="value" id="latency">Pinging...</div>
+          </div>
+          <div class="metric-card">
+            <div class="label">Connection Protocol</div>
+            <div class="value" id="protocol">Checking...</div>
+          </div>
+          <div class="metric-card">
+            <div class="label">Viewport</div>
+            <div class="value" id="viewport">Calculating...</div>
+          </div>
+        </div>
+
+        <!-- Fake Logs -->
+        <h2>_SYSTEM_LOGS</h2>
+        <div class="log-area" id="console-logs">
+          <!-- Logs injected via JS -->
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // --- Utilities ---
+      function log(msg) {
+        const area = document.getElementById("console-logs");
+        const entry = document.createElement("div");
+        entry.className = "log-entry";
+
+        const time = new Date().toISOString().split("T")[1].split(".")[0];
+        entry.innerHTML = `<span class="log-time">[${time}]</span><span class="log-msg">${msg}</span>`;
+
+        area.appendChild(entry);
+        area.scrollTop = area.scrollHeight;
+      }
+
+      // --- Client Stats ---
+      function updateClientStats() {
+        // Viewport
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+        document.getElementById("viewport").innerText = `${w}x${h}px`;
+
+        // Protocol
+        const protocol = window.location.protocol
+          .replace(":", "")
+          .toUpperCase();
+        document.getElementById("protocol").innerText = `${protocol} / ${
+          navigator.connection ? navigator.connection.effectiveType : "Unknown"
+        }`;
+
+        log("Client viewport metrics captured.");
+        log(`Detected protocol: ${protocol}`);
+      }
+
+      // --- Network Tests ---
+      async function measureLatency() {
+        log("Initiating ICMP heartbeat simulation...");
+        const start = performance.now();
+        try {
+          // Fetching self header to avoid CORS issues and measure RTT to the origin/edge
+          await fetch(window.location.href, {
+            method: "HEAD",
+            cache: "no-cache",
+          });
+          const end = performance.now();
+          const rtt = Math.round(end - start);
+
+          const el = document.getElementById("latency");
+          el.innerText = `${rtt}ms`;
+
+          if (rtt < 50) el.style.color = "#27c93f";
+          else if (rtt < 150) el.style.color = "#ffbd2e";
+          else el.style.color = "#ff5f56";
+
+          log(`RTT check complete: ${rtt}ms`);
+        } catch (e) {
+          document.getElementById("latency").innerText = "Timeout";
+          log("RTT check failed: Connection interrupted.");
+        }
+      }
+
+      // --- IP Detection (Simulated or Real if possible) ---
+      async function getIP() {
+        try {
+          // Using a free IP echo service is risky for longevity, so effectively we might mock this
+          // or use a safe public endpoint.
+          // For this demo, let's use a reliable public JSON endpoint if available, or just show redacted.
+          // Actually, let's use a clever trick: we can't easily get the client IP without an echo server.
+          // We will display a placeholder to keep it robust without external dependencies.
+
+          document.getElementById("client-ip").innerText = "Client-Side Hidden";
+          log("IP Address masked for privacy.");
+
+          /* 
+                // Uncomment if you want to use a public dependency
+                const res = await fetch('https://api.ipify.org?format=json');
+                const data = await res.json();
+                document.getElementById('client-ip').innerText = data.ip;
+                log(`Client IP Resolved: ${data.ip}`); 
+                */
+        } catch (e) {
+          document.getElementById("client-ip").innerText = "Unknown";
+        }
+      }
+
+      // --- Initialization ---
+      window.addEventListener("load", () => {
+        log("System initialized.");
+        log("Loading kernel modules... OK");
+
+        updateClientStats();
+        getIP();
+
+        setTimeout(() => {
+          measureLatency();
+        }, 800);
+
+        // Periodically refresh latency
+        setInterval(measureLatency, 5000);
+      });
+
+      window.addEventListener("resize", updateClientStats);
+    </script>
+  </body>
+</html>
