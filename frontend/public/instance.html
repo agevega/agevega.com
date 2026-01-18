@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0d1117" />
     <title>Instance Diagnostics | Agevega</title>
     <style>
       :root {
@@ -269,6 +270,10 @@
                 <div class="value" id="protocol">Checking...</div>
             </div>
             <div class="metric-card">
+                <div class="label">Network Type</div>
+                <div class="value" id="network-type">Unknown</div>
+            </div>
+            <div class="metric-card">
                 <div class="label">Viewport</div>
                 <div class="value" id="viewport">Calculating...</div>
             </div>
@@ -356,6 +361,7 @@
                 
                 const data = await res.json();
                 
+                // Safe DOM updates
                 document.getElementById("az").textContent = data.availabilityZone || TEXT.unknown;
                 document.getElementById("instance-id").textContent = data.instanceId || TEXT.unknown;
                 
@@ -381,8 +387,10 @@
             document.getElementById("viewport").textContent = `${w}x${h}px`;
 
             const protocol = window.location.protocol.replace(":", "").toUpperCase();
+            document.getElementById("protocol").textContent = protocol;
+
             const connType = navigator.connection ? navigator.connection.effectiveType : "Unknown";
-            document.getElementById("protocol").textContent = `${protocol} / ${connType}`;
+            document.getElementById("network-type").textContent = connType.toUpperCase();
         }
 
         async function getIP() {
