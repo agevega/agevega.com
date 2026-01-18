@@ -29,11 +29,11 @@
             >
           </h2>
           <p class="text-slate-400 text-lg leading-relaxed max-w-3xl">
-            Diseñado desde cero siguiendo principios <strong
-              >Cloud Native</strong
-            >, <strong>Zero-Trust Security</strong> y eficiencia de costes <strong
-              >FinOps</strong
-            >.
+            En esta sección se describe el diseño de la arquitectura y la
+            ingeniería detrás de esta página web. Diseñado desde cero siguiendo
+            principios <strong>Cloud Native</strong>, <strong
+              >Zero-Trust Security</strong
+            > y eficiencia de costes <strong>FinOps</strong>.
           </p>
         </div>
         <div class="flex-shrink-0">
@@ -91,8 +91,10 @@
                 class="mt-1.5 w-1.5 h-1.5 rounded-full bg-indigo-400 flex-shrink-0"
               ></span>
               <p class="text-slate-400 text-sm leading-relaxed">
-                <strong class="text-slate-200">Aprovisionamiento Total:</strong> 100%
-                Terraform. Estado remoto en S3 con bloqueo DynamoDB.
+                <strong class="text-slate-200"
+                  >Infraestructura como Código (IaC):</strong
+                > Aprovisionamiento 100% automatizado con Terraform sobre AWS. Estado
+                remoto en S3 con bloqueo DynamoDB.
               </p>
             </li>
             <li class="flex items-start gap-3">
@@ -119,7 +121,7 @@
               ></span>
               <p class="text-slate-400 text-sm leading-relaxed">
                 <strong class="text-slate-200">Cómputo Aislado:</strong> EC2 en subred
-                privada. Acceso solo vía CloudFront (Prefix Lists).
+                privada. Acceso solo vía CloudFront.
               </p>
             </li>
             <li class="flex items-start gap-3">
@@ -183,8 +185,8 @@
                 class="mt-1.5 w-1.5 h-1.5 rounded-full bg-purple-400 flex-shrink-0"
               ></span>
               <p class="text-slate-400 text-sm leading-relaxed">
-                <strong class="text-slate-200">Build Multi-Arch:</strong> Docker builds
-                optimizados para ARM64 (compatible con Graviton).
+                <strong class="text-slate-200">Build Multi-Arch:</strong> Imágenes
+                Docker optimizadas para arquitecturas ARM64 y AMD64.
               </p>
             </li>
             <li class="flex items-start gap-3">
@@ -193,7 +195,7 @@
               ></span>
               <p class="text-slate-400 text-sm leading-relaxed">
                 <strong class="text-slate-200">Despliegue Atómico:</strong> Updates
-                sin downtime en Bastion Host mediante scripts de rotación.
+                sin downtime en EC2 mediante scripts de rotación.
               </p>
             </li>
           </ul>
@@ -230,7 +232,7 @@
               ></span>
               <p class="text-slate-400 text-sm leading-relaxed">
                 <strong class="text-slate-200">Arquitectura de Islas:</strong> Astro
-                v5 (SSG). Zero JS por defecto, interactividad on-demand.
+                v5 (SSG). Zero JS por defecto.
               </p>
             </li>
             <li class="flex items-start gap-3">
@@ -248,7 +250,7 @@
               ></span>
               <p class="text-slate-400 text-sm leading-relaxed">
                 <strong class="text-slate-200">Nginx Server:</strong> Imagen Docker
-                customizada. Cabeceras de caché eficientes y seguridad.
+                customizada y optimizada. Cabeceras de caché eficientes y seguridad.
               </p>
             </li>
           </ul>
@@ -285,15 +287,6 @@
                 class="mt-1.5 w-1.5 h-1.5 rounded-full bg-emerald-400 flex-shrink-0"
               ></span>
               <p class="text-slate-400 text-sm leading-relaxed">
-                <strong class="text-slate-200">Eficiencia Graviton:</strong> Migración
-                a instancias ARM64 (t4g.nano). Mejor ratio precio/rendimiento.
-              </p>
-            </li>
-            <li class="flex items-start gap-3">
-              <span
-                class="mt-1.5 w-1.5 h-1.5 rounded-full bg-emerald-400 flex-shrink-0"
-              ></span>
-              <p class="text-slate-400 text-sm leading-relaxed">
                 <strong class="text-slate-200">Control Presupuestario:</strong> AWS
                 Budgets con alertas granulares (Diaria $1 / Mensual $10).
               </p>
@@ -303,8 +296,9 @@
                 class="mt-1.5 w-1.5 h-1.5 rounded-full bg-emerald-400 flex-shrink-0"
               ></span>
               <p class="text-slate-400 text-sm leading-relaxed">
-                <strong class="text-slate-200">Gestión de Assets:</strong> Lifecycle
-                Policies en S3 (Glacier) y Logs efímeros (24h).
+                <strong class="text-slate-200">Eficiencia Graviton:</strong> Migración
+                a instancias ARM64. Mejor ratio precio/rendimiento frente a arquitecturas
+                x86 tradicionales.
               </p>
             </li>
             <li class="flex items-start gap-3">
@@ -312,8 +306,17 @@
                 class="mt-1.5 w-1.5 h-1.5 rounded-full bg-emerald-400 flex-shrink-0"
               ></span>
               <p class="text-slate-400 text-sm leading-relaxed">
-                <strong class="text-slate-200">WAF On-Demand:</strong> Firewall perimetral
-                provisionado pero desactivado (ahorro de coste) hasta ataque.
+                <strong class="text-slate-200">Gestión de Assets:</strong> Lifecycle
+                Policies en S3 (Glacier) y ECR. Logs efímeros (24h).
+              </p>
+            </li>
+            <li class="flex items-start gap-3">
+              <span
+                class="mt-1.5 w-1.5 h-1.5 rounded-full bg-emerald-400 flex-shrink-0"
+              ></span>
+              <p class="text-slate-400 text-sm leading-relaxed">
+                <strong class="text-slate-200">Resources On-Demand:</strong> NAT Gateway
+                y WAF provisionados pero desactivados para ahorro de costes.
               </p>
             </li>
           </ul>
