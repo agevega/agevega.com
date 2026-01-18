@@ -226,17 +226,17 @@
       <main>
         <h1>SYSTEM DIAGNOSTICS</h1>
 
-        <!-- Static Infrastructure Info -->
+            <!-- Static Infrastructure Info -->
         <section aria-labelledby="infra-title">
             <h2 id="infra-title">_INFRASTRUCTURE</h2>
             <div class="grid">
             <div class="metric-card">
                 <div class="label">Cloud Provider</div>
-                <div class="value highlight">AWS</div>
+                <div class="value highlight" id="provider">Fetching...</div>
             </div>
             <div class="metric-card">
                 <div class="label">Region</div>
-                <div class="value">eu-south-2 (Spain)</div>
+                <div class="value" id="region">Fetching...</div>
             </div>
             <div class="metric-card">
                 <div class="label">Availability Zone</div>
@@ -252,7 +252,7 @@
             </div>
             <div class="metric-card">
                 <div class="label">Architecture</div>
-                <div class="value text-green">ARM64 (Graviton2)</div>
+                <div class="value text-green" id="architecture">Fetching...</div>
             </div>
             </div>
         </section>
@@ -299,13 +299,6 @@
         // --- Constants & Config ---
         const CONFIG = {
             apiTimeout: 3000
-        };
-
-        const TEXT = {
-            unknown: "Unknown",
-            local: "Local (Simulated)",
-            localId: "i-local-dev-env",
-            localhost: "Localhost"
         };
 
         // --- Logger ---
@@ -361,23 +354,32 @@
                 
                 const data = await res.json();
                 
-                // Safe DOM updates
-                document.getElementById("az").textContent = data.availabilityZone || TEXT.unknown;
-                document.getElementById("instance-id").textContent = data.instanceId || TEXT.unknown;
+                // Safe DOM updates with defaults handled by entrypoint or fallback here
+                document.getElementById("provider").textContent = data.provider || "Unknown";
+                document.getElementById("region").textContent = data.region || "Unknown";
+                document.getElementById("az").textContent = data.availabilityZone || "Unknown";
+                document.getElementById("instance-id").textContent = data.instanceId || "Unknown";
+                document.getElementById("instance-type").textContent = data.instanceType || "Unknown";
                 
-                const type = (data.instanceType && data.instanceType !== "Unknown (Local/Error)") 
-                             ? data.instanceType 
-                             : "t4g.nano";
-                document.getElementById("instance-type").textContent = type;
+                let arch = data.architecture || "Unknown";
+                // Cosmetic cleanup for arch if needed, but raw is fine too.
+                // aarch64 -> ARM64 (Graviton)
+                if (arch === "aarch64") arch = "ARM64 (Graviton)";
+                if (arch === "x86_64") arch = "x86_64 (Intel/AMD)";
+                document.getElementById("architecture").textContent = arch;
 
                 Logger.info("Metadata retrieved successfully.");
             } catch (e) {
                 Logger.warn(`Metadata fetch failed: ${e.message}`);
                 Logger.info("Falling back to local/default configuration.");
                 
-                document.getElementById("az").textContent = TEXT.local;
-                document.getElementById("instance-id").textContent = TEXT.localId;
-                document.getElementById("instance-type").textContent = TEXT.localhost;
+                // Fallback for visual confirmation if meta.json 404s (e.g. not generated yet)
+                document.getElementById("provider").textContent = "Localhost";
+                document.getElementById("region").textContent = "Unknown";
+                document.getElementById("az").textContent = "Unknown";
+                document.getElementById("instance-id").textContent = "Unknown";
+                document.getElementById("instance-type").textContent = "Unknown";
+                document.getElementById("architecture").textContent = "Unknown";
             }
         }
 
