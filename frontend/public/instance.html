@@ -218,20 +218,20 @@
             <div class="value">eu-south-2 (Spain)</div>
           </div>
           <div class="metric-card">
+            <div class="label">Availability Zone</div>
+            <div class="value" id="az">Fetching...</div>
+          </div>
+          <div class="metric-card">
+            <div class="label">Instance ID</div>
+            <div class="value" id="instance-id">Fetching...</div>
+          </div>
+          <div class="metric-card">
             <div class="label">Instance Type</div>
-            <div class="value">t4g.nano</div>
+            <div class="value" id="instance-type">Fetching...</div>
           </div>
           <div class="metric-card">
             <div class="label">Architecture</div>
             <div class="value text-green">ARM64 (Graviton2)</div>
-          </div>
-          <div class="metric-card">
-            <div class="label">Orchestration</div>
-            <div class="value">Docker / Nginx</div>
-          </div>
-          <div class="metric-card">
-            <div class="label">IaC State</div>
-            <div class="value">Terraform Managed</div>
           </div>
         </div>
 
@@ -276,6 +276,35 @@
 
         area.appendChild(entry);
         area.scrollTop = area.scrollHeight;
+      }
+
+      // --- Metadata Fetching ---
+      async function fetchMetadata() {
+        log("Querying instance metadata service (IMDSv2 via proxy)...");
+        try {
+          const res = await fetch("/meta.json");
+          if (!res.ok) throw new Error("Metadata unreachable");
+          
+          const data = await res.json();
+          
+          document.getElementById("az").innerText = data.availabilityZone || "Unknown";
+          document.getElementById("instance-id").innerText = data.instanceId || "Unknown";
+          
+          // Use fetched type or fallback to known t4g.nano
+          const type = (data.instanceType && data.instanceType !== "Unknown (Local/Error)") 
+                       ? data.instanceType 
+                       : "t4g.nano";
+          document.getElementById("instance-type").innerText = type;
+
+          log("Metadata retrieved successfully.");
+        } catch (e) {
+            log("Metadata fetch failed: " + e.message);
+            log("Falling back to local/default configuration.");
+            
+            document.getElementById("az").innerText = "Local (Simulated)";
+            document.getElementById("instance-id").innerText = "i-local-dev-env";
+            document.getElementById("instance-type").innerText = "Locahost";
+        }
       }
 
       // --- Client Stats ---
@@ -327,22 +356,8 @@
       // --- IP Detection (Simulated or Real if possible) ---
       async function getIP() {
         try {
-          // Using a free IP echo service is risky for longevity, so effectively we might mock this
-          // or use a safe public endpoint.
-          // For this demo, let's use a reliable public JSON endpoint if available, or just show redacted.
-          // Actually, let's use a clever trick: we can't easily get the client IP without an echo server.
-          // We will display a placeholder to keep it robust without external dependencies.
-
           document.getElementById("client-ip").innerText = "Client-Side Hidden";
           log("IP Address masked for privacy.");
-
-          /* 
-                // Uncomment if you want to use a public dependency
-                const res = await fetch('https://api.ipify.org?format=json');
-                const data = await res.json();
-                document.getElementById('client-ip').innerText = data.ip;
-                log(`Client IP Resolved: ${data.ip}`); 
-                */
         } catch (e) {
           document.getElementById("client-ip").innerText = "Unknown";
         }
@@ -353,6 +368,7 @@
         log("System initialized.");
         log("Loading kernel modules... OK");
 
+        fetchMetadata();
         updateClientStats();
         getIP();
 
