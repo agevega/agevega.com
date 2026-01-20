@@ -15,9 +15,9 @@ El proyecto funciona como un **monorepo** que centraliza tanto el desarrollo del
 
 Aunque el objetivo final es servir un sitio web estático, el proyecto se aborda con una **perspectiva de ingeniería de infraestructura**. Se priorizan prácticas como:
 
-- **Infraestructura como Código (IaC):** Todo el entorno se define y provisiona mediante Terraform, evitando configuraciones manuales irreproducibles.
-- **Security First:** Implementación de auditoría (CloudTrail), cumplimiento de configuración (AWS Config) y principios de mínimo privilegio desde el inicio.
-- **Soberanía:** Control granular sobre la red y la distribución de contenido, evitando plataformas PaaS "caja negra" en favor de una arquitectura AWS nativa.
+- **Infraestructura como Código (IaC):** Todo el entorno se define y provisiona mediante Terraform.
+- **Security First:** Auditoría (CloudTrail), AWS Config y principios de mínimo privilegio.
+- **Soberanía:** Arquitectura AWS nativa, evitando dependencias de plataformas PaaS.
 
 ---
 
@@ -27,11 +27,11 @@ La solución se compone de dos capas principales: Aplicación y Plataforma.
 
 ### 1. Frontend (Aplicación)
 
-Desarrollado con **Astro** para generar un sitio puramente estático (SSG). Esto garantiza:
+Desarrollado con **Astro** para generar un sitio estático (SSG), operativizado mediante contenedores Docker.
 
-- Alto rendimiento (Zero JS por defecto).
-- Seguridad (superficie de ataque reducida al no haber servidor de aplicaciones).
-- Costes operativos mínimos (alojamiento en S3 + CloudFront).
+- **Alto rendimiento:** Zero JS por defecto (Astro).
+- **Containerización:** Empaquetado en Docker con Nginx como servidor web.
+- **Alojamiento:** Desplegado en instancias EC2 (Bastion) dentro de una VPC segura.
 
 ### 2. Infraestructura (Plataforma)
 
