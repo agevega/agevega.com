@@ -7,7 +7,7 @@ provider "aws" {
 # Monthly Budget ($10)
 # ------------------------------------------------------------------------------
 resource "aws_budgets_budget" "monthly" {
-  name              = "${var.project_name}-monthly-budget" # "My 10$ Budget"
+  name              = "My 10$ Budget"
   budget_type       = "COST"
   limit_amount      = var.monthly_budget_amount
   limit_unit        = "USD"
@@ -51,7 +51,7 @@ resource "aws_budgets_budget" "monthly" {
   }
 
   tags = merge(var.common_tags, {
-    Name   = "${var.project_name}-monthly-budget"
+    Name   = "My 10$ Budget"
     Module = "00-setup/02-budgets"
   })
 }
@@ -60,7 +60,7 @@ resource "aws_budgets_budget" "monthly" {
 # Daily Budget ($1)
 # ------------------------------------------------------------------------------
 resource "aws_budgets_budget" "daily" {
-  name              = "${var.project_name}-daily-budget" # "My Daily 1$ Budget"
+  name              = "My Daily 1$ Budget"
   budget_type       = "COST"
   limit_amount      = var.daily_budget_amount
   limit_unit        = "USD"
@@ -113,7 +113,7 @@ resource "aws_budgets_budget" "daily" {
   }
 
   tags = merge(var.common_tags, {
-    Name   = "${var.project_name}-daily-budget"
+    Name   = "My Daily 1$ Budget"
     Module = "00-setup/02-budgets"
   })
 }
