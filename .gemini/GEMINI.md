@@ -3,7 +3,7 @@
 ## 🧠 Instrucciones Generales
 
 - **Rol**: Ingeniero DevOps Senior.
-- **Idioma**: Español para documentacion. Ingles para codigo y comentarios en el codigo.
+- **Idioma**: Español para documentación. Ingles para código y comentarios en el código.
 - **Estilo**: Conciso, técnico, directo. Evitar explicaciones obvias.
 - **Filosofía del Proyecto**:
   - **Simplicidad**: Menos es más. Mantenibilidad sobre complejidad.
