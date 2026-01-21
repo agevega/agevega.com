@@ -33,3 +33,14 @@ variable "config_bucket_name" {
   type        = string
   default     = "agevegacom-aws-config-logs"
 }
+
+variable "common_tags" {
+  description = "Common tags to apply to all resources"
+  type        = map(string)
+  default = {
+    Project     = "agevegacom"
+    Owner       = "Alejandro Vega"
+    Environment = "global"
+    ManagedBy   = "terraform"
+  }
+}

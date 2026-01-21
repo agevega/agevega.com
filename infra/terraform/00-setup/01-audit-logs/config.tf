@@ -5,6 +5,12 @@ resource "aws_s3_bucket" "config_logs" {
   lifecycle {
     prevent_destroy = true
   }
+
+  tags = merge(var.common_tags, {
+    Name   = var.config_bucket_name
+    Role   = "config-logs"
+    Module = "01-audit-logs"
+  })
 }
 
 resource "aws_s3_bucket_ownership_controls" "config_logs" {

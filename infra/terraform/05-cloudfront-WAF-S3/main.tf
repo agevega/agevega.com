@@ -66,6 +66,11 @@ data "aws_caller_identity" "current" {}
 
 resource "aws_s3_bucket" "assets" {
   bucket = var.assets_bucket_name
+  tags = merge(var.common_tags, {
+    Name   = var.assets_bucket_name
+    Role   = "assets-storage"
+    Module = "05-cloudfront-WAF-S3"
+  })
 }
 
 resource "aws_s3_bucket_public_access_block" "assets" {
@@ -210,5 +215,8 @@ resource "aws_cloudfront_distribution" "distribution" {
     minimum_protocol_version = "TLSv1.2_2021"
   }
 
-  tags = var.common_tags
+  tags = merge(var.common_tags, {
+    Name   = "cloudfront-${var.domain_name}"
+    Module = "05-cloudfront-WAF-S3"
+  })
 }

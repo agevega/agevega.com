@@ -22,6 +22,9 @@ data "aws_iam_policy_document" "lambda_assume_role" {
 resource "aws_iam_role" "lambda_role" {
   name               = "${var.project_name}-contact-lambda-role"
   assume_role_policy = data.aws_iam_policy_document.lambda_assume_role.json
+  tags = merge(var.common_tags, {
+    Module = "04-lambda-SES"
+  })
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_basic_execution" {
@@ -98,6 +101,10 @@ resource "aws_apigatewayv2_stage" "default" {
     throttling_burst_limit = 5
     throttling_rate_limit  = 1
   }
+
+  tags = merge(var.common_tags, {
+    Module = "04-lambda-SES"
+  })
 }
 
 # ------------------------------------------------------------------------------
@@ -106,6 +113,9 @@ resource "aws_apigatewayv2_stage" "default" {
 resource "aws_cloudwatch_log_group" "lambda_logs" {
   name              = "/aws/lambda/${aws_lambda_function.contact_form.function_name}"
   retention_in_days = 1
+  tags = merge(var.common_tags, {
+    Module = "04-lambda-SES"
+  })
 }
 
 resource "aws_apigatewayv2_integration" "lambda_integration" {

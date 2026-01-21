@@ -7,6 +7,12 @@ resource "aws_s3_bucket" "cloudtrail_logs" {
   lifecycle {
     prevent_destroy = true
   }
+
+  tags = merge(var.common_tags, {
+    Name   = var.cloudtrail_bucket_name
+    Role   = "cloudtrail-logs"
+    Module = "01-audit-logs"
+  })
 }
 
 resource "aws_s3_bucket_ownership_controls" "cloudtrail_logs" {
@@ -114,6 +120,11 @@ resource "aws_cloudtrail" "main" {
       equals = ["Management"]
     }
   }
+
+  tags = merge(var.common_tags, {
+    Name   = var.cloudtrail_name
+    Module = "01-audit-logs"
+  })
 
   depends_on = [aws_s3_bucket_policy.cloudtrail_logs]
 }

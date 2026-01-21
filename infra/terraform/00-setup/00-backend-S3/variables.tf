@@ -32,8 +32,9 @@ variable "common_tags" {
   description = "Common tags to apply to all resources"
   type        = map(string)
   default = {
-    Project = "agevegacom"
-    Owner   = "Alejandro Vega"
-    IaC     = "Terraform"
+    Project     = "agevegacom"
+    Owner       = "Alejandro Vega"
+    Environment = "global"
+    ManagedBy   = "terraform"
   }
 }

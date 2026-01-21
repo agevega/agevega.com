@@ -19,11 +19,10 @@ variable "resource_prefix" {
 variable "common_tags" {
   description = "Standard tags applied to every resource"
   type        = map(string)
-  default = {
     Project     = "agevegacom"
     Owner       = "Alejandro Vega"
     Environment = "lab"
-    IaC         = "Terraform"
+    ManagedBy   = "terraform"
   }
 }
 

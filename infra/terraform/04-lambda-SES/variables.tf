@@ -33,3 +33,14 @@ variable "project_name" {
   type        = string
   default     = "agevegacom"
 }
+
+variable "common_tags" {
+  description = "Common tags to apply to all resources"
+  type        = map(string)
+  default = {
+    Project     = "agevegacom"
+    Owner       = "Alejandro Vega"
+    Environment = "lab"
+    ManagedBy   = "terraform"
+  }
+}

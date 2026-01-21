@@ -6,9 +6,10 @@ resource "aws_ecr_repository" "this" {
     scan_on_push = true
   }
 
-  tags = {
-    Name = var.repository_name
-  }
+  tags = merge(var.common_tags, {
+    Name   = var.repository_name
+    Module = "03-ECR"
+  })
 }
 
 resource "aws_ecr_lifecycle_policy" "this" {
