@@ -7,10 +7,11 @@ resource "aws_instance" "bastion" {
 
   vpc_security_group_ids = [data.terraform_remote_state.security.outputs.security_group_id]
 
-  tags = {
+  tags = merge(var.common_tags, {
     Name        = "bastion-host"
     Environment = var.environment
-  }
+    Module      = "02-bastion-EC2/01-instance"
+  })
 
   user_data = file("${path.module}/user_data.sh")
 }

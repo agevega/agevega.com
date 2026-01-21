@@ -9,7 +9,7 @@ resource "aws_s3_bucket" "tf_state" {
   tags = merge(var.common_tags, {
     Name   = var.state_bucket_name
     Role   = "terraform-state"
-    Module = "00-backend-S3"
+    Module = "00-setup/00-backend-S3"
   })
 }
 

@@ -11,7 +11,7 @@ resource "aws_s3_bucket" "cloudtrail_logs" {
   tags = merge(var.common_tags, {
     Name   = var.cloudtrail_bucket_name
     Role   = "cloudtrail-logs"
-    Module = "01-audit-logs"
+    Module = "00-setup/01-audit-logs"
   })
 }
 
