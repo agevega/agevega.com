@@ -1,6 +1,6 @@
 terraform {
   backend "s3" {
-    bucket         = "terraform-state-agevegacom"
+    bucket         = "agevegacom-terraform-state"
     key            = "envs/lab/agevegacom/05-cloudfront-WAF-S3/terraform.tfstate"
     region         = "eu-south-2"
     profile        = "terraform"

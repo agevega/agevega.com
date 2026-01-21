@@ -19,7 +19,7 @@ variable "resource_prefix" {
 variable "cloudtrail_bucket_name" {
   description = "Name of the existing S3 bucket for CloudTrail logs"
   type        = string
-  default     = "cloudtrail-logs-agevegacom"
+  default     = "agevegacom-cloudtrail-logs"
 }
 
 variable "cloudtrail_name" {
@@ -31,5 +31,5 @@ variable "cloudtrail_name" {
 variable "config_bucket_name" {
   description = "Name of the existing S3 bucket for AWS Config logs"
   type        = string
-  default     = "aws-config-logs-agevegacom"
+  default     = "agevegacom-aws-config-logs"
 }

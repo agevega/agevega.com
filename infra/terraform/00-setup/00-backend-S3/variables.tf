@@ -19,7 +19,7 @@ variable "resource_prefix" {
 variable "state_bucket_name" {
   description = "Nombre globalmente único del bucket S3 para el estado de Terraform"
   type        = string
-  default     = "terraform-state-agevegacom"
+  default     = "agevegacom-terraform-state"
 }
 
 variable "lock_table_name" {
