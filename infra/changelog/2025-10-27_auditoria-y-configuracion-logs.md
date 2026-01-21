@@ -2,7 +2,7 @@
 
 ### 🗂️ Descripción
 
-Despliegue del código contenido en `infra/terraform/00-setup/01-init-config`, encargado de habilitar los servicios **AWS CloudTrail** y **AWS Config** para registrar toda la actividad y los cambios de configuración dentro de la cuenta AWS (`agevega.com@gmail.com`).  
+Despliegue del código contenido en `infra/terraform/00-setup/01-audit-logs`, encargado de habilitar los servicios **AWS CloudTrail** y **AWS Config** para registrar toda la actividad y los cambios de configuración dentro de la cuenta AWS (`agevega.com@gmail.com`).  
 Con esta configuración, el entorno queda preparado para auditoría completa, trazabilidad de eventos y control de configuración en tiempo real.
 
 ---

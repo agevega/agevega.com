@@ -5,7 +5,7 @@ Este módulo gestiona el setup inicial de la infraestructura (backend y auditor�
 Está dividido en dos submódulos críticos que deben ejecutarse en orden:
 
 1.  **`00-backend-S3`**: Bootstrap de IaC. Crea el bucket S3 y la tabla DynamoDB para guardar el estado de Terraform.
-2.  **`01-init-config`**: Configuración de auditoría. Habilita AWS CloudTrail y AWS Config para compliance y seguridad.
+2.  **`01-audit-logs`**: Configuración de auditoría. Habilita AWS CloudTrail y AWS Config para compliance y seguridad.
 
 ![Architecture Diagram](../../diagrams/00-terraform-state-S3.png)
 
@@ -40,12 +40,12 @@ terraform apply
 >
 > Responde `yes` para copiar tu estado local existente al bucket S3.
 
-### Paso 2: Auditoría (01-init-config)
+### Paso 2: Auditoría (01-audit-logs)
 
 Habilita los logs de auditoría obligatorios.
 
 ```bash
-cd 01-init-config
+cd 01-audit-logs
 terraform init
 terraform apply
 ```
@@ -59,7 +59,7 @@ terraform apply
 - **Bucket S3**: `terraform-state-agevegacom`. Versionado, encriptado (AES256), sin acceso público.
 - **DynamoDB**: `terraform-state-lock`. LockID key, PITR activo.
 
-### 01-init-config
+### 01-audit-logs
 
 - **CloudTrail**: `agevegacom-trail`. Multi-región, validación de logs activa, eventos de gestión.
 - **AWS Config**: Grabación continua de todos los recursos (incluido globales), retención 90 días.
