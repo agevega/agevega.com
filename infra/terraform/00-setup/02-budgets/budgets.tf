@@ -12,7 +12,6 @@ resource "aws_budgets_budget" "monthly" {
   limit_amount      = var.monthly_budget_amount
   limit_unit        = "USD"
   time_period_start = "2025-10-01_00:00"
-  time_period_end   = "2087-06-15_00:00"
   time_unit         = "MONTHLY"
 
   # Actual > 10% ($1.00)
@@ -51,12 +50,10 @@ resource "aws_budgets_budget" "monthly" {
     subscriber_email_addresses = [var.notification_email]
   }
 
-  # Tags support depends on provider version, but it is best practice to include them.
-  # If the provider is old and fails, these might need to be removed.
-  # tags = merge(var.common_tags, {
-  #   Name   = "${var.project_name}-monthly-budget"
-  #   Module = "00-setup/02-budgets"
-  # })
+  tags = merge(var.common_tags, {
+    Name   = "${var.project_name}-monthly-budget"
+    Module = "00-setup/02-budgets"
+  })
 }
 
 # ------------------------------------------------------------------------------
@@ -68,7 +65,6 @@ resource "aws_budgets_budget" "daily" {
   limit_amount      = var.daily_budget_amount
   limit_unit        = "USD"
   time_period_start = "2025-10-26_00:00"
-  time_period_end   = "2087-06-15_00:00"
   time_unit         = "DAILY"
 
   # Actual > 50% ($0.50)
@@ -116,8 +112,8 @@ resource "aws_budgets_budget" "daily" {
     subscriber_email_addresses = [var.notification_email]
   }
 
-  # tags = merge(var.common_tags, {
-  #   Name   = "${var.project_name}-daily-budget"
-  #   Module = "00-setup/02-budgets"
-  # })
+  tags = merge(var.common_tags, {
+    Name   = "${var.project_name}-daily-budget"
+    Module = "00-setup/02-budgets"
+  })
 }
