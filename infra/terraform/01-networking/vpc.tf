@@ -11,7 +11,7 @@ resource "aws_vpc" "agevegacom_vpc" {
   )
 }
 
-# Crear 3 subredes públicas en diferentes AZs
+# Create 3 public subnets in different AZs
 resource "aws_subnet" "public_subnet_1" {
   vpc_id                  = aws_vpc.agevegacom_vpc.id
   cidr_block              = var.public_subnets[0]
@@ -54,7 +54,7 @@ resource "aws_subnet" "public_subnet_3" {
   )
 }
 
-# Crear 3 subredes privadas en diferentes AZs
+# Create 3 private subnets in different AZs
 resource "aws_subnet" "private_subnet_1" {
   vpc_id            = aws_vpc.agevegacom_vpc.id
   cidr_block        = var.private_subnets[0]
@@ -94,7 +94,7 @@ resource "aws_subnet" "private_subnet_3" {
   )
 }
 
-# Crear 3 subredes de bases de datos en diferentes AZs (sin salida a Internet)
+# Create 3 database subnets in different AZs (no Internet access)
 resource "aws_subnet" "db_subnet_1" {
   vpc_id            = aws_vpc.agevegacom_vpc.id
   cidr_block        = var.db_subnets[0]
@@ -134,7 +134,7 @@ resource "aws_subnet" "db_subnet_3" {
   )
 }
 
-# Crear un Internet Gateway para las subredes públicas
+# Create an Internet Gateway for public subnets
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.agevegacom_vpc.id
 
@@ -165,7 +165,7 @@ resource "aws_vpc_endpoint" "vpce_s3" {
   )
 }
 
-# Crear una tabla de enrutamiento para las subredes públicas
+# Create a route table for public subnets
 resource "aws_route_table" "public_route_table" {
   vpc_id = aws_vpc.agevegacom_vpc.id
 
@@ -182,7 +182,7 @@ resource "aws_route_table" "public_route_table" {
   )
 }
 
-# Asociar las subredes públicas a la tabla de enrutamiento pública
+# Associate public subnets with the public route table
 resource "aws_route_table_association" "public_subnet_1_association" {
   subnet_id      = aws_subnet.public_subnet_1.id
   route_table_id = aws_route_table.public_route_table.id
@@ -198,7 +198,7 @@ resource "aws_route_table_association" "public_subnet_3_association" {
   route_table_id = aws_route_table.public_route_table.id
 }
 
-# Crear una tabla de enrutamiento para cada subred privada
+# Create a route table for each private subnet
 resource "aws_route_table" "private_route_table_1" {
   vpc_id = aws_vpc.agevegacom_vpc.id
 
@@ -232,7 +232,7 @@ resource "aws_route_table" "private_route_table_3" {
   )
 }
 
-# Crear una tabla de enrutamiento para cada subred de bases de datos
+# Create a route table for each database subnet
 resource "aws_route_table" "db_route_table_1" {
   vpc_id = aws_vpc.agevegacom_vpc.id
 
@@ -266,7 +266,7 @@ resource "aws_route_table" "db_route_table_3" {
   )
 }
 
-# Asociar las subredes privadas a sus respectivas tablas de enrutamiento
+# Associate private subnets with their respective route tables
 
 resource "aws_route_table_association" "private_subnet_1_association" {
   subnet_id      = aws_subnet.private_subnet_1.id
@@ -283,7 +283,7 @@ resource "aws_route_table_association" "private_subnet_3_association" {
   route_table_id = aws_route_table.private_route_table_3.id
 }
 
-# Asociar las subredes de bases de datos a sus tablas dedicadas
+# Associate database subnets with their dedicated route tables
 
 resource "aws_route_table_association" "db_subnet_1_association" {
   subnet_id      = aws_subnet.db_subnet_1.id
@@ -300,8 +300,8 @@ resource "aws_route_table_association" "db_subnet_3_association" {
   route_table_id = aws_route_table.db_route_table_3.id
 }
 
-# NAT Gateway (opcional – no desplegar mientras el presupuesto sea 5–10 €)
-# Descomenta estos recursos cuando necesites salida a Internet desde las subredes privadas.
+# NAT Gateway (optional - do not deploy while budget is 5-10 euros)
+# Uncomment these resources when Internet access is needed from private subnets.
 # resource "aws_eip" "nat_eip" {
 #   domain = "vpc"
 #

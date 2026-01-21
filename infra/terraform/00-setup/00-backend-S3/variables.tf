@@ -1,11 +1,11 @@
 variable "aws_region" {
-  description = "Región AWS para los recursos del estado"
+  description = "AWS region for state resources"
   type        = string
   default     = "eu-south-2"
 }
 
 variable "aws_profile" {
-  description = "Perfil de AWS CLI a usar"
+  description = "AWS CLI profile to use"
   type        = string
   default     = "terraform"
 }
@@ -17,13 +17,13 @@ variable "resource_prefix" {
 }
 
 variable "state_bucket_name" {
-  description = "Nombre globalmente único del bucket S3 para el estado de Terraform"
+  description = "Globally unique name of the S3 bucket for Terraform state"
   type        = string
   default     = "agevegacom-terraform-state"
 }
 
 variable "lock_table_name" {
-  description = "Nombre de la tabla DynamoDB para el locking del estado"
+  description = "Name of the DynamoDB table for state locking"
   type        = string
   default     = "terraform-state-lock"
 }

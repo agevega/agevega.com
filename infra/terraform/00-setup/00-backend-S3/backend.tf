@@ -1,7 +1,7 @@
-# INSTRUCCIONES DE USO:
-# 1. Ejecuta 'terraform apply' primero para crear el bucket y la tabla.
-# 2. Una vez creados, DESCOMENTA el bloque 'terraform' de abajo.
-# 3. Ejecuta 'terraform init -migrate-state' y escribe 'yes'.
+# USAGE INSTRUCTIONS:
+# 1. Run 'terraform apply' first to create the bucket and table.
+# 2. Once created, UNCOMMENT the 'terraform' block below.
+# 3. Run 'terraform init -migrate-state' and type 'yes'.
 
 # terraform {
 #   backend "s3" {
