@@ -160,7 +160,7 @@ resource "aws_cloudfront_distribution" "distribution" {
     
     forwarded_values {
       query_string = true
-      headers      = ["Host", "Origin"] # Importante para Nginx y CORS
+      headers      = ["Host", "Origin"] # Important for Nginx and CORS
 
       cookies {
         forward = "none"
