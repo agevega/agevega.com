@@ -1,6 +1,6 @@
 # 00-setup/02-budgets
 
-Este módulo configura los presupuestos de AWS (AWS Budgets) para monitorizar los costes de la cuenta, replicando la configuración establecida manualmente.
+Este módulo configura los presupuestos de AWS (AWS Budgets) para monitorizar los costes de la cuenta.
 
 ## Recursos
 
@@ -9,11 +9,10 @@ Este módulo configura los presupuestos de AWS (AWS Budgets) para monitorizar lo
 
 ## Variables
 
-| Nombre                  | Descripción           | Default             |
-| ----------------------- | --------------------- | ------------------- |
-| `monthly_budget_amount` | Límite mensual en USD | `10`                |
-| `daily_budget_amount`   | Límite diario en USD  | `1`                 |
-| `notification_email`    | Email para alertas    | `agevega@gmail.com` |
+| Nombre                  | Descripción           | Default |
+| ----------------------- | --------------------- | ------- |
+| `monthly_budget_amount` | Límite mensual en USD | `10`    |
+| `daily_budget_amount`   | Límite diario en USD  | `1`     |
 
 ## Alertas
 
