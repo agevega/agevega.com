@@ -16,14 +16,14 @@ Con esta configuración, el entorno queda preparado para auditoría completa, tr
 - Región principal: **eu-south-2 (España)**.
 - Activado registro de eventos en **todas las regiones**.
 - Bucket S3 asociado:  
-  `cloudtrail-logs-agevegacom`
+  `agevegacom-cloudtrail-logs`
 - Configuración de seguridad:
   - Bloqueo de acceso público ✅
   - ACLs deshabilitadas ✅
   - Cifrado SSE-S3 activo ✅
 - Activada la **validación de archivos de registro** para garantizar la integridad de los logs.
 - Confirmado envío de archivos al bucket:  
-  `s3://cloudtrail-logs-agevegacom/AWSLogs/332327025453/`
+  `s3://agevegacom-cloudtrail-logs/AWSLogs/332327025453/`
 - No configuradas notificaciones SNS ni integración con CloudWatch Logs.
 
 ---
@@ -56,7 +56,7 @@ Con esta configuración, el entorno queda preparado para auditoría completa, tr
 - Grabación configurada en modo **continuo** para **todos los tipos de recursos**.
 - Activada la opción **incluir recursos globales** (IAM, CloudFront, etc.).
 - Bucket S3 de entrega creado:  
-  `aws-config-logs-agevegacom`
+  `agevegacom-aws-config-logs`
 - Propiedades del bucket:
   - Bloqueo de acceso público ✅
   - ACLs deshabilitadas ✅
@@ -93,7 +93,7 @@ Con esta configuración, el entorno queda preparado para auditoría completa, tr
 
 | Servicio       | Estado                     | Región     | Bucket                       | Coste estimado |
 | -------------- | -------------------------- | ---------- | ---------------------------- | -------------- |
-| **CloudTrail** | Activo + Validación ON     | eu-south-2 | `cloudtrail-logs-agevegacom` | ~0,05 €        |
-| **AWS Config** | Activo + Retención 90 días | eu-south-2 | `aws-config-logs-agevegacom` | ~0,60 €        |
+| **CloudTrail** | Activo + Validación ON     | eu-south-2 | `agevegacom-cloudtrail-logs` | ~0,05 €        |
+| **AWS Config** | Activo + Retención 90 días | eu-south-2 | `agevegacom-aws-config-logs` | ~0,60 €        |
 
 **Coste total estimado mensual:** ~0,65 €

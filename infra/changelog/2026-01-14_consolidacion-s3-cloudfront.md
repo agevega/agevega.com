@@ -20,7 +20,7 @@ Refactorización de la infraestructura para servir archivos estáticos privados 
 ### Infraestructura
 
 1.  **Renombrado**: `05-cloudfront-waf` -> `05-cloudfront-WAF-S3`.
-2.  **Backend Key**: Actualizada la ruta del estado de Terraform a `05-cloudfront-WAF-S3/terraform.tfstate`.
+2.  **Backend Key**: Actualizada la ruta del estado de Terraform a `modules/05-cloudfront-WAF-S3/terraform.tfstate`.
 
 ### Frontend
 

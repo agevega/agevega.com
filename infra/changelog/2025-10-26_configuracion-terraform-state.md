@@ -11,7 +11,7 @@ Con esta implementación, la infraestructura queda preparada para operar de form
 
 ### ⚙️ Acciones realizadas
 
-- Creado el bucket **`terraform-state-agevegacom`** en la región **`eu-south-2 (Madrid)`**.
+- Creado el bucket **`agevegacom-terraform-state`** en la región **`eu-south-2 (Madrid)`**.
 - Configuración de seguridad aplicada:
   - **Bloqueo completo de acceso público** ✅
   - **Propiedad forzada al propietario (BucketOwnerEnforced)** ✅
