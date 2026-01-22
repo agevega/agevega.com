@@ -57,14 +57,14 @@ terraform apply
 
 ### 00-backend-S3
 
-- **Bucket S3**: `terraform-state-agevegacom`. Versionado, encriptado (AES256), sin acceso público.
+- **Bucket S3**: `agevegacom-terraform-state`. Versionado, encriptado (AES256), sin acceso público.
 - **DynamoDB**: `terraform-state-lock`. LockID key, PITR activo.
 
 ### 01-audit-logs
 
 - **CloudTrail**: `agevegacom-trail`. Multi-región, validación de logs activa, eventos de gestión.
 - **AWS Config**: Grabación continua de todos los recursos (incluido globales), retención 90 días.
-- **Buckets de Logs**: `cloudtrail-logs-agevegacom` y `aws-config-logs-agevegacom`.
+- **Buckets de Logs**: `agevegacom-cloudtrail-logs` y `agevegacom-aws-config-logs`.
 
 ### 02-budgets
 
@@ -80,8 +80,8 @@ Para que otros módulos guarden su estado en esta infraestructura, añade el blo
 ```hcl
 terraform {
   backend "s3" {
-    bucket         = "terraform-state-agevegacom"
-    key            = "envs/lab/agevegacom/<NOMBRE_MODULO>/terraform.tfstate"
+    bucket         = "agevegacom-terraform-state"
+    key            = "modules/<NOMBRE_MODULO>/terraform.tfstate"
     region         = "eu-south-2"
     dynamodb_table = "terraform-state-lock"
     encrypt        = true
