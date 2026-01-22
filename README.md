@@ -82,7 +82,10 @@ agevega.com/
 │   └── package.json              # Dependencias
 ├── infra/                        # Definición de infraestructura
 │   ├── terraform/                # Código HCL de Terraform
-│   │   ├── 00-setup/             # Bootstrap (S3+Dynamo) + Auditoría
+│   │   ├── 00-setup/             # Bootstrap (S3+Dynamo) + Auditoría + Budgets
+│   │   │   ├── 00-backend-S3/
+│   │   │   ├── 01-audit-logs/
+│   │   │   └── 02-budgets/       # Control de costes
 │   │   ├── 01-networking/        # Red (VPC 3-tier)
 │   │   ├── 02-bastion-EC2/       # Compute (Bastion ARM64)
 │   │   ├── 03-ECR/               # Registry de contenedores

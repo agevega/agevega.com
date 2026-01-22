@@ -6,6 +6,7 @@ Está dividido en dos submódulos críticos que deben ejecutarse en orden:
 
 1.  **`00-backend-S3`**: Bootstrap de IaC. Crea el bucket S3 y la tabla DynamoDB para guardar el estado de Terraform.
 2.  **`01-audit-logs`**: Configuración de auditoría. Habilita AWS CloudTrail y AWS Config para compliance y seguridad.
+3.  **`02-budgets`**: Control de costes. Establece presupuestos mensuales y diarios con alertas por email.
 
 ![Architecture Diagram](../../diagrams/00-terraform-state-S3.png)
 
@@ -64,6 +65,11 @@ terraform apply
 - **CloudTrail**: `agevegacom-trail`. Multi-región, validación de logs activa, eventos de gestión.
 - **AWS Config**: Grabación continua de todos los recursos (incluido globales), retención 90 días.
 - **Buckets de Logs**: `cloudtrail-logs-agevegacom` y `aws-config-logs-agevegacom`.
+
+### 02-budgets
+
+- **Budget Mensual**: Límite $10 USD. Alertas al 10%, 50%, 100% y 200%.
+- **Budget Diario**: Límite $1 USD. Alertas escalonadas al 50%, 100%, 200%, 500% y 1000%.
 
 ---
 
