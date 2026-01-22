@@ -125,3 +125,9 @@ infra/
 - Fusión de S3 Assets dentro del módulo de CloudFront (`05-cloudfront-WAF-S3`).
 - Implementación de **OAC (Origin Access Control)** para acceso seguro a documentos privados (CV).
   ➡️ [Detalles](changelog/2026-01-14_consolidacion-s3-cloudfront.md)
+
+### 22/01/2026 — Refactorización Networking y Auditoría
+
+- División de `01-networking` en submódulos (`vpc-core`, `nat-gateway`, `vpc-endpoints`) para gestión de costes.
+- Corrección integral de documentación y dependencias.
+  ➡️ [Detalles](changelog/2026-01-22_refactorizacion-networking-y-doc.md)
