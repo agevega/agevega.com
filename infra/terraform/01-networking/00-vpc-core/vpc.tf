@@ -7,7 +7,7 @@ resource "aws_vpc" "agevegacom_vpc" {
     var.common_tags,
     {
       Name   = "${var.resource_prefix}-vpc"
-      Module = "01-networking"
+      Module = "01-networking/00-vpc-core"
     },
   )
 }
@@ -23,7 +23,7 @@ resource "aws_subnet" "public_subnet_1" {
     var.common_tags,
     {
       Name   = "${var.resource_prefix}-subnet-public1-${var.availability_zones[0]}"
-      Module = "01-networking"
+      Module = "01-networking/00-vpc-core"
     },
   )
 }
@@ -38,7 +38,7 @@ resource "aws_subnet" "public_subnet_2" {
     var.common_tags,
     {
       Name   = "${var.resource_prefix}-subnet-public2-${var.availability_zones[1]}"
-      Module = "01-networking"
+      Module = "01-networking/00-vpc-core"
     },
   )
 }
@@ -53,7 +53,7 @@ resource "aws_subnet" "public_subnet_3" {
     var.common_tags,
     {
       Name   = "${var.resource_prefix}-subnet-public3-${var.availability_zones[2]}"
-      Module = "01-networking"
+      Module = "01-networking/00-vpc-core"
     },
   )
 }
@@ -68,7 +68,7 @@ resource "aws_subnet" "private_subnet_1" {
     var.common_tags,
     {
       Name   = "${var.resource_prefix}-subnet-private1-${var.availability_zones[0]}"
-      Module = "01-networking"
+      Module = "01-networking/00-vpc-core"
     },
   )
 }
@@ -82,7 +82,7 @@ resource "aws_subnet" "private_subnet_2" {
     var.common_tags,
     {
       Name   = "${var.resource_prefix}-subnet-private2-${var.availability_zones[1]}"
-      Module = "01-networking"
+      Module = "01-networking/00-vpc-core"
     },
   )
 }
@@ -96,7 +96,7 @@ resource "aws_subnet" "private_subnet_3" {
     var.common_tags,
     {
       Name   = "${var.resource_prefix}-subnet-private3-${var.availability_zones[2]}"
-      Module = "01-networking"
+      Module = "01-networking/00-vpc-core"
     },
   )
 }
@@ -111,7 +111,7 @@ resource "aws_subnet" "db_subnet_1" {
     var.common_tags,
     {
       Name   = "${var.resource_prefix}-subnet-db1-${var.availability_zones[0]}"
-      Module = "01-networking"
+      Module = "01-networking/00-vpc-core"
     },
   )
 }
@@ -125,7 +125,7 @@ resource "aws_subnet" "db_subnet_2" {
     var.common_tags,
     {
       Name   = "${var.resource_prefix}-subnet-db2-${var.availability_zones[1]}"
-      Module = "01-networking"
+      Module = "01-networking/00-vpc-core"
     },
   )
 }
@@ -139,7 +139,7 @@ resource "aws_subnet" "db_subnet_3" {
     var.common_tags,
     {
       Name   = "${var.resource_prefix}-subnet-db3-${var.availability_zones[2]}"
-      Module = "01-networking"
+      Module = "01-networking/00-vpc-core"
     },
   )
 }
@@ -152,27 +152,7 @@ resource "aws_internet_gateway" "igw" {
     var.common_tags,
     {
       Name   = "${var.resource_prefix}-igw"
-      Module = "01-networking"
-    },
-  )
-}
-resource "aws_vpc_endpoint" "vpce_s3" {
-  vpc_id       = aws_vpc.agevegacom_vpc.id
-  service_name = "com.amazonaws.${var.aws_region}.s3"
-  route_table_ids = [
-    aws_route_table.private_route_table_1.id,
-    aws_route_table.private_route_table_2.id,
-    aws_route_table.private_route_table_3.id,
-    aws_route_table.db_route_table_1.id,
-    aws_route_table.db_route_table_2.id,
-    aws_route_table.db_route_table_3.id,
-  ]
-
-  tags = merge(
-    var.common_tags,
-    {
-      Name   = "${var.resource_prefix}-vpce-s3"
-      Module = "01-networking"
+      Module = "01-networking/00-vpc-core"
     },
   )
 }
@@ -190,7 +170,7 @@ resource "aws_route_table" "public_route_table" {
     var.common_tags,
     {
       Name   = "${var.resource_prefix}-rtb-public"
-      Module = "01-networking"
+      Module = "01-networking/00-vpc-core"
     },
   )
 }
@@ -219,7 +199,7 @@ resource "aws_route_table" "private_route_table_1" {
     var.common_tags,
     {
       Name   = "${var.resource_prefix}-rtb-private1-${var.availability_zones[0]}"
-      Module = "01-networking"
+      Module = "01-networking/00-vpc-core"
     },
   )
 }
@@ -231,7 +211,7 @@ resource "aws_route_table" "private_route_table_2" {
     var.common_tags,
     {
       Name   = "${var.resource_prefix}-rtb-private2-${var.availability_zones[1]}"
-      Module = "01-networking"
+      Module = "01-networking/00-vpc-core"
     },
   )
 }
@@ -243,7 +223,7 @@ resource "aws_route_table" "private_route_table_3" {
     var.common_tags,
     {
       Name   = "${var.resource_prefix}-rtb-private3-${var.availability_zones[2]}"
-      Module = "01-networking"
+      Module = "01-networking/00-vpc-core"
     },
   )
 }
@@ -256,7 +236,7 @@ resource "aws_route_table" "db_route_table_1" {
     var.common_tags,
     {
       Name   = "${var.resource_prefix}-rtb-db1-${var.availability_zones[0]}"
-      Module = "01-networking"
+      Module = "01-networking/00-vpc-core"
     },
   )
 }
@@ -268,7 +248,7 @@ resource "aws_route_table" "db_route_table_2" {
     var.common_tags,
     {
       Name   = "${var.resource_prefix}-rtb-db2-${var.availability_zones[1]}"
-      Module = "01-networking"
+      Module = "01-networking/00-vpc-core"
     },
   )
 }
@@ -280,7 +260,7 @@ resource "aws_route_table" "db_route_table_3" {
     var.common_tags,
     {
       Name   = "${var.resource_prefix}-rtb-db3-${var.availability_zones[2]}"
-      Module = "01-networking"
+      Module = "01-networking/00-vpc-core"
     },
   )
 }
@@ -318,33 +298,3 @@ resource "aws_route_table_association" "db_subnet_3_association" {
   subnet_id      = aws_subnet.db_subnet_3.id
   route_table_id = aws_route_table.db_route_table_3.id
 }
-
-# NAT Gateway (optional - do not deploy while budget is 5-10 euros)
-# Uncomment these resources when Internet access is needed from private subnets.
-# resource "aws_eip" "nat_eip" {
-#   domain = "vpc"
-#
-#   tags = {
-#     Name = "${var.resource_prefix}-nat-eip"
-#   }
-# }
-#
-# resource "aws_nat_gateway" "nat_gw" {
-#   allocation_id = aws_eip.nat_eip.id
-#   subnet_id     = aws_subnet.public_subnet_1.id
-#
-#   tags = {
-#     Name = "${var.resource_prefix}-nat-gw"
-#   }
-# }
-#
-# resource "aws_route" "private_default_route" {
-#   for_each               = {
-#     az0 = aws_route_table.private_route_table_1.id
-#     az1 = aws_route_table.private_route_table_2.id
-#     az2 = aws_route_table.private_route_table_3.id
-#   }
-#   route_table_id         = each.value
-#   destination_cidr_block = "0.0.0.0/0"
-#   nat_gateway_id         = aws_nat_gateway.nat_gw.id
-# }
