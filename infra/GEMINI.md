@@ -7,7 +7,7 @@
 
 ## 📏 Guías de Desarrollo
 
-- **Estructura**: Módulos numerados (e.g., `01-networking`, `02-bastion`).
+- **Estructura**: Módulos numerados (e.g., `01-networking`, `02-bastion-EC2`).
 - **Convenciones**:
   - Recursos: `snake_case`.
   - Variables: Siempre incluir `description` y `type`.

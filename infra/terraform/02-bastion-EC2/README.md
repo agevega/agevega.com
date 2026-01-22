@@ -12,14 +12,13 @@ Para facilitar la gestión y evitar dependencias circulares, el despliegue se di
 El módulo se estructura en dos pasos lógicos:
 
 1.  **`00-security`**: Prepara los componentes de identidad y red.
-
     - **Elastic IP (EIP):** IP estática reservada para el Bastion.
     - **Security Group:** Permite SSH (22) solo desde IPs confiables. HTTP/HTTPS restringido a **CloudFront** (vía Managed Prefix List).
     - **Key Pair:** Sube tu clave pública SSH a AWS.
 
 2.  **`01-instance`**: Despliega el cómputo.
     - **EC2 Instance:** `t4g.nano` (ARM64) con Amazon Linux 2023.
-    - **Ubicación:** Subred pública 1 (creada en `01-networking`).
+    - **Ubicación:** Subred pública 1 (creada en `01-networking/00-vpc-core`).
     - **Asociación:** Vincula la EIP y el Security Group creados en el paso anterior.
 
 ---
@@ -54,8 +53,8 @@ terraform apply
 
 Este módulo depende del estado remoto de los módulos anteriores:
 
-1.  **`00-setup`**: Backend S3/DynamoDB configurado.
-2.  **`01-networking`**: VPC y subredes desplegadas.
+1.  **`00-setup/00-backend-S3`**: Backend S3/DynamoDB configurado.
+2.  **`01-networking/00-vpc-core`**: VPC y subredes desplegadas.
 
 ---
 

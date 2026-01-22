@@ -19,10 +19,12 @@ infra/
 ├── terraform/
 │   ├── 00-terraform-state-S3/
 │   ├── 01-networking/
+│   │   ├── 00-vpc-core/
+│   │   ├── 01-nat-gateway/
+│   │   └── 02-vpc-endpoints/
 │   ├── 02-bastion-EC2/
-│   ├── 03-ECR/
-│   ├── 04-lambda-SES/
-│   ├── 04-lambda-SES/
+│   ├── 03-ECR/               # Registry de contenedores
+│   ├── 04-lambda-SES/        # Backend Serverless (Contact Form)
 │   ├── 05-cloudfront-WAF-S3/
 └── README.md
 ```

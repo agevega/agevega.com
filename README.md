@@ -87,9 +87,11 @@ agevega.com/
 │   │   │   ├── 01-audit-logs/
 │   │   │   └── 02-budgets/       # Control de costes
 │   │   ├── 01-networking/        # Red (VPC 3-tier)
+│   │   │   ├── 00-vpc-core/
+│   │   │   ├── 01-nat-gateway/
+│   │   │   └── 02-vpc-endpoints/
 │   │   ├── 02-bastion-EC2/       # Compute (Bastion ARM64)
 │   │   ├── 03-ECR/               # Registry de contenedores
-│   │   ├── 04-lambda-SES/        # Backend Serverless (Contact Form)
 │   │   ├── 04-lambda-SES/        # Backend Serverless (Contact Form)
 │   │   └── 05-cloudfront-WAF-S3/ # CDN + WAF + S3 Assets
 │   └── changelog/                # Registro de cambios de infraestructura
