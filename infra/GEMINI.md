@@ -4,7 +4,6 @@
 
 - **IaC**: Terraform.
 - **Cloud**: AWS (Región: `eu-south-2` - Madrid).
-- **State Lock**: DynamoDB.
 
 ## 📏 Guías de Desarrollo
 
