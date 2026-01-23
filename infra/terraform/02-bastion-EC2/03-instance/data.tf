@@ -18,6 +18,26 @@ data "terraform_remote_state" "security" {
   }
 }
 
+data "terraform_remote_state" "ssh_key" {
+  backend = "s3"
+  config = {
+    bucket  = "agevegacom-terraform-state"
+    key     = "modules/02-bastion-EC2/01-ssh-key/terraform.tfstate"
+    region  = "eu-south-2"
+    profile = "terraform"
+  }
+}
+
+data "terraform_remote_state" "eip" {
+  backend = "s3"
+  config = {
+    bucket  = "agevegacom-terraform-state"
+    key     = "modules/02-bastion-EC2/02-eip/terraform.tfstate"
+    region  = "eu-south-2"
+    profile = "terraform"
+  }
+}
+
 data "aws_ami" "amazon_linux_2023" {
   most_recent = true
   owners      = ["amazon"]

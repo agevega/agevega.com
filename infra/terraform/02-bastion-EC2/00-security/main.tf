@@ -49,21 +49,3 @@ resource "aws_security_group_rule" "ingress_cloudfront_http" {
   security_group_id = aws_security_group.bastion_sg.id
 }
 
-resource "aws_key_pair" "bastion_key" {
-  key_name   = "bastion-key"
-  public_key = file(var.public_key_path)
-
-  tags = merge(var.common_tags, {
-    Environment = var.environment
-    Module      = "02-bastion-EC2/00-security"
-  })
-}
-
-resource "aws_eip" "bastion_eip" {
-  domain = "vpc"
-  tags = merge(var.common_tags, {
-    Name        = "bastion-eip"
-    Environment = var.environment
-    Module      = "02-bastion-EC2/00-security"
-  })
-}

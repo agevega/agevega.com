@@ -9,17 +9,17 @@ Para facilitar la gestión y evitar dependencias circulares, el despliegue se di
 
 ## 🏛️ Arquitectura
 
-El módulo se estructura en dos pasos lógicos:
+1.  **`00-security`**: Define los Security Groups.
+    - **Security Group:** Permite SSH (22) y crea las reglas de tráfico.
 
-1.  **`00-security`**: Prepara los componentes de identidad y red.
-    - **Elastic IP (EIP):** IP estática reservada para el Bastion.
-    - **Security Group:** Permite SSH (22) solo desde IPs confiables. HTTP/HTTPS restringido a **CloudFront** (vía Managed Prefix List).
+2.  **`01-ssh-key`**: Gestión de identidad.
     - **Key Pair:** Sube tu clave pública SSH a AWS.
 
-2.  **`01-instance`**: Despliega el cómputo.
-    - **EC2 Instance:** `t4g.nano` (ARM64) con Amazon Linux 2023.
-    - **Ubicación:** Subred pública 1 (creada en `01-networking/00-vpc-core`).
-    - **Asociación:** Vincula la EIP y el Security Group creados en el paso anterior.
+3.  **`02-eip`**: Networking estático.
+    - **Elastic IP (EIP):** IP estática reservada para el Bastion.
+
+4.  **`03-instance`**: Cómputo.
+    - **EC2 Instance:** `t4g.nano` (ARM64) y asociación de recursos.
 
 ---
 
@@ -27,22 +27,42 @@ El módulo se estructura en dos pasos lógicos:
 
 Sigue este orden para evitar errores de dependencias.
 
-### Paso 1: Seguridad e Identidad (`00-security`)
+### Paso 1: Seguridad (`00-security`)
 
-Crea los grupos de seguridad, la clave SSH y reserva la IP elástica.
+Define los grupos de seguridad (Security Groups).
 
 ```bash
 cd infra/terraform/02-bastion-EC2/00-security
 terraform init
+terraform apply
+```
+
+### Paso 2: Llave SSH (`01-ssh-key`)
+
+Registra tu clave pública en AWS.
+
+```bash
+cd ../01-ssh-key
+terraform init
 terraform apply -var="public_key_path=~/.ssh/id_rsa.pub"
 ```
 
-### Paso 2: Instancia (`01-instance`)
+### Paso 3: Elastic IP (`02-eip`)
 
-Lanza la instancia y le asigna los recursos de seguridad.
+Reserva una IP elástica estática.
 
 ```bash
-cd 01-instance
+cd ../02-eip
+terraform init
+terraform apply
+```
+
+### Paso 4: Instancia (`03-instance`)
+
+Lanza la instancia y asocia los recursos.
+
+```bash
+cd ../03-instance
 terraform init
 terraform apply
 ```
@@ -62,12 +82,17 @@ Este módulo depende del estado remoto de los módulos anteriores:
 
 ### `00-security`
 
-| Variable                  | Descripción                            | Valor por defecto                        |
-| :------------------------ | :------------------------------------- | :--------------------------------------- |
-| `public_key_path`         | Ruta local a tu clave pública (`.pub`) | `~/.ssh/id_rsa.pub`                      |
-| `allowed_ssh_cidr_blocks` | Lista de CIDRs permitidos para SSH     | `["0.0.0.0/0"]` (Recomendado restringir) |
+| Variable                  | Descripción                        | Valor por defecto                        |
+| :------------------------ | :--------------------------------- | :--------------------------------------- |
+| `allowed_ssh_cidr_blocks` | Lista de CIDRs permitidos para SSH | `["0.0.0.0/0"]` (Recomendado restringir) |
 
-### `01-instance`
+### `01-ssh-key`
+
+| Variable          | Descripción                            | Valor por defecto   |
+| :---------------- | :------------------------------------- | :------------------ |
+| `public_key_path` | Ruta local a tu clave pública (`.pub`) | `~/.ssh/id_rsa.pub` |
+
+### `03-instance`
 
 | Variable        | Descripción           | Valor por defecto |
 | :-------------- | :-------------------- | :---------------- |

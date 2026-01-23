@@ -10,13 +10,6 @@ variable "aws_profile" {
   default     = "terraform"
 }
 
-variable "allowed_ssh_cidr_blocks" {
-  description = "List of CIDR blocks allowed to SSH into the bastion host"
-  type        = list(string)
-  default     = ["79.117.246.12/32"]
-}
-
-
 variable "environment" {
   description = "Environment name"
   type        = string

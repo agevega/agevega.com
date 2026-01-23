@@ -1,6 +1,6 @@
 output "bastion_public_ip" {
   description = "Public IP of the Bastion Host"
-  value       = data.terraform_remote_state.security.outputs.eip_public_ip
+  value       = data.terraform_remote_state.eip.outputs.eip_public_ip
 }
 
 output "bastion_instance_id" {
