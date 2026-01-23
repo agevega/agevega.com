@@ -23,6 +23,10 @@ infra/
 │   │   ├── 01-nat-gateway/
 │   │   └── 02-vpc-endpoints/
 │   ├── 02-bastion-EC2/
+│   │   ├── 00-security/
+│   │   ├── 01-ssh-key/
+│   │   ├── 02-eip/
+│   │   └── 03-instance/
 │   ├── 03-ECR/               # Registry de contenedores
 │   ├── 04-lambda-SES/        # Backend Serverless (Contact Form)
 │   ├── 05-cloudfront-WAF-S3/
@@ -131,3 +135,13 @@ infra/
 - División de `01-networking` en submódulos (`vpc-core`, `nat-gateway`, `vpc-endpoints`) para gestión de costes.
 - Corrección integral de documentación y dependencias.
   ➡️ [Detalles](changelog/2026-01-22_refactorizacion-networking-y-doc.md)
+
+### 23/01/2026 — Refactorización Bastion EC2 (Módulo 02)
+
+- Refactorización del módulo `02-bastion-EC2` en 4 submódulos para granularidad total.
+- **00-security**: Security Groups.
+- **01-ssh-key**: Key Pair.
+- **02-eip**: Elastic IP.
+- **03-instance**: Instancia EC2.
+- Restricción de acceso SSH a IP personal por defecto.
+  ➡️ [Detalles](changelog/2026-01-23_refactorizacion-bastion.md)
