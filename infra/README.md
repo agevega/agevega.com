@@ -30,6 +30,10 @@ infra/
 │   ├── 03-ECR/               # Registry de contenedores
 │   ├── 04-lambda-SES/        # Backend Serverless (Contact Form)
 │   ├── 05-cloudfront-WAF-S3/
+│   │   ├── 00-s3-assets/
+│   │   ├── 01-acm-certificate/
+│   │   ├── 02-waf/
+│   │   └── 03-cloudfront/
 └── README.md
 ```
 
@@ -145,3 +149,10 @@ infra/
 - **03-instance**: Instancia EC2.
 - Restricción de acceso SSH a IP personal por defecto.
   ➡️ [Detalles](changelog/2026-01-23_refactorizacion-bastion.md)
+
+### 23/01/2026 — Refactorización CloudFront (Módulo 05)
+
+- Refactorización de `05-cloudfront-WAF-S3` en 4 submódulos secuenciales.
+- Optimización regional: S3/CloudFront en Madrid (eu-south-2), ACM/WAF en N. Virginia (us-east-1).
+- WAF opcional ("Plug & Play") para ahorro de costes.
+  ➡️ [Detalles](changelog/2026-01-23_refactorizacion-cloudfront.md)
