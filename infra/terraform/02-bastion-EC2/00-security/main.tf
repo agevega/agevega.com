@@ -3,8 +3,6 @@ resource "aws_security_group" "bastion_sg" {
   description = "Security group for Bastion Host"
   vpc_id      = data.terraform_remote_state.networking.outputs.vpc_id
 
-  # Inline rules removed to support extending via aws_security_group_rule resources (e.g. from module 05)
-
   tags = merge(var.common_tags, {
     Name        = "bastion-sg"
     Environment = var.environment
