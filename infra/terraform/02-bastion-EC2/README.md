@@ -1,7 +1,7 @@
 # 02-bastion-EC2
 
-Este módulo despliega un **Bastion Host** (EC2) altamente seguro para permitir el acceso administrativo a las redes privadas.  
-Para facilitar la gestión y evitar dependencias circulares, el despliegue se divide en dos submódulos secuenciales.
+Este módulo despliega un **Bastion Host** (EC2) para permitir el acceso administrativo a las redes privadas.  
+Para facilitar la gestión y evitar dependencias circulares, el despliegue se divide en dos submódulos.
 
 ![Architecture Diagram](../../diagrams/02-bastion-EC2.png)
 
@@ -25,7 +25,7 @@ El módulo se estructura en dos pasos lógicos:
 
 ## 🚀 Guía de Despliegue
 
-Sigue este orden estricto para evitar errores de dependencias.
+Sigue este orden para evitar errores de dependencias.
 
 ### Paso 1: Seguridad e Identidad (`00-security`)
 
