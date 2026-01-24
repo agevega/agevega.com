@@ -2,6 +2,22 @@
 
 Este módulo despliega la capa de entrega de contenido (CDN), seguridad (WAF) y almacenamiento de assets. Se ha diseñado de forma modular para optimizar costes y tiempos de despliegue, separando los recursos por región y ciclo de vida.
 
+**Comportamiento Automático:**
+
+- Si `02-waf` existe: Se asocia el Web ACL.
+- Si `02-waf` no existe o fue destruido: Se despliega sin WAF.
+
+> **⚠️ Importante**: Para que la detección automática funcione, el **archivo de estado** del módulo `02-waf` debe existir en S3.
+> Si nunca has ejecutado el módulo `02-waf`, recibirás un error `No stored state was found`.
+>
+> **Solución para despliegue SIN WAF:**
+>
+> 1. Ejecuta `terraform apply` en `02-waf` (Crea el recurso).
+> 2. Ejecuta `terraform destroy` en `02-waf` (Borra el recurso, pero deja el estado vacío).
+> 3. Ejecuta `terraform apply` en `03-cloudfront`.
+>
+> Esto inicializa el estado remoto necesario para que CloudFront sepa que "no hay WAF".
+
 ---
 
 ## 🏛️ Arquitectura
@@ -56,15 +72,20 @@ terraform apply
 
 ### 4. CloudFront (`03-cloudfront`)
 
-Si desplegaste el WAF en el paso anterior, obtén su ARN primero.
-
-**Opción A: Sin WAF (Ahorro de costes)**
+La distribución detectará automáticamente la configuración del WAF.
 
 ```bash
 cd ../03-cloudfront
 terraform init
 terraform apply
 ```
+
+**Comportamiento:**
+
+- Si `02-waf` **existe**: CloudFront se asocia al WAF automáticamente.
+- Si `02-waf` **no existe** (o fue destruido): CloudFront se despliega sin WAF.
+
+> **Nota**: Si nunca has inicializado `02-waf`, recuerda ejecutarlo y destruirlo una vez para crear el estado vacío (ver aviso arriba).
 
 ---
 
@@ -77,5 +98,3 @@ terraform apply
     ```
 
 ---
-
-## 🔧 Variables Importantes
