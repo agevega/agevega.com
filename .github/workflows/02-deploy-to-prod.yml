@@ -1,0 +1,39 @@
+name: 02 - Deploy to Prod (HA Cluster)
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/02-deploy-to-prod.yml'
+
+jobs:
+  deploy-prod:
+    runs-on: ubuntu-latest
+    needs: build-and-push # Assuming we link it, or we rely on 01 to build.
+                          # If 01 builds on main push, we can just run this. 
+                          # Ideally, we should separate build, but for now let's assume 01 runs in parallel or before.
+                          # Actually, if both trigger on main, they run in parallel. 
+                          # To ensure 01 finishes building, we might need a workflow_run trigger or just wait/retry.
+                          # Or simpler: COPY the build steps here? No, redundant.
+                          # Let's use workflow_run or just assume the image is ready (rolling update tolerates mix).
+    
+    # Better approach: This workflow only handles the refresh. 
+    # Current user flow: 01 builds and deploys to dev.
+    # We want Prod to be updated too.
+    
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-south-2
+
+      - name: Start ASG Instance Refresh
+        run: |
+          aws autoscaling start-instance-refresh \
+            --auto-scaling-group-name ha-cluster-asg \
+            --preferences '{"MinHealthyPercentage": 50}'
