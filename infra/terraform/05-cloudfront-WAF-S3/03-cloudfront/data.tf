@@ -27,3 +27,13 @@ data "terraform_remote_state" "bastion_eip" {
     profile = "terraform"
   }
 }
+
+data "terraform_remote_state" "waf" {
+  backend = "s3"
+  config = {
+    bucket  = "agevegacom-terraform-state"
+    key     = "modules/05-cloudfront-WAF-S3/02-waf/terraform.tfstate"
+    region  = "eu-south-2"
+    profile = "terraform"
+  }
+}

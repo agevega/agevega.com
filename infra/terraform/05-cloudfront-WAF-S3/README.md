@@ -66,17 +66,6 @@ terraform init
 terraform apply
 ```
 
-**Opción B: Con WAF**
-
-```bash
-# Obtén el ARN del WAF (desde el output del módulo 02)
-WAF_ARN=$(cd ../02-waf && terraform output -raw web_acl_arn)
-
-cd ../03-cloudfront
-terraform init
-terraform apply -var="web_acl_arn=$WAF_ARN"
-```
-
 ---
 
 ## ⚠️ Pasos Post-Despliegue
@@ -90,9 +79,3 @@ terraform apply -var="web_acl_arn=$WAF_ARN"
 ---
 
 ## 🔧 Variables Importantes
-
-### `03-cloudfront`
-
-| Variable      | Descripción                                                  | Valor por defecto |
-| :------------ | :----------------------------------------------------------- | :---------------- |
-| `web_acl_arn` | ARN del WAF Web ACL. Dejar en `null` para desplegar sin WAF. | `null`            |

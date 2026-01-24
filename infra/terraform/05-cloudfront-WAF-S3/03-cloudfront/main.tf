@@ -16,7 +16,9 @@ resource "aws_cloudfront_distribution" "distribution" {
   is_ipv6_enabled     = true
   comment             = "Distribution for ${var.domain_name}"
   default_root_object = "" # Not needed for proxy to EC2
-  web_acl_id          = var.web_acl_arn
+  
+  # Auto-attach WAF if module 02 is deployed. Gracefully fallback to null (no WAF) if state is missing.
+  web_acl_id = try(data.terraform_remote_state.waf.outputs.web_acl_arn, null)
 
   aliases = [var.domain_name, "www.${var.domain_name}"]
 

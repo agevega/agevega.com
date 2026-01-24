@@ -16,11 +16,7 @@ variable "domain_name" {
   default     = "agevega.com"
 }
 
-variable "web_acl_arn" {
-  description = "ARN of the WAF Web ACL to associate. Leave null to disable WAF."
-  type        = string
-  default     = null
-}
+
 
 variable "common_tags" {
   description = "Common tags for all resources"
