@@ -21,7 +21,7 @@ resource "aws_cloudfront_distribution" "distribution" {
   # Gracefully fallback to null if state is missing or enable_waf is false.
   web_acl_id = var.enable_waf ? try(data.terraform_remote_state.waf.outputs.web_acl_arn, null) : null
 
-  aliases = [var.domain_name, "www.${var.domain_name}"]
+  aliases = [var.domain_name, "www.${var.domain_name}", "dev.${var.domain_name}"]
 
   origin {
     domain_name = data.terraform_remote_state.bastion_eip.outputs.eip_public_dns
