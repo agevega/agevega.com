@@ -11,7 +11,7 @@ on:
 env:
   AWS_REGION: eu-south-2
   ECR_REPOSITORY: agevegacom-frontend
-  EC2_HOST: 51.92.143.87
+  EC2_HOST: 18.100.30.160
   EC2_USER: ec2-user
 
 jobs:
