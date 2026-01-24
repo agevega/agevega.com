@@ -24,7 +24,8 @@ La nueva arquitectura divide el despliegue en 4 submódulos secuenciales:
 La principal mejora es la capacidad de "Plug & Play" del WAF.
 
 - El módulo `02-waf` contiene la definición de reglas. Puede crearse o destruirse independientemente.
-- El módulo `03-cloudfront` acepta una variable opcional `web_acl_arn`. Si es `null`, CloudFront funciona sin WAF (ahorro de costes). Si se provee, se asocia.
+- El módulo `02-waf` contiene la definición de reglas. Puede crearse o destruirse independientemente.
+- El módulo `03-cloudfront` tiene lógica de auto-descubrimiento. Detecta si el WAF existe y lo asocia automáticamente. Incluye una variable `enable_waf` para permitir la desvinculación manual.
 
 ### Nuevo Árbol de Directorios
 

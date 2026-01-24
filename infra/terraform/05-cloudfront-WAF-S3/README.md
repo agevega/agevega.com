@@ -120,3 +120,11 @@ Debido a que AWS impide borrar un WAF si está en uso, debes seguir estos pasos 
     ```
 
 ---
+
+## 🔧 Variables Importantes
+
+### `03-cloudfront`
+
+| Variable     | Descripción                                                                               | Valor por defecto |
+| :----------- | :---------------------------------------------------------------------------------------- | :---------------- |
+| `enable_waf` | Activa la detección automática del WAF. Poner a `false` para desvincular antes de borrar. | `true`            |
