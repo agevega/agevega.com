@@ -89,6 +89,28 @@ terraform apply
 
 ---
 
+### 🛑 Cómo desactivar y destruir el WAF
+
+Debido a que AWS impide borrar un WAF si está en uso, debes seguir estos pasos para evitar el error `WAFAssociatedItemException`:
+
+1.  **Desvincular WAF**: Actualiza CloudFront ignorando el WAF.
+    ```bash
+    cd infra/terraform/05-cloudfront-WAF-S3/03-cloudfront
+    terraform apply -var="enable_waf=false"
+    ```
+2.  **Destruir WAF**: Ahora que está libre, destrúyelo.
+    ```bash
+    cd ../02-waf
+    terraform destroy
+    ```
+3.  **Limpiar**: (Opcional) Vuelve a dejar la variable en `true` (por defecto) en CloudFront para futuras detecciones.
+    ```bash
+    cd ../03-cloudfront
+    terraform apply
+    ```
+
+---
+
 ## ⚠️ Pasos Post-Despliegue
 
 1.  **DNS**: Asegurar que los registros CNAME apuntan a la distribución (Output: `cloudfront_domain_name`).

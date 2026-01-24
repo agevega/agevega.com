@@ -16,7 +16,11 @@ variable "domain_name" {
   default     = "agevega.com"
 }
 
-
+variable "enable_waf" {
+  description = "Enable WAF auto-discovery. Set to false to force WAF detachment before destroying the WAF module."
+  type        = bool
+  default     = true
+}
 
 variable "common_tags" {
   description = "Common tags for all resources"

@@ -17,8 +17,9 @@ resource "aws_cloudfront_distribution" "distribution" {
   comment             = "Distribution for ${var.domain_name}"
   default_root_object = "" # Not needed for proxy to EC2
   
-  # Auto-attach WAF if module 02 is deployed. Gracefully fallback to null (no WAF) if state is missing.
-  web_acl_id = try(data.terraform_remote_state.waf.outputs.web_acl_arn, null)
+  # Auto-attach WAF if module 02 is deployed AND enable_waf is true.
+  # Gracefully fallback to null if state is missing or enable_waf is false.
+  web_acl_id = var.enable_waf ? try(data.terraform_remote_state.waf.outputs.web_acl_arn, null) : null
 
   aliases = [var.domain_name, "www.${var.domain_name}"]
 
