@@ -2,6 +2,7 @@ resource "aws_launch_template" "app_lt" {
   name_prefix   = "ha-cluster-lt-"
   image_id      = var.ami_id
   instance_type = var.instance_type
+  key_name      = data.terraform_remote_state.ssh_key.outputs.key_name
 
   iam_instance_profile {
     name = data.terraform_remote_state.security.outputs.instance_profile_name

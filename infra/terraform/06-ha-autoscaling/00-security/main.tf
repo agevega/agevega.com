@@ -36,6 +36,14 @@ resource "aws_security_group" "instance_sg" {
     security_groups = [aws_security_group.alb_sg.id]
   }
 
+  ingress {
+    description     = "SSH from Bastion"
+    from_port       = 22
+    to_port         = 22
+    protocol        = "tcp"
+    security_groups = [data.terraform_remote_state.bastion.outputs.security_group_id]
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
