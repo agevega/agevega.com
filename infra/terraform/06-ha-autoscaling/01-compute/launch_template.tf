@@ -1,6 +1,6 @@
 resource "aws_launch_template" "app_lt" {
   name_prefix   = "ha-cluster-lt-"
-  image_id      = var.ami_id
+  image_id      = data.aws_ami.amazon_linux_2023.id
   instance_type = var.instance_type
   key_name      = data.terraform_remote_state.ssh_key.outputs.key_name
 

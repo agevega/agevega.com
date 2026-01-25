@@ -24,11 +24,7 @@ variable "common_tags" {
 variable "instance_type" {
   description = "Instance type for ASG (Spot)"
   type        = string
-  default     = "t3.small"
+  default     = "t4g.nano"
 }
 
-variable "ami_id" {
-  description = "AMI ID (default: Ubuntu 24.04 LTS for eu-south-2)"
-  type        = string
-  default     = "ami-0b0dcb5067f052a63"
-}
+
