@@ -28,7 +28,7 @@ RUN chmod +x /docker-entrypoint.sh
 # Copy built application
 COPY --from=build /app/dist /usr/share/nginx/html
 
-EXPOSE 80 443
+EXPOSE 80
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["nginx", "-g", "daemon off;"]
