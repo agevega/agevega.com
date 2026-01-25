@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# LEGACY SCRIPT
+
 # Configuration
 DOMAIN="agevega.com"
 EMAIL="admin@agevega.com" # Replace with valid email if needed
