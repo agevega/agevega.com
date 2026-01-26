@@ -27,3 +27,13 @@ data "terraform_remote_state" "compute" {
     profile = "terraform"
   }
 }
+
+data "terraform_remote_state" "s3_assets" {
+  backend = "s3"
+  config = {
+    bucket  = "agevegacom-terraform-state"
+    key     = "modules/05-cloudfront-WAF-S3/00-s3-assets/terraform.tfstate"
+    region  = "eu-south-2"
+    profile = "terraform"
+  }
+}
