@@ -3,7 +3,7 @@ resource "aws_lb" "app_alb" {
   internal           = false
   load_balancer_type = "application"
   security_groups    = [data.terraform_remote_state.security.outputs.alb_sg_id]
-  subnets            = [
+  subnets = [
     data.terraform_remote_state.vpc.outputs.subnet_public_1_id,
     data.terraform_remote_state.vpc.outputs.subnet_public_2_id,
     data.terraform_remote_state.vpc.outputs.subnet_public_3_id

@@ -1,14 +1,18 @@
+data "aws_ec2_managed_prefix_list" "cloudfront" {
+  name = "com.amazonaws.global.cloudfront.origin-facing"
+}
+
 resource "aws_security_group" "alb_sg" {
   name        = "ha-cluster-alb-sg"
   description = "Security group for Application Load Balancer"
   vpc_id      = data.terraform_remote_state.vpc.outputs.vpc_id
 
   ingress {
-    description = "HTTP from Anywhere"
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    description     = "HTTP from CloudFront"
+    from_port       = 80
+    to_port         = 80
+    protocol        = "tcp"
+    prefix_list_ids = [data.aws_ec2_managed_prefix_list.cloudfront.id]
   }
 
   egress {

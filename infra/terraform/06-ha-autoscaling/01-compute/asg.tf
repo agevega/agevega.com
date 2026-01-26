@@ -1,13 +1,13 @@
 resource "aws_autoscaling_group" "app_asg" {
-  name                = "ha-cluster-asg"
+  name = "ha-cluster-asg"
   vpc_zone_identifier = [
     data.terraform_remote_state.vpc.outputs.subnet_private_1_id,
     data.terraform_remote_state.vpc.outputs.subnet_private_2_id,
     data.terraform_remote_state.vpc.outputs.subnet_private_3_id
   ]
 
-  target_group_arns = [aws_lb_target_group.app_tg.arn]
-  health_check_type = "ELB"
+  target_group_arns         = [aws_lb_target_group.app_tg.arn]
+  health_check_type         = "ELB"
   health_check_grace_period = 300
 
   min_size         = 1
