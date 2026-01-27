@@ -36,5 +36,7 @@ resource "aws_wafv2_web_acl" "main" {
     }
   }
 
-  tags = var.common_tags
+  tags = merge(var.common_tags, {
+    Module = "04-bastion-host/03-waf"
+  })
 }

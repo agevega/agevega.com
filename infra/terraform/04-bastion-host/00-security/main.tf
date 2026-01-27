@@ -6,7 +6,7 @@ resource "aws_security_group" "bastion_sg" {
   tags = merge(var.common_tags, {
     Name        = "bastion-sg"
     Environment = var.environment
-    Module      = "02-bastion-EC2/00-security"
+    Module      = "04-bastion-host/00-security"
   })
 }
 

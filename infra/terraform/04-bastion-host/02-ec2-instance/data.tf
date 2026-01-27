@@ -12,7 +12,7 @@ data "terraform_remote_state" "security" {
   backend = "s3"
   config = {
     bucket  = "agevegacom-terraform-state"
-    key     = "modules/02-bastion-EC2/00-security/terraform.tfstate"
+    key     = "modules/04-bastion-host/00-security/terraform.tfstate"
     region  = "eu-south-2"
     profile = "terraform"
   }
@@ -22,7 +22,7 @@ data "terraform_remote_state" "ssh_key" {
   backend = "s3"
   config = {
     bucket  = "agevegacom-terraform-state"
-    key     = "modules/02-bastion-EC2/01-ssh-key/terraform.tfstate"
+    key     = "modules/02-shared-resources/00-ssh-keys/terraform.tfstate"
     region  = "eu-south-2"
     profile = "terraform"
   }
@@ -32,7 +32,7 @@ data "terraform_remote_state" "eip" {
   backend = "s3"
   config = {
     bucket  = "agevegacom-terraform-state"
-    key     = "modules/02-bastion-EC2/02-eip/terraform.tfstate"
+    key     = "modules/04-bastion-host/01-eip/terraform.tfstate"
     region  = "eu-south-2"
     profile = "terraform"
   }
