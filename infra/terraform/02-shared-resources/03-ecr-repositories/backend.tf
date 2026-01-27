@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
     bucket         = "agevegacom-terraform-state"
-    key            = "modules/03-ECR/terraform.tfstate"
+    key            = "modules/02-shared-resources/03-ecr-repositories/terraform.tfstate"
     region         = "eu-south-2"
     dynamodb_table = "terraform-state-lock"
     encrypt        = true

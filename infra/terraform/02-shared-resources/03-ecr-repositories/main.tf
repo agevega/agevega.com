@@ -8,7 +8,7 @@ resource "aws_ecr_repository" "this" {
 
   tags = merge(var.common_tags, {
     Name   = var.repository_name
-    Module = "03-ECR"
+    Module = "02-shared-resources/03-ecr-repositories"
   })
 }
 
