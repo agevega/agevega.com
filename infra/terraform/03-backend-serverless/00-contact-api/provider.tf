@@ -7,7 +7,7 @@ provider "aws" {
       Project     = "agevega.com"
       Environment = "lab"
       ManagedBy   = "Terraform"
-      Module      = "04-lambda-SES"
+      Module      = "03-backend-serverless/00-contact-api"
     }
   }
 }
@@ -22,7 +22,7 @@ provider "aws" {
       Project     = "agevega.com"
       Environment = "lab"
       ManagedBy   = "Terraform"
-      Module      = "04-lambda-SES"
+      Module      = "03-backend-serverless/00-contact-api"
     }
   }
 }

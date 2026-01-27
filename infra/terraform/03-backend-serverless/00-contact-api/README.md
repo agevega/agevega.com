@@ -1,4 +1,4 @@
-# 04-lambda-SES
+# 03-backend-serverless (00-contact-api)
 
 Este módulo implementa el backend **Serverless** para el formulario de contacto del sitio web. Utiliza AWS Lambda y Amazon SES para procesar correos electrónicos sin necesidad de servidores dedicados.
 
@@ -18,7 +18,7 @@ Este módulo implementa el backend **Serverless** para el formulario de contacto
 ## 🚀 Guía de Despliegue
 
 ```bash
-cd infra/terraform/04-lambda-SES
+cd infra/terraform/03-backend-serverless/00-contact-api
 terraform init
 terraform apply
 ```

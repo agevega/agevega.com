@@ -23,7 +23,7 @@ resource "aws_iam_role" "lambda_role" {
   name               = "${var.project_name}-contact-lambda-role"
   assume_role_policy = data.aws_iam_policy_document.lambda_assume_role.json
   tags = merge(var.common_tags, {
-    Module = "04-lambda-SES"
+    Module = "03-backend-serverless/00-contact-api"
   })
 }
 
@@ -103,7 +103,7 @@ resource "aws_apigatewayv2_stage" "default" {
   }
 
   tags = merge(var.common_tags, {
-    Module = "04-lambda-SES"
+    Module = "03-backend-serverless/00-contact-api"
   })
 }
 
@@ -114,7 +114,7 @@ resource "aws_cloudwatch_log_group" "lambda_logs" {
   name              = "/aws/lambda/${aws_lambda_function.contact_form.function_name}"
   retention_in_days = 1
   tags = merge(var.common_tags, {
-    Module = "04-lambda-SES"
+    Module = "03-backend-serverless/00-contact-api"
   })
 }
 
