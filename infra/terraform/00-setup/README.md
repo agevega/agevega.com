@@ -4,7 +4,7 @@ Este módulo gestiona el setup inicial de la infraestructura (backend y auditor�
 
 Está dividido en dos submódulos críticos que deben ejecutarse en orden:
 
-1.  **`00-backend-S3`**: Bootstrap de IaC. Crea el bucket S3 y la tabla DynamoDB para guardar el estado de Terraform.
+1.  **`00-tf-backend`**: Bootstrap de IaC. Crea el bucket S3 y la tabla DynamoDB para guardar el estado de Terraform.
 2.  **`01-audit-logs`**: Configuración de auditoría. Habilita AWS CloudTrail y AWS Config para compliance y seguridad.
 3.  **`02-budgets`**: Control de costes. Establece presupuestos mensuales y diarios con alertas por email.
 
@@ -14,12 +14,12 @@ Está dividido en dos submódulos críticos que deben ejecutarse en orden:
 
 ## 🚀 Guía de Despliegue (Fresh Account)
 
-### Paso 1: Bootstrap (00-backend-S3)
+### Paso 1: Bootstrap (00-tf-backend)
 
 Crea la infraestructura base para que Terraform pueda guardar su estado.
 
 ```bash
-cd 00-backend-S3
+cd 00-tf-backend
 terraform init
 terraform apply
 ```
@@ -30,7 +30,7 @@ terraform apply
 >
 > Una vez que el bucket y la tabla DynamoDB se hayan creado:
 >
-> 1. Abre el archivo `backend.tf` (ya incluido en la carpeta `00-backend-S3`).
+> 1. Abre el archivo `backend.tf` (ya incluido en la carpeta `00-tf-backend`).
 > 2. Descomenta el bloque de configuración `terraform { ... }`.
 >
 > Luego, ejecuta:
@@ -55,7 +55,7 @@ terraform apply
 
 ## 📂 Contenido del Módulo
 
-### 00-backend-S3
+### 00-tf-backend
 
 - **Bucket S3**: `agevegacom-terraform-state`. Versionado, encriptado (AES256), sin acceso público.
 - **DynamoDB**: `terraform-state-lock`. LockID key, PITR activo.
