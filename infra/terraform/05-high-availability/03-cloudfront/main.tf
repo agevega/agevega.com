@@ -95,5 +95,7 @@ resource "aws_cloudfront_distribution" "prod_distribution" {
     minimum_protocol_version = "TLSv1.2_2021"
   }
 
-  tags = var.common_tags
+  tags = merge(var.common_tags, {
+    Module = "05-high-availability/03-cloudfront"
+  })
 }

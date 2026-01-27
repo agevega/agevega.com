@@ -12,7 +12,8 @@ resource "aws_lb" "app_alb" {
   enable_deletion_protection = false
 
   tags = merge(var.common_tags, {
-    Name = "ha-cluster-alb"
+    Name   = "ha-cluster-alb"
+    Module = "05-high-availability/01-ec2-autoscaling"
   })
 }
 

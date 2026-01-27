@@ -25,6 +25,12 @@ resource "aws_autoscaling_group" "app_asg" {
     propagate_at_launch = true
   }
 
+  tag {
+    key                 = "Module"
+    value               = "05-high-availability/01-ec2-autoscaling"
+    propagate_at_launch = true
+  }
+
   dynamic "tag" {
     for_each = var.common_tags
     content {

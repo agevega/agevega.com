@@ -35,5 +35,7 @@ resource "aws_wafv2_web_acl" "main" {
     }
   }
 
-  tags = var.common_tags
+  tags = merge(var.common_tags, {
+    Module = "05-high-availability/02-waf"
+  })
 }

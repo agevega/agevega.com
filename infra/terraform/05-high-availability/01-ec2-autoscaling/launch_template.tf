@@ -22,7 +22,8 @@ resource "aws_launch_template" "app_lt" {
   tag_specifications {
     resource_type = "instance"
     tags = merge(var.common_tags, {
-      Name = "ha-cluster-node"
+      Name   = "ha-cluster-node"
+      Module = "05-high-availability/01-ec2-autoscaling"
     })
   }
 
