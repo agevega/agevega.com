@@ -93,22 +93,18 @@ agevega.com/
 
 ## 🚀 Uso y Despliegue
 
-### Desarrollo Local (Frontend)
+### Desarrollo Localhost (Frontend)
 
 Para trabajar en el diseño y contenido del sitio web:
 
 ```bash
-# Navegar al directorio frontend
-cd frontend
-
-# Instalar dependencias
-npm install
-
 # Iniciar servidor de desarrollo en http://localhost:4321
+cd frontend
+npm install
 npm run dev
 ```
 
-### Despliegue (CI/CD)
+### Despliegue de Aplicación (CI/CD)
 
 El proyecto cuenta con workflows de GitHub Actions para gestionar el ciclo de vida de la aplicación:
 
@@ -121,14 +117,7 @@ El proyecto cuenta con workflows de GitHub Actions para gestionar el ciclo de vi
 
 ### Despliegue de Infraestructura
 
-Los cambios en la nube se aplican mediante Terraform.
-
-```bash
-cd infra/terraform/<modulo>/<submodulo>
-terraform init
-terraform plan
-terraform apply
-```
+Los cambios en AWS se aplican mediante Terraform. Para más detalles, consulta la [documentación de Infraestructura](./infra/README.md).
 
 ---
 
