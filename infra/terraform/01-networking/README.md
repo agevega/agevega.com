@@ -1,48 +1,83 @@
-# 01-networking
+# 🌐 01-networking
 
-Este directorio containe la infraestructura de red dividida en **submódulos** para facilitar la gestión de costes y actualizaciones.
+Este módulo despliega la **Infraestructura de Red (VPC)** base. Diseñada en 3 capas para máxima seguridad y segmentación.
 
-## 📂 Submódulos
+---
+
+## 🏛️ Arquitectura
+
+La red se estructura en una VPC con direccionamiento `10.0.0.0/16` dividida en subredes por función.
+
+- **VPC Tiering**:
+  - **Public**: Para recursos con acceso directo a Internet.
+  - **Private**: Para cargas de trabajo en alta disponibilidad. Salida a Internet a través del NAT Gateway.
+  - **Data/Secure**: Para datos y persistencia (RDS, DynamoDB). Aislada de internet.
+- **Conectividad Opcional**: El NAT Gateway está desacoplado para permitir su apagado y reducir costes.
+
+---
+
+## 📂 Componentes (Submódulos)
 
 ### 1. [00-vpc-core](./00-vpc-core)
 
-- **Descripción**: Despliega la VPC, Subredes (Públicas, Privadas, DB), Internet Gateway y Tablas de Rutas base.
-- **Uso**: Siempre activo. Es el cimiento de la infraestructura.
+- **Función**: Red troncal.
+- **Recursos**: VPC, Subnets (Public/Private), Internet Gateway, Route Tables.
 
 ### 2. [01-nat-gateway](./01-nat-gateway)
 
-- **Descripción**: Despliega el NAT Gateway y la Elastic IP asociada. Añade rutas `0.0.0.0/0` a las tablas privadas.
-- **Uso**: **Opcional**. Desplegar solo cuando las instancias privadas necesiten acceso a Internet (ej: actualizaciones). Destruir para ahorrar costes (~33€/mes).
+- **Función**: Salida a Internet para redes privadas.
+- **Recursos**: NAT Gateway, Elastic IP, Rutas `0.0.0.0/0` en tablas privadas.
+- **Nota**: **Opcional**. Desplegar únicamente si se requiere conectividad de salida a Internet para los recursos en subredes privadas.
 
 ### 3. [02-vpc-endpoints](./02-vpc-endpoints)
 
-- **Descripción**: Endpoints de VPC para acceso interno a servicios AWS.
-- **Recursos**: S3 Gateway Endpoint.
-- **Uso**: Recomendado para permitir acceso a S3 privado sin salir a Internet.
+- **Función**: Acceso privado a servicios AWS.
+- **Recursos**: Gateway Endpoint para S3.
+- **Beneficio**: Permite acceder a S3 desde la red privada sin usar el NAT Gateway (ahorro de costes y tráfico).
+
+---
 
 ## 🚀 Guía de Despliegue
 
-El orden de despliegue es estricto debido a las dependencias de estado remoto:
+### 1. Core (Obligatorio)
 
-1.  **Core (Obligatorio)**:
+```bash
+cd 00-vpc-core
+terraform init
+terraform apply
+```
 
-    ```bash
-    cd 00-vpc-core
-    terraform init
-    terraform apply
-    ```
+### 2. Endpoints (Recomendado)
 
-2.  **Endpoints (Recomendado)**:
+```bash
+cd ../02-vpc-endpoints
+terraform init
+terraform apply
+```
 
-    ```bash
-    cd ../02-vpc-endpoints
-    terraform init
-    terraform apply
-    ```
+### 3. NAT Gateway (Bajo Demanda)
 
-3.  **NAT Gateway (Solo bajo demanda)**:
-    ```bash
-    cd ../01-nat-gateway
-    terraform init
-    terraform apply
-    ```
+```bash
+cd ../01-nat-gateway
+terraform init
+terraform apply
+# Destruir cuando no se use para ahorrar ~33€/mes
+# terraform destroy
+```
+
+---
+
+## 🔧 Variables Clave
+
+| Variable             | Descripción                         | Valor por Defecto                                  |
+| :------------------- | :---------------------------------- | :------------------------------------------------- |
+| `vpc_cidr`           | Rango CIDR de la VPC                | `10.0.0.0/16`                                      |
+| `availability_zones` | Zonas de disponibilidad a usar      | `["eu-south-2a", "eu-south-2b", "eu-south-2c"]`    |
+| `common_tags`        | Tags aplicados a todos los recursos | `{ Project = "agevega.com", Environment = "dev" }` |
+
+---
+
+## ⚡ Optimización y Costes
+
+- **NAT Gateway On-Demand**: El NAT Gateway es el componente más caro (~$0.045/hora + tráfico). Este diseño modular permite provisionarlo solo durante ventanas de mantenimiento (ej: `yum update` en instancias privadas) y destruirlo después, resultando en un ahorro significativo.
+- **VPC Endpoints (Gateway)**: Los endpoints de tipo Gateway para S3 son **gratuitos** y evitan pagar procesamiento de datos por el NAT Gateway.

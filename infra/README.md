@@ -1,41 +1,73 @@
-# 🧱 Infraestructura – agevegacom
+# 🏗️ Infraestructura Agevega.com
 
-Registro cronológico de la configuración y mantenimiento de la infraestructura en AWS para el proyecto **agevegacom**.
-
-Este documento actúa como índice general de todas las operaciones y cambios realizados, con enlaces a las entradas detalladas del registro diario en la carpeta `changelog/`.
+Documentación técnica de la infraestructura como código (IaC) para **agevega.com**. Este directorio contiene todo el código Terraform modularizado para desplegar una arquitectura segura, escalable y optimizada en costes en AWS.
 
 ---
 
-## 📘 Estructura del directorio
+## 🏛️ Arquitectura Global
 
-```bash
-infra/
-├── changelog/
-│   ├── 2025-10-18_creacion-cuenta.md
-│   └── 2025-10-18_configuracion-iam.md
-│   └── 2025-10-24_auditoria-y-configuracion-logs.md
-│   └── 2025-10-26_configuracion-terraform-state.md
-│   └── 2025-11-01_despliegue-red-vpc.md
-├── terraform/
-│   ├── 00-terraform-state-S3/
-│   ├── 01-networking/
-│   │   ├── 00-vpc-core/
-│   │   ├── 01-nat-gateway/
-│   │   └── 02-vpc-endpoints/
-│   ├── 02-bastion-EC2/
-│   │   ├── 00-security/
-│   │   ├── 01-ssh-key/
-│   │   ├── 02-eip/
-│   │   └── 03-instance/
-│   ├── 03-ECR/               # Registry de contenedores
-│   ├── 04-lambda-SES/        # Backend Serverless (Contact Form)
-│   ├── 05-cloudfront-WAF-S3/
-│   │   ├── 00-s3-assets/
-│   │   ├── 01-acm-certificate/
-│   │   ├── 02-waf/
-│   │   └── 03-cloudfront/
-└── README.md
-```
+La infraestructura sigue una filosofía **Cloud Native** y **Serverless First** donde sea posible, priorizando la seguridad y la reducción de costes operativos.
+
+### Principios de Diseño
+
+- **Inmutabilidad**: Toda la infraestructura es gestionada via Terraform (`infra/terraform`). No se permiten cambios manuales.
+- **Seguridad**:
+  - **WAF**: Reglas gestionadas de AWS protegiendo CloudFront.
+  - **CloudFront + OAC**: Distribución global de contenido estático desde S3 privado.
+  - **EC2 Aislado**: Instancias en subredes privadas, accesisbles solo via Bastion (SSH) o ALB (HTTP).
+- **Eficiencia de Costes**:
+  - **ARM64 (Graviton)**: Uso exclusivo de procesadores Graviton (`t4g.*`) en cómputo y Lambda.
+  - **Spot Instances**: Entornos de alta disponibilidad sobre instancias Spot.
+
+---
+
+## 📂 Estructura de Módulos
+
+La infraestructura se organiza en módulos numerados secuencialmente según su orden de despliegue.
+
+| Módulo                                                         | Descripción              | Componentes Clave                                          |
+| :------------------------------------------------------------- | :----------------------- | :--------------------------------------------------------- |
+| **[00-setup](./terraform/00-setup)**                           | **IaC & Gobierno**       | Backend S3/DynamoDB, CloudTrail, AWS Config, Budgets.      |
+| **[01-networking](./terraform/01-networking)**                 | **Recursos de Red**      | VPC (3-Tier), Subnets, NAT (Opcional), VPC Endpoints.      |
+| **[02-shared-resources](./terraform/02-shared-resources)**     | **Recursos Compartidos** | S3 Assets, ECR, ACM Certs, SSH Keys.                       |
+| **[03-backend-serverless](./terraform/03-backend-serverless)** | **Serverless Backend**   | Lambda (Python), API Gateway, SES.                         |
+| **[04-bastion-host](./terraform/04-bastion-host)**             | **Bastion SSH**          | EC2 Bastion, Elastic IP, Security Groups, WAF, CloudFront. |
+| **[05-high-availability](./terraform/05-high-availability)**   | **Alta Disponibilidad**  | ASG (Spot), ALB, CloudFront, WAF, Auto-Scaling.            |
+
+---
+
+## 🚀 Getting Started
+
+### Prerrequisitos
+
+- **Terraform** >= 1.5.0
+- **AWS CLI** configurado con perfil `terraform` o variable `AWS_PROFILE`.
+
+### Flujo de Trabajo
+
+Cada módulo es independiente pero depende del estado remoto de los anteriores.
+
+1. Navegar al directorio del módulo/submódulo:
+   ```bash
+   cd infra/terraform/<module>/<submodule>
+   ```
+2. Inicializar Terraform:
+   ```bash
+   terraform init
+   ```
+3. Planificar y aplicar:
+   ```bash
+   terraform apply
+   ```
+
+---
+
+## 🔒 Gestión del Estado
+
+El estado de Terraform se almacena de forma remota y segura:
+
+- **Bucket**: `agevegacom-terraform-state` (Encriptado, Versionado).
+- **Locking**: Tabla DynamoDB `terraform-state-lock`.
 
 ---
 

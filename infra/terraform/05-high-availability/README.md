@@ -1,64 +1,63 @@
-# 06-ha-autoscaling
+# 🚀 05-high-availability
 
-Este módulo despliega el entorno de **Producción en Alta Disponibilidad (HA)**. Utiliza instancias EC2 Spot orquestadas por un Auto Scaling Group (ASG), servidas a través de un Application Load Balancer (ALB) y protegidas por CloudFront y WAF.
-
-**Características Principales:**
-
-- **Alta Disponibilidad**: ASG distribuido en 3 zonas de disponibilidad.
-- **Eficiencia de Costes**: Uso de instancias Spot (`t4g.nano`).
-- **Seguridad Robusta**:
-  - **WAF Global**: Protege la distribución de CloudFront (Región `us-east-1`).
-  - **ALB Privado**: El ALB solo acepta tráfico desde CloudFront (Managed Prefix List).
-  - **IMDSv2**: Enforce de tokens de sesión para metadatos de instancias (prevención SSRF).
-  - **EC2 Aislado**: Las instancias solo aceptan tráfico HTTP del ALB y SSH del Bastion.
-- **Activos Compartidos**: Integra el bucket de S3 del Módulo 05 para servir assets estáticos (`/assets/*`).
+Este módulo despliega el entorno de **Producción**, diseñado para máxima disponibilidad y escalabilidad automática utilizando instancias Spot.
 
 ---
 
-## 🏛️ Arquitectura Modular
+## 🏛️ Arquitectura
 
-El módulo se divide en 4 componentes secuenciales:
+Arquitectura tolerante a fallos distribuida en 3 zonas de disponibilidad.
 
-1.  **`00-security`**:
-    - **Security Groups**: Reglas estrictas. El ALB rechaza tráfico directo de internet, solo permite CloudFront.
-    - **IAM**: Roles para EC2 (SSM, ECR).
-2.  **`01-compute`**:
-    - **ALB**: Balanceador de carga interno a la VPC (accesible por CloudFront).
-    - **ASG & Launch Template**: Gestión del ciclo de vida de las instancias. Fuerza IMDSv2.
-3.  **`02-waf`** (Global - `us-east-1`):
-    - **Web ACL**: Firewall de aplicación web desplegado en `us-east-1` para proteger CloudFront.
-4.  **`03-cloudfront`**:
-    - **Distribución**: Punto de entrada global.
-    - **Orígenes**:
-      - ALB (Default): Para la aplicación web.
-      - S3 Assets (Módulo 05): Para ficheros estáticos (`/assets/*`) vía OAC.
-    - **Caching**: TTL de 1 hora (3600s) para optimizar rendimiento.
+- **Spot Fleet**: Cluster de instancias `t4g.nano` gestionadas por ASG, logrando hasta un 90% de descuento en cómputo.
+- **Load Balancing**: ALB interno que distribuye tráfico y realiza health checks.
+- **Frontal Seguro**: El tráfico entra exclusivamente por CloudFront + WAF. El ALB solo acepta peticiones de CloudFront (verificado por Prefix List).
+- **Seguridad Instancias**: IMDSv2 forzado para mitigación de SSRF.
 
 ---
 
-## 🚀 Guía de Despliegue Secuencial
+## 📂 Componentes (Submódulos)
 
-Sigue este orden estricto debido a las dependencias de estado (`terraform_remote_state`):
+### 1. [00-security](./00-security)
 
-### 1. Seguridad (`00-security`)
+- **Función**: Firewalls y Seguridad de Red.
+- **Recursos**: Security Groups (ALB e Instancias), Prefix Lists de CloudFront.
+
+### 2. [01-ec2-autoscaling](./01-ec2-autoscaling)
+
+- **Función**: Cómputo elástico.
+- **Recursos**: Auto Scaling Group, Launch Template, Application Load Balancer.
+
+### 3. [02-waf](./02-waf)
+
+- **Función**: Protección Web.
+- **Recursos**: Web ACL dedicada para producción en `us-east-1`.
+
+### 4. [03-cloudfront](./03-cloudfront)
+
+- **Función**: CDN.
+- **Recursos**: Distribución optimizada para la aplicación web.
+
+---
+
+## 🚀 Guía de Despliegue
+
+### 1. Seguridad
 
 ```bash
-cd infra/terraform/06-ha-autoscaling/00-security
+cd 00-security
 terraform init
 terraform apply
 ```
 
-### 2. Cómputo (`01-compute`)
+### 2. Computación (ASG + ALB)
 
 ```bash
-cd ../01-compute
+cd ../01-ec2-autoscaling
 terraform init
 terraform apply
 ```
 
-### 3. WAF (`02-waf`)
-
-**Importante**: Este recurso debe desplegarse en `us-east-1` (configurado automáticamente en `provider.tf`).
+### 3. WAF Production
 
 ```bash
 cd ../02-waf
@@ -66,9 +65,7 @@ terraform init
 terraform apply
 ```
 
-### 4. CloudFront (`03-cloudfront`)
-
-Este paso integrará el ALB, el WAF y el bucket de S3 del Módulo 05.
+### 4. CloudFront Final
 
 ```bash
 cd ../03-cloudfront
@@ -78,36 +75,18 @@ terraform apply
 
 ---
 
-## 🔒 Detalles de Seguridad
+## 🔧 Variables Clave
 
-### Protección del ALB
-
-Para evitar que los atacantes se salten el WAF accediendo directamente al ALB, hemos implementado una restricción basada en **Prefix List**.
-
-- **Regla**: Ingress Port 80.
-- **Origen**: `com.amazonaws.global.cloudfront.origin-facing`.
-- **Efecto**: El ALB descarta cualquier paquete que no provenga de la red de CloudFront.
-
-### Protección de Instancias (IMDSv2)
-
-Para mitigar riesgos de SSRF, las instancias requieren **IMDSv2**:
-
-- `http_tokens = "required"`
-- `http_put_response_hop_limit = 1`
+| Variable           | Descripción                     | Valor por Defecto |
+| :----------------- | :------------------------------ | :---------------- |
+| `desired_capacity` | Número objetivo de instancias   | `2`               |
+| `min_size`         | Mínimo de instancias en ASG     | `1`               |
+| `max_size`         | Máximo de instancias (escalado) | `3`               |
+| `instance_type`    | Familia de instancias           | `t4g.nano`        |
 
 ---
 
-## 🛑 Gestión del WAF
+## ⚡ Optimización y Costes
 
-Para destruir o desvincular el WAF sin errores:
-
-1.  **Desvincular en CloudFront**:
-    ```bash
-    cd infra/terraform/06-ha-autoscaling/03-cloudfront
-    terraform apply -var="enable_waf=false"
-    ```
-2.  **Destruir WAF**:
-    ```bash
-    cd ../02-waf
-    terraform destroy
-    ```
+- **Spot Instances**: El uso de instancias Spot para el entorno de producción reduce dramáticamente los costes. Al estar detrás de un ASG y ALB, la posible interrupción de una instancia es manejada automáticamente reemplazándola por otra.
+- **Prefix List Security**: Implementación de Security Groups basados en Prefix Lists de CloudFront para restringir el acceso al ALB. Esto permite prescindir de un WAF regional, optimizando costes y delegando la seguridad de capa 7 íntegramente a CloudFront WAF.
