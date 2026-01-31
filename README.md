@@ -16,10 +16,10 @@ Se ha construido una plataforma **AWS Cloud-Native** siguiendo los principios de
 
 Este proyecto se aborda con una **perspectiva de ingeniería de infraestructura**, demostrando que la robustez y la escalabilidad no están reñidas con el bajo coste. Se priorizan prácticas como:
 
-- **FinOps Architecture**: Uso de **Spot Instances** y procesadores **Graviton (ARM64)** para mantener un entorno de Alta Disponibilidad.
-- **Inmutabilidad y Automatización**: Cero cambios manuales ("ClickOps"). Desde la red hasta la capa de aplicación, todo nace y evoluciona mediante **Terraform** y **CI/CD**.
 - **Seguridad**: Modelo **Zero Trust** donde cada capa (WAF, CloudFront, ALB, EC2) verifica explícitamente a su predecesora.
+- **Inmutabilidad y Automatización**: Cero cambios manuales ("ClickOps"). Desde la red hasta la capa de aplicación, todo nace y evoluciona mediante **Terraform** y **CI/CD**.
 - **Resiliencia**: Diseño tolerante a fallos distribuido en múltiples **Zonas de Disponibilidad (AZs)** y protegido globalmente en el Edge.
+- **FinOps Architecture**: Uso de **Spot Instances** y procesadores **Graviton (ARM64)** para mantener un entorno de Alta Disponibilidad.
 
 ---
 
