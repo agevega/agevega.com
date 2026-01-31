@@ -23,29 +23,35 @@ Aunque el objetivo final es servir un sitio web estático, el proyecto se aborda
 
 ## 🏗 Arquitectura del Sistema
 
-[La infraestructura](./infra) se ha diseñado siguiendo una estrategia dual para equilibrar costes y disponibilidad, apoyada en componentes serverless globales.
+Diseño cloud-native orientado a la optimización de costes y alta disponibilidad, siguiendo una estrategia dual para equilibrar costes y disponibilidad, apoyada en componentes serverless globales.
 
-### 1. Entorno de Desarrollo (Bastion)
+### 💻 Stack de Aplicación
 
-Punto de entrada administrativo y servidor de bajo coste.
+- **Frontend**: **Astro** (SSG) y **TailwindCSS** para una entrega de contenido ultrarrápida con enfoque _Zero JS_.
+- **Contenerización**: Imágenes **Docker** optimizadas con **Nginx**, gestionadas en **Amazon ECR** para despliegues sobre **EC2**.
+- **Backend**: Lógica serverless mediante **AWS Lambda** (Python) y **API Gateway**.
 
-- **Compute**: Instancia `t4g.nano` (ARM64).
-- **Seguridad**: Security Groups estrictos (SSH Whitelist).
-- **Función**: Túnel SSH y entorno de pruebas.
+### 🌐 Infraestructura (AWS)
 
-### 2. Entorno de Producción (High Availability)
+La red se despliega sobre una **VPC 3-Tier** personalizada, segmentando el tráfico en subredes públicas y privadas.
 
-Cluster escalable para servir tráfico real con máxima resiliencia.
+#### 1. Entorno de Desarrollo (Bastion)
 
-- **Compute**: Auto Scaling Group (ASG) de instancias Spot `t4g.nano`.
-- **Routing**: Application Load Balancer (ALB) interno.
-- **Seguridad**: El ALB rechaza tráfico directo; solo acepta peticiones de CloudFront (via Prefix List).
+- **Compute**: Instancia `t4g.nano` (Linux 2023).
+- **Seguridad**: Acceso administrativo restringido mediante Security Groups (SSH Whitelist).
+- **Función**: Punto de entrada a la red privada y entorno de pruebas.
 
-### 3. Componentes Globales
+#### 2. Entorno de Producción (High Availability)
 
-- **Frontend**: Astro (SSG) servido via Nginx en contenedores Docker.
-- **CDN**: CloudFront con OAC para servir assets privados desde S3 y WAF para protección perimetral.
-- **Backend**: Lambda (Python) + API Gateway para gestión de formularios.
+- **Compute**: Clúster EC2 elástico gestionado por un **Auto Scaling Group (ASG)** con **instancias Spot** para eficiencia de costes.
+- **Routing**: **Application Load Balancer (ALB)** interno que distribuye el tráfico hacia el ASG y solo permite peticiones validadas desde la CDN.
+
+### 🔐 Seguridad y Distribución
+
+- **Content Delivery**: **CloudFront** con **OAC** (Origin Access Control) para servir assets desde S3.
+- **Edge Security**: **AWS WAF** con reglas gestionadas para mitigación de ataques comunes.
+- **Identity**: Gestión de certificados SSL/TLS mediante **ACM** y resolución de dominios en **Route53**.
+- **CI/CD**: Pipelines automatizados en **GitHub Actions** para el build de imágenes y despliegues.
 
 ---
 
