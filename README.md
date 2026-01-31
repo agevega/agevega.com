@@ -8,7 +8,7 @@
 
 Este repositorio orquesta el ciclo de vida completo de `agevega.com`, desde el código fuente del frontend hasta la infraestructura subyacente en AWS.
 
-Se ha construido una plataforma **AWS Cloud-Native** siguiendo los principios de **Seguridad, Automatización, Replicabilidad, Resiliencia, Escalabilidad y Optimización de Costes (FinOps)**. Todo provisionado 100% como código **(IaC)**.
+Se ha construido una plataforma **AWS Cloud-Native** siguiendo los principios de **Seguridad, Automatización, Resiliencia, Escalabilidad y Optimización de Costes (FinOps)**. Todo provisionado 100% como código **(IaC)**.
 
 ---
 
@@ -18,8 +18,8 @@ Este proyecto se aborda con una **perspectiva de ingeniería de infraestructura*
 
 - **Seguridad**: Modelo **Zero Trust** donde cada capa (WAF, CloudFront, ALB, EC2) verifica explícitamente a su predecesora.
 - **Inmutabilidad y Automatización**: Cero cambios manuales ("ClickOps"). Desde la red hasta la capa de aplicación, todo nace y evoluciona mediante **Terraform** y **CI/CD**.
-- **Resiliencia**: Diseño tolerante a fallos distribuido en múltiples **Zonas de Disponibilidad (AZs)** y protegido globalmente en el Edge.
-- **FinOps Architecture**: Uso de **Spot Instances** y procesadores **Graviton (ARM64)** para mantener un entorno de Alta Disponibilidad.
+- **Resiliencia y Escalabilidad**: Diseño horizontal tolerante a fallos distribuido en múltiples **Zonas de Disponibilidad (AZs)** y protegido globalmente en el Edge.
+- **FinOps**: Uso de **Spot Instances** y procesadores **Graviton (ARM64)** para mantener un entorno de Alta Disponibilidad a menor coste.
 
 ---
 
