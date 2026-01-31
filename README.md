@@ -1,13 +1,14 @@
-# 🌐 agevega.com
+# 🚀 agevega.com
 
 ![AWS](https://img.shields.io/badge/AWS-232F3E?style=for-the-badge&logo=amazon-aws&logoColor=white)
 ![Terraform](https://img.shields.io/badge/terraform-%235835CC.svg?style=for-the-badge&logo=terraform&logoColor=white)
+![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
 ![Astro](https://img.shields.io/badge/astro-%232C2052.svg?style=for-the-badge&logo=astro&logoColor=white)
 ![GitHub Actions](https://img.shields.io/badge/github%20actions-%232671E5.svg?style=for-the-badge&logo=githubactions&logoColor=white)
 
-Este repositorio contiene el código fuente y la definición de infraestructura para el sitio web personal de **Alejandro Vega**.
+Este repositorio orquesta el ciclo de vida completo de `agevega.com`, desde el código fuente del frontend hasta la infraestructura subyacente en AWS.
 
-El proyecto funciona como un **monorepo** que centraliza tanto el desarrollo del frontend (landing page) como la gestión del ciclo de vida de la infraestructura en la nube (AWS) mediante código.
+Se ha construido una plataforma **AWS Cloud-Native** siguiendo los principios de **Seguridad, Automatización, Replicabilidad, Resiliencia, Escalabilidad y Optimización de Costes (FinOps)**. Todo provisionado 100% como código **(IaC)**.
 
 ---
 
@@ -25,12 +26,6 @@ Aunque el objetivo final es servir un sitio web estático, el proyecto se aborda
 
 Diseño cloud-native orientado a la optimización de costes y alta disponibilidad, siguiendo una estrategia dual para equilibrar costes y disponibilidad, apoyada en componentes serverless globales.
 
-### 💻 Stack de Aplicación
-
-- **Frontend**: **Astro** (SSG) y **TailwindCSS** para una entrega de contenido ultrarrápida con enfoque _Zero JS_.
-- **Contenerización**: Imágenes **Docker** optimizadas con **Nginx**, almacenadas en **Amazon ECR** para despliegues sobre **EC2**.
-- **Backend**: Lógica serverless mediante **AWS Lambda** (Python) y **API Gateway**.
-
 ### 🌐 Infraestructura (AWS)
 
 La red se despliega sobre una **VPC 3-Tier** personalizada, segmentando el tráfico en subredes públicas y privadas.
@@ -46,24 +41,22 @@ La red se despliega sobre una **VPC 3-Tier** personalizada, segmentando el tráf
 - **Compute**: Clúster EC2 elástico gestionado por un **Auto Scaling Group (ASG)** con **instancias Spot** para eficiencia de costes.
 - **Routing**: **Application Load Balancer (ALB)** interno que distribuye el tráfico hacia el ASG y solo permite peticiones validadas desde la CDN.
 
-### 🔐 Seguridad y Distribución
+### 💻 Stack de Aplicación
+
+| Capa         | Tecnología                   | Función                                            |
+| :----------- | :--------------------------- | :------------------------------------------------- |
+| **Frontend** | **Astro** + **TailwindCSS**  | Interfaz estática (SSG) de alto rendimiento.       |
+| **Runtime**  | **Docker** + **Nginx**       | Contenedorización y servidor web optimizado.       |
+| **Backend**  | **Lambda** + **API Gateway** | Lógica serverless (Python).                        |
+| **IaC**      | **Terraform**                | Definición declarativa de toda la infraestructura. |
+| **Cloud**    | **AWS**                      | S3, VPC, ECR, CloudFront, WAF, IAM, EC2...         |
+| **CI/CD**    | **GitHub Actions**           | Automatización de Build, Push y Deploy.            |
+
+### 🔐 Seguridad
 
 - **Content Delivery**: **CloudFront** con **OAC** (Origin Access Control) para servir assets desde S3.
 - **Edge Security**: **AWS WAF** con reglas gestionadas para mitigación de ataques comunes.
 - **Identity**: Gestión de certificados SSL/TLS mediante **ACM** y resolución de dominios en **Route53**.
-- **CI/CD**: Pipelines automatizados en **GitHub Actions** para el build de imágenes y despliegues.
-
----
-
-## 🛠 Stack Tecnológico
-
-| Capa         | Tecnología                  | Función                                            |
-| :----------- | :-------------------------- | :------------------------------------------------- |
-| **Frontend** | **Astro** + **TailwindCSS** | Interfaz estática (SSG) de alto rendimiento.       |
-| **Runtime**  | **Docker** + **Nginx**      | Contenedorización y servidor web optimizado.       |
-| **IaC**      | **Terraform**               | Definición declarativa de toda la infraestructura. |
-| **Cloud**    | **AWS**                     | S3, VPC, ECR, CloudFront, WAF, IAM, EC2...         |
-| **CI/CD**    | **GitHub Actions**          | Automatización de Build, Push y Deploy.            |
 
 ---
 
