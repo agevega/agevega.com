@@ -23,44 +23,42 @@ Aunque el objetivo final es servir un sitio web estático, el proyecto se aborda
 
 ## 🏗 Arquitectura del Sistema
 
-La solución se compone de dos capas principales: Aplicación y Plataforma.
+[La infraestructura](./infra) se ha diseñado siguiendo una estrategia dual para equilibrar costes y disponibilidad, apoyada en componentes serverless globales.
 
-### 1. Frontend (Aplicación)
+### 1. Entorno de Desarrollo (Bastion)
 
-Desarrollado con **Astro** para generar un sitio estático (SSG), operativizado mediante contenedores Docker.
+Punto de entrada administrativo y servidor de bajo coste.
 
-- **Alto rendimiento:** Zero JS por defecto (Astro).
-- **Containerización:** Empaquetado en Docker con Nginx como servidor web.
-- **Alojamiento:** Desplegado en instancias EC2 (Bastion) dentro de una VPC segura.
+- **Compute**: Instancia `t4g.nano` (ARM64).
+- **Seguridad**: Security Groups estrictos (SSH Whitelist).
+- **Función**: Túnel SSH y entorno de pruebas.
 
-### 2. Infraestructura (Plataforma)
+### 2. Entorno de Producción (High Availability)
 
-El entorno de despliegue en AWS se gestiona en la carpeta `infra/` y comprende:
+Cluster escalable para servir tráfico real con máxima resiliencia.
 
-- **Compute & Networking:**
-  - VPC personalizada en `eu-south-2` (Madrid) con arquitectura 3-Tier.
-  - Instancias EC2 **Graviton2 (ARM64)** para eficiencia de costes.
-- **Distribución & Seguridad:**
-  - **CloudFront**: CDN global con terminación SSL/TLS.
-  - **WAF**: Firewall perimetral (desactivado por defecto para optimización de costes).
-- **Serverless Backend:**
-  - Lambda (Python) + API Gateway para gestión de formularios.
-- **Artifact Registry:** AWS ECR para almacenar las imágenes Docker del frontend.
-- **Gestión:**
-  - Despliegues desde GitHub Actions.
-  - Gestión de dominios (Route53) y certificados SSL/TLS (ACM).
+- **Compute**: Auto Scaling Group (ASG) de instancias Spot `t4g.nano`.
+- **Routing**: Application Load Balancer (ALB) interno.
+- **Seguridad**: El ALB rechaza tráfico directo; solo acepta peticiones de CloudFront (via Prefix List).
+
+### 3. Componentes Globales
+
+- **Frontend**: Astro (SSG) servido via Nginx en contenedores Docker.
+- **CDN**: CloudFront con OAC para servir assets privados desde S3 y WAF para protección perimetral.
+- **Backend**: Lambda (Python) + API Gateway para gestión de formularios.
 
 ---
 
 ## 🛠 Stack Tecnológico
 
-| Capa           | Tecnología                   | Función                                                 |
-| :------------- | :--------------------------- | :------------------------------------------------------ |
-| **Frontend**   | **Astro** + **TailwindCSS**  | Desarrollo de interfaz "Zero JS" y generación estática. |
-| **IaC**        | **Terraform**                | Provisión y gestión del estado de la infraestructura.   |
-| **Serverless** | **Lambda** + **API Gateway** | Backend y gestión de APIs.                              |
-| **Cloud**      | **AWS**                      | Proveedor Cloud (S3, CloudFront, VPC, SES, IAM...).     |
-| **CI/CD**      | **GitHub Actions**           | Build & Push a ECR, Despliegue a EC2.                   |
+| Capa           | Tecnología                   | Función                                                     |
+| :------------- | :--------------------------- | :---------------------------------------------------------- |
+| **Frontend**   | **Astro** + **TailwindCSS**  | Desarrollo de interfaz "Zero JS" y generación estática.     |
+| **IaC**        | **Terraform**                | Provisión y gestión del estado de la infraestructura.       |
+| **Serverless** | **Lambda** + **API Gateway** | Backend y gestión de APIs.                                  |
+| **Cloud**      | **AWS**                      | S3, CloudFront, VPC, SES, IAM, EC2...                       |
+| **FinOps**     | **Spot Instances**           | Cómputo efímero de bajo coste (`t4g.nano`) para producción. |
+| **CI/CD**      | **GitHub Actions**           | Build & Push a ECR, Despliegue a EC2 Fleet.                 |
 
 ---
 
@@ -68,34 +66,23 @@ El entorno de despliegue en AWS se gestiona en la carpeta `infra/` y comprende:
 
 ```bash
 agevega.com/
-├── .gemini/                      # Contexto y Memoria del Proyecto para Gemini
-│   └── GEMINI.md
-├── .github/                      # CI/CD Workflows
+├── .gemini/                       # Contexto y Memoria del Proyecto
+├── .github/                       # CI/CD Workflows
 │   └── workflows/
-│       ├── 00-generate...yml     # Build & Push Docker
-│       └── 01-deploy...yml       # Deploy to EC2
-├── frontend/                     # Aplicación web (Astro + Tailwind)
-│   ├── src/                      # Código fuente
-│   ├── public/                   # Archivos estáticos
-│   ├── Dockerfile                # Definición de la imagen
-│   ├── nginx.conf                # Servidor web optimizado
-│   └── package.json              # Dependencias
-├── infra/                        # Definición de infraestructura
-│   ├── terraform/                # Código HCL de Terraform
-│   │   ├── 00-setup/             # Bootstrap (S3+Dynamo) + Auditoría + Budgets
-│   │   │   ├── 00-backend-S3/
-│   │   │   ├── 01-audit-logs/
-│   │   │   └── 02-budgets/       # Control de costes
-│   │   ├── 01-networking/        # Red (VPC 3-tier)
-│   │   │   ├── 00-vpc-core/
-│   │   │   ├── 01-nat-gateway/
-│   │   │   └── 02-vpc-endpoints/
-│   │   ├── 02-bastion-EC2/       # Compute (Bastion ARM64)
-│   │   ├── 03-ECR/               # Registry de contenedores
-│   │   ├── 04-lambda-SES/        # Backend Serverless (Contact Form)
-│   │   └── 05-cloudfront-WAF-S3/ # CDN + WAF + S3 Assets
-│   └── changelog/                # Registro de cambios de infraestructura
-└── scripts/                      # Scripts de utilidad (Certificados, Despliegue)
+├── frontend/                      # Aplicación web (Astro + Tailwind)
+│   ├── src/                       # Código fuente
+│   ├── public/                    # Archivos estáticos
+│   └── Dockerfile                 # Definición de la imagen
+├── infra/                         # Definición de infraestructura
+│   ├── terraform/                 # Código HCL de Terraform
+│   │   ├── 00-setup/              # Bootstrap, Auditoría y Budgets
+│   │   ├── 01-networking/         # VPC 3-Tier (Core, NAT, Endpoints)
+│   │   ├── 02-shared-resources/   # ECR, ACM, S3 Assets, SSH Keys
+│   │   ├── 03-backend-serverless/ # Lambda Contact & SES
+│   │   ├── 04-bastion-host/       # Entorno Dev & Acceso SSH
+│   │   └── 05-high-availability/  # Entorno Prod (ASG + ALB)
+│   └── changelog/                 # Registro de cambios
+└── scripts/                       # Scripts de utilidad
 ```
 
 ---
@@ -123,7 +110,7 @@ El proyecto cuenta con workflows de GitHub Actions para gestionar el ciclo de vi
 
 1.  **Build & Push**: Al pushear un tag (`v*.*.*`), se construye la imagen y se sube a **AWS ECR**.
 2.  **Deploy Automático**: El workflow anterior dispara automáticamente el despliegue (`01-deploy-to-ec2`), actualizando el Bastion Host con la nueva versión.
-3.  **Manual (Opcional)**: Se puede forzar un despliegue manual (`workflow_dispatch`) si es necesario rollbackear o redesplegar una versión específica.
+3.  **Manual (Opcional)**: Se puede forzar un despliegue manual si es necesario rollbackear o redesplegar una versión específica.
 
 > [!NOTE]
 > Los scripts subyacentes `scripts/01_deploy_frontend.sh` y `scripts/00_generate_cert.sh` se ejecutan automáticamente en el servidor durante el despliegue, pero pueden usarse manualmente en caso de debug.
@@ -133,7 +120,7 @@ El proyecto cuenta con workflows de GitHub Actions para gestionar el ciclo de vi
 Los cambios en la nube se aplican mediante Terraform.
 
 ```bash
-cd infra/terraform/<modulo>
+cd infra/terraform/<modulo>/<submodulo>
 terraform init
 terraform plan
 terraform apply
@@ -145,13 +132,13 @@ terraform apply
 
 Estado actual de las tareas principales y evolución prevista:
 
-- [x] **Seguridad y Observabilidad**: CloudTrail y AWS Config activos.
-- [x] **Infraestructura Core**: Configuración base de AWS, VPC y gestión de estado Terraform.
-- [x] **Frontend Base**: Proyecto Astro inicializado.
-- [x] **Automatización CI/CD**: Pipeline de despliegue continuo (Build, Push to ECR, Deploy to EC2).
-- [x] **Containerización**: Empaquetado de la aplicación con Docker y optimización con Nginx.
-- [x] **WAF y Seguridad Perimetral**: Reglas de filtrado en CloudFront (Desactivado para ahorro).
-- [x] **Funcionalidad Backend**: Implementación serverless para formulario de contacto.
+- [x] **Seguridad y Observabilidad**: CloudTrail, AWS Config y Budgets activos.
+- [x] **Infraestructura Core**: VPC 3-Tier y gestión de estado remoto.
+- [x] **Frontend & CI/CD**: Astro, Docker y Pipelines de GitHub Actions.
+- [x] **Serverless Backend**: API Gateway + Lambda para contacto.
+- [x] **Alta Disponibilidad**: Cluster de producción con Spot Instances y Autoscaling.
+- [x] **Optimización de Costes**: Migración a ARM64 y WAF 'Plug & Play'.
+- [x] **Refactorización Modular**: Organización granular de IaC.
 
 ---
 
