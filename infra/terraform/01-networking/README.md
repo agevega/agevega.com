@@ -12,7 +12,7 @@ La red se estructura en una VPC con direccionamiento `10.0.0.0/16` dividida en s
   - **Public**: Para recursos con acceso directo a Internet.
   - **Private**: Para cargas de trabajo en alta disponibilidad. Salida a Internet a través del NAT Gateway.
   - **Data/Secure**: Para datos y persistencia (RDS, DynamoDB). Aislada de internet.
-- **Conectividad Opcional**: El NAT Gateway está desacoplado para permitir su apagado y reducir costes.
+- **Conectividad**: El NAT Gateway está desacoplado para permitir su apagado y reducir costes.
 
 ---
 
@@ -69,11 +69,10 @@ terraform apply
 
 ## 🔧 Variables Clave
 
-| Variable             | Descripción                         | Valor por Defecto                                  |
-| :------------------- | :---------------------------------- | :------------------------------------------------- |
-| `vpc_cidr`           | Rango CIDR de la VPC                | `10.0.0.0/16`                                      |
-| `availability_zones` | Zonas de disponibilidad a usar      | `["eu-south-2a", "eu-south-2b", "eu-south-2c"]`    |
-| `common_tags`        | Tags aplicados a todos los recursos | `{ Project = "agevega.com", Environment = "dev" }` |
+| Variable             | Descripción                    | Valor por Defecto                               |
+| :------------------- | :----------------------------- | :---------------------------------------------- |
+| `vpc_cidr`           | Rango CIDR de la VPC           | `10.0.0.0/16`                                   |
+| `availability_zones` | Zonas de disponibilidad a usar | `["eu-south-2a", "eu-south-2b", "eu-south-2c"]` |
 
 ---
 

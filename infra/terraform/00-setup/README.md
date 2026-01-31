@@ -37,7 +37,7 @@ Este módulo prepara el entorno de AWS para ser gestionado por Terraform y estab
 
 - **Función**: FinOps / Control de Costes.
 - **Recursos**:
-  - `AWS Budgets`: Presupuestos mensuales y diarios con alertas por email.
+  - `AWS Budgets`: Presupuestos mensuales ($10) y diarios ($1) con alertas escalonadas por email.
 
 ---
 
@@ -82,3 +82,10 @@ terraform apply
 | `region`               | Región principal de despliegue | `eu-south-2` (Spain)         |
 | `monthly_budget_limit` | Límite de gasto mensual ($)    | `10`                         |
 | `daily_budget_limit`   | Límite de gasto diario ($)     | `1`                          |
+
+---
+
+## ⚡ Optimización y Costes
+
+- **Budgets y Alertas**: El uso de presupuestos granulares (diario/mensual) permite una detección temprana de anomalías de coste, evitando facturas inesperadas (Cost Control).
+- **S3 Lifecycle**: Los logs de auditoría tienen ciclos de vida configurados para archivarse/borrarse automáticamente y reducir costes de almacenamiento.
