@@ -19,8 +19,8 @@ Los recursos aquí definidos son consumidos tanto por el entorno de desarrollo (
 
 ### 1. [00-ssh-keys](./00-ssh-keys)
 
-- **Función**: Acceso administrativo.
-- **Recursos**: Key Pair de EC2 (`bastion-key`).
+- **Función**: Acceso e identidad.
+- **Recursos**: Key Pair. Sube tu clave pública SSH a AWS para permitir el acceso a las instancias.
 
 ### 2. [01-acm-certificates](./01-acm-certificates)
 
@@ -36,7 +36,7 @@ Los recursos aquí definidos son consumidos tanto por el entorno de desarrollo (
 ### 4. [03-ecr-repositories](./03-ecr-repositories)
 
 - **Función**: Registro de imágenes Docker.
-- **Recursos**: ECR Repository con escaneo de vulnerabilidades.
+- **Recursos**: ECR Repository con escaneo de vulnerabilidades. Retención de últimas 10 imágenes.
 
 ---
 
@@ -49,7 +49,7 @@ Debido a la independencia de estos recursos, el orden dentro del módulo no es e
 ```bash
 cd 00-ssh-keys
 terraform init
-terraform apply
+terraform apply -var="public_key_path=~/.ssh/id_rsa.pub"
 ```
 
 ### 2. Certificados CAS (Tarda unos minutos)
