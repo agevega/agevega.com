@@ -34,8 +34,8 @@ Arquitectura tolerante a fallos distribuida en 3 zonas de disponibilidad.
 
 ### 4. [03-cloudfront](./03-cloudfront)
 
-- **Función**: CDN.
-- **Recursos**: Distribución optimizada para la aplicación web.
+- **Función**: CDN Global.
+- **Recursos**: Distribución con orígenes múltiples (S3 y ALB).
 
 ---
 
@@ -73,6 +73,21 @@ terraform init
 terraform apply
 ```
 
+## 🛑 Gestión del WAF
+
+Para destruir o desvincular el WAF sin errores:
+
+1. **Desvincular en CloudFront**:
+   ```bash
+   cd 03-cloudfront
+   terraform apply -var="enable_waf=false"
+   ```
+2. **Destruir WAF**:
+   ```bash
+   cd ../02-waf
+   terraform destroy
+   ```
+
 ---
 
 ## 🔧 Variables Clave
@@ -88,5 +103,5 @@ terraform apply
 
 ## ⚡ Optimización y Costes
 
-- **Spot Instances**: El uso de instancias Spot para el entorno de producción reduce dramáticamente los costes. Al estar detrás de un ASG y ALB, la posible interrupción de una instancia es manejada automáticamente reemplazándola por otra.
+- **Spot Instances**: El uso de instancias Spot para el entorno de producción reduce drásticamente los costes. Al estar detrás de un ASG y ALB, la posible interrupción de una instancia es manejada automáticamente reemplazándola por otra.
 - **Prefix List Security**: Implementación de Security Groups basados en Prefix Lists de CloudFront para restringir el acceso al ALB. Esto permite prescindir de un WAF regional, optimizando costes y delegando la seguridad de capa 7 íntegramente a CloudFront WAF.

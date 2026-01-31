@@ -35,12 +35,12 @@ Este módulo despliega el punto de entrada administrativo y la distribución de 
 
 ### 4. [03-waf](./03-waf)
 
-- **Función**: Seguridad de Aplicación.
+- **Función**: Protección Web.
 - **Recursos**: Web ACL (AWS Managed Rules) en `us-east-1`.
 
 ### 5. [04-cloudfront](./04-cloudfront)
 
-- **Función**: Entrega de contenido.
+- **Función**: CDN Global.
 - **Recursos**: Distribución con orígenes múltiples (S3 y EC2).
 
 ---
@@ -88,6 +88,21 @@ cd ../04-cloudfront
 terraform init
 terraform apply
 ```
+
+## 🛑 Gestión del WAF
+
+Para destruir o desvincular el WAF sin errores:
+
+1. **Desvincular en CloudFront**:
+   ```bash
+   cd 04-cloudfront
+   terraform apply -var="enable_waf=false"
+   ```
+2. **Destruir WAF**:
+   ```bash
+   cd ../03-waf
+   terraform destroy
+   ```
 
 ---
 
