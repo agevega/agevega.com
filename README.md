@@ -57,14 +57,13 @@ La red se despliega sobre una **VPC 3-Tier** personalizada, segmentando el tráf
 
 ## 🛠 Stack Tecnológico
 
-| Capa           | Tecnología                   | Función                                                     |
-| :------------- | :--------------------------- | :---------------------------------------------------------- |
-| **Frontend**   | **Astro** + **TailwindCSS**  | Desarrollo de interfaz "Zero JS" y generación estática.     |
-| **IaC**        | **Terraform**                | Provisión y gestión del estado de la infraestructura.       |
-| **Serverless** | **Lambda** + **API Gateway** | Backend y gestión de APIs.                                  |
-| **Cloud**      | **AWS**                      | S3, CloudFront, VPC, SES, IAM, EC2...                       |
-| **FinOps**     | **Spot Instances**           | Cómputo efímero de bajo coste (`t4g.nano`) para producción. |
-| **CI/CD**      | **GitHub Actions**           | Build & Push a ECR, Despliegue a EC2 Fleet.                 |
+| Capa         | Tecnología                  | Función                                            |
+| :----------- | :-------------------------- | :------------------------------------------------- |
+| **Frontend** | **Astro** + **TailwindCSS** | Interfaz estática (SSG) de alto rendimiento.       |
+| **Runtime**  | **Docker** + **Nginx**      | Contenedorización y servidor web optimizado.       |
+| **IaC**      | **Terraform**               | Definición declarativa de toda la infraestructura. |
+| **Cloud**    | **AWS**                     | S3, VPC, ECR, CloudFront, WAF, IAM, EC2...         |
+| **CI/CD**    | **GitHub Actions**          | Automatización de Build, Push y Deploy.            |
 
 ---
 
