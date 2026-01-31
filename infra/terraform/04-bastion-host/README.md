@@ -12,7 +12,7 @@ Este módulo despliega el punto de entrada administrativo y la distribución de 
 - **CDN Global**: CloudFront actúa como frontal para servir contenido estático (assets) y enrutar tráfico dinámico (si fuera necesario).
 - **Seguridad**:
   - **WAF**: Protege la distribución CloudFront contra ataques web comunes.
-  - **Security Groups**: Lista blanca estricta para acceso SSH.
+  - **Security Groups**: Whitelist para acceso SSH.
 
 ---
 
@@ -65,18 +65,18 @@ terraform init
 terraform apply
 ```
 
-### 3. WAF (Debe existir antes de CloudFront)
+### 3. Instancia Bastion
 
 ```bash
-cd ../03-waf
+cd ../02-ec2-instance
 terraform init
 terraform apply
 ```
 
-### 4. Instancia Bastion
+### 4. WAF
 
 ```bash
-cd ../02-ec2-instance
+cd ../03-waf
 terraform init
 terraform apply
 ```
