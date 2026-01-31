@@ -11,7 +11,7 @@
 ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
 ![GitHub Actions](https://img.shields.io/badge/github%20actions-%232671E5.svg?style=for-the-badge&logo=githubactions&logoColor=white)
 
-Este repositorio orquesta el ciclo de vida completo de `agevega.com`, desde el código fuente del frontend hasta la infraestructura subyacente en AWS.
+**Este repositorio** orquesta el ciclo de vida completo de `agevega.com`, desde el código fuente del frontend hasta la infraestructura subyacente en **AWS**.
 
 Se ha construido una plataforma **AWS Cloud-Native** siguiendo los principios de **Seguridad, Automatización, Resiliencia, Escalabilidad y Optimización de Costes (FinOps)**. Todo provisionado 100% como código **(IaC)**.
 
