@@ -28,7 +28,7 @@ Diseño cloud-native orientado a la optimización de costes y alta disponibilida
 ### 💻 Stack de Aplicación
 
 - **Frontend**: **Astro** (SSG) y **TailwindCSS** para una entrega de contenido ultrarrápida con enfoque _Zero JS_.
-- **Contenerización**: Imágenes **Docker** optimizadas con **Nginx**, gestionadas en **Amazon ECR** para despliegues sobre **EC2**.
+- **Contenerización**: Imágenes **Docker** optimizadas con **Nginx**, almacenadas en **Amazon ECR** para despliegues sobre **EC2**.
 - **Backend**: Lógica serverless mediante **AWS Lambda** (Python) y **API Gateway**.
 
 ### 🌐 Infraestructura (AWS)
