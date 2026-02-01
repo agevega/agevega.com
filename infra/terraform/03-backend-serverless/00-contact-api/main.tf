@@ -112,7 +112,7 @@ resource "aws_apigatewayv2_stage" "default" {
 # ------------------------------------------------------------------------------
 resource "aws_cloudwatch_log_group" "lambda_logs" {
   name              = "/aws/lambda/${aws_lambda_function.contact_form.function_name}"
-  retention_in_days = 1
+  retention_in_days = 7
   tags = merge(var.common_tags, {
     Module = "03-backend-serverless/00-contact-api"
   })
