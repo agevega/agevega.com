@@ -1,4 +1,4 @@
-# 🤖 CI/CD Automation - agevega.com
+# 🤖 CI/CD - Agevega.com
 
 Este directorio contiene los workflows de GitHub Actions que automatizan el ciclo de vida de la aplicación, desde el build hasta el despliegue en producción.
 
@@ -12,8 +12,8 @@ graph TD;
     B -->|Builds Docker Image| C{Success?};
     C -->|Yes| D[Push to ECR];
     D -->|Triggers via gh CLI| E(01 Deploy to EC2);
-    E -->|SSH| F[Bastion Host];
-    F -->|Pull & Keep 2 Versions| G[Update Container];
+    E -->|SSH| F[Bastion Host (dev)];
+    F -->|Pull & Keep New Version| G[Update Container];
     E -->|AWS CLI| H[Invalidate CloudFront];
 ```
 

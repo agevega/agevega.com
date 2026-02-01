@@ -1,4 +1,4 @@
-# 💻 Frontend - agevega.com
+# 💻 Frontend - Agevega.com
 
 Aplicación estática (SSG) de alto rendimiento construida con **Astro** y optimizada para despliegue en contenedores **Docker**.
 
