@@ -20,7 +20,7 @@
   - Infraestructura gestionada por Terraform (Backend S3 remoto).
 - **Seguridad Perimetral**:
   - **CloudFront**: Terminación SSL (HTTPS) y Caché.
-  - **WAF**: AWS Managed Rules (Provisionado pero desactivado por coste).
+  - **WAF**: AWS Managed Rules (Despliegue opcional por coste).
   - **Assets Privados**: S3 Bucket integrado en CloudFront con OAC.
   - **EC2**: Aislado. Solo accesible vía CloudFront (Security Group restringido a Prefix List) y SSH (IP whitelist).
   - **Protocolo**: HTTPS (Viewer) -> HTTP (Origin) para evitar conflictos SNI.
