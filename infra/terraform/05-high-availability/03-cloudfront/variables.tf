@@ -27,8 +27,8 @@ variable "common_tags" {
   type        = map(string)
   default = {
     Project     = "agevegacom"
+    Owner       = "Alejandro Vega"
     Environment = "prod"
     ManagedBy   = "terraform"
-    Module      = "06-ha-autoscaling/03-cloudfront"
   }
 }

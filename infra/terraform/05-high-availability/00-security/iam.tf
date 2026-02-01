@@ -14,7 +14,9 @@ resource "aws_iam_role" "ec2_role" {
     ]
   })
 
-  tags = var.common_tags
+  tags = merge(var.common_tags, {
+    Module = "05-high-availability/00-security"
+  })
 }
 
 resource "aws_iam_role_policy_attachment" "ecr_readonly" {
