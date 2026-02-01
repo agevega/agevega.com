@@ -21,12 +21,44 @@
 - **Seguridad Perimetral**:
   - **CloudFront**: Terminación SSL (HTTPS) y Caché.
   - **WAF**: AWS Managed Rules (Provisionado pero desactivado por coste).
-  - **Assets Privados**: S3 Bucket integrado en CloudFront con OAC (`05-cloudfront-WAF-S3`).
+  - **Assets Privados**: S3 Bucket integrado en CloudFront con OAC.
   - **EC2**: Aislado. Solo accesible vía CloudFront (Security Group restringido a Prefix List) y SSH (IP whitelist).
   - **Protocolo**: HTTPS (Viewer) -> HTTP (Origin) para evitar conflictos SNI.
 
-## 📍 Roadmap de Alto Nivel
+---
 
-- [x] **WAF/CDN**: Distribución Global y Seguridad (CloudFront + WAF).
-- [x] **Contacto**: Formulario Serverless (Lambda/API Gateway).
-- [x] **Privacidad**: Hosting seguro de documentos (CV) vía S3 OAC.
+## 🎨 Contexto: Frontend (`/frontend`)
+
+### 🛠 Stack Tecnológico
+
+- **Framework**: Astro v5 (Static Site Generation).
+- **Estilo**: TailwindCSS v3.
+- **Build**: Docker (Node -> Nginx).
+
+### 📏 Guías de Desarrollo
+
+- **Zero JS**: Mantenlo estático. Usa "Astro Islands" (client:load) solo si es imprescindible.
+- **Componentes**: Pequeños, atómicos y reutilizables.
+- **Rendimiento**: Prioriza Core Web Vitals. Optimiza imágenes y fuentes.
+- **Docker**: El Dockerfile debe ser multi-stage para minimizar el tamaño final de la imagen.
+
+---
+
+## ☁️ Contexto: Infraestructura (`/infra`)
+
+### 🛠 Stack Tecnológico
+
+- **IaC**: Terraform.
+- **Cloud**: AWS (Región: `eu-south-2` - Madrid).
+
+### 📏 Guías de Desarrollo
+
+- **Estructura**: Módulos numerados (e.g., `01-networking`, `02-bastion-EC2`).
+- **Convenciones**:
+  - Recursos: `snake_case`.
+  - Variables: Siempre incluir `description` y `type`.
+- **Seguridad**:
+  - Least Privilege en IAM Roles.
+  - Security Groups estrictos (Whitelisting).
+- **Recursos Principales**:
+  - **VPC**: 3 capas (Public, Private, Data).
