@@ -14,7 +14,7 @@ resource "aws_cloudfront_origin_access_control" "s3_oac" {
 resource "aws_cloudfront_distribution" "prod_distribution" {
   enabled         = true
   is_ipv6_enabled = true
-  comment         = "Production Distribution for ${var.domain_name}"
+  comment         = "High Availability Cluster Origin (Module 05) - Distribution for ${var.domain_name}, www.${var.domain_name}"
 
   web_acl_id = var.enable_waf ? try(data.terraform_remote_state.waf.outputs.web_acl_arn, null) : null
 

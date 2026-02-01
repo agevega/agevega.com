@@ -14,7 +14,7 @@ resource "aws_cloudfront_origin_access_control" "s3_oac" {
 resource "aws_cloudfront_distribution" "distribution" {
   enabled             = true
   is_ipv6_enabled     = true
-  comment             = "Distribution for ${var.domain_name}"
+  comment             = "Bastion Host Origin (Module 04) - Distribution for dev.${var.domain_name}"
   default_root_object = "" # Not needed for proxy to EC2
   
   # Auto-attach WAF if module 02 is deployed AND enable_waf is true.
