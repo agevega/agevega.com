@@ -102,3 +102,14 @@ resource "aws_cloudfront_distribution" "distribution" {
     Module = "04-bastion-host/04-cloudfront"
   })
 }
+
+resource "aws_ssm_parameter" "cloudfront_distribution_id" {
+  name        = "/${var.project_name}/04-bastion-host/04-cloudfront/cloudfront-distribution-id"
+  description = "CloudFront Distribution ID (Bastion)"
+  type        = "String"
+  value       = aws_cloudfront_distribution.distribution.id
+
+  tags = merge(var.common_tags, {
+    Module = "04-bastion-host/04-cloudfront"
+  })
+}

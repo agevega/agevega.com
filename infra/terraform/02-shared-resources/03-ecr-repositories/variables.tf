@@ -26,3 +26,9 @@ variable "common_tags" {
     ManagedBy   = "terraform"
   }
 }
+
+variable "project_name" {
+  description = "Project name for SSM paths"
+  type        = string
+  default     = "agevegacom"
+}

@@ -32,3 +32,9 @@ variable "common_tags" {
     Module      = "05-cloudfront-WAF-S3/03-cloudfront"
   }
 }
+
+variable "project_name" {
+  description = "Project name for SSM paths"
+  type        = string
+  default     = "agevegacom"
+}

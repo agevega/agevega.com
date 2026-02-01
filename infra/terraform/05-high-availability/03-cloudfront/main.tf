@@ -99,3 +99,14 @@ resource "aws_cloudfront_distribution" "prod_distribution" {
     Module = "05-high-availability/03-cloudfront"
   })
 }
+
+resource "aws_ssm_parameter" "cloudfront_distribution_id" {
+  name        = "/${var.project_name}/05-high-availability/03-cloudfront/cloudfront-distribution-id"
+  description = "CloudFront Distribution ID (HA)"
+  type        = "String"
+  value       = aws_cloudfront_distribution.prod_distribution.id
+
+  tags = merge(var.common_tags, {
+    Module = "05-high-availability/03-cloudfront"
+  })
+}
