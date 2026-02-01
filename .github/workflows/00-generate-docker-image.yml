@@ -7,8 +7,7 @@ on:
 
 env:
   AWS_REGION: eu-south-2
-  ECR_REPOSITORY: agevegacom-frontend
-  SSM_API_URL_PATH: /agevegacom/contact-api/endpoint
+  PROJECT_NAME: agevegacom
 
 jobs:
   deploy:
@@ -40,10 +39,14 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Get API URL from SSM
-        id: get-api-url
+      - name: Get SSM Parameters
+        id: get-ssm
         run: |
-          API_URL=$(aws ssm get-parameter --name "${{ env.SSM_API_URL_PATH }}" --query "Parameter.Value" --output text)
+          echo "Fetching configuration from SSM..."
+          ECR_REPO=$(aws ssm get-parameter --name "/${{ env.PROJECT_NAME }}/02-shared-resources/03-ecr-repositories/ecr-repository" --query "Parameter.Value" --output text)
+          API_URL=$(aws ssm get-parameter --name "/${{ env.PROJECT_NAME }}/03-backend-serverless/00-contact-api/endpoint" --query "Parameter.Value" --output text)
+          
+          echo "ECR_REPO=$ECR_REPO" >> $GITHUB_OUTPUT
           echo "API_URL=$API_URL" >> $GITHUB_OUTPUT
 
       - name: Build and push
@@ -53,11 +56,11 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           tags: |
-            ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.ref_name }}
-            ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:latest
+            ${{ steps.login-ecr.outputs.registry }}/${{ steps.get-ssm.outputs.ECR_REPO }}:${{ github.ref_name }}
+            ${{ steps.login-ecr.outputs.registry }}/${{ steps.get-ssm.outputs.ECR_REPO }}:latest
           build-args: |
             PUBLIC_APP_VERSION=${{ github.ref_name }}
-            PUBLIC_API_URL=${{ steps.get-api-url.outputs.API_URL }}
+            PUBLIC_API_URL=${{ steps.get-ssm.outputs.API_URL }}
           provenance: false
 
       - name: Trigger Deploy to EC2
