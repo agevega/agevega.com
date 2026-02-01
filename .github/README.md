@@ -12,7 +12,7 @@ graph TD;
     B -->|Builds Docker Image| C{Success?};
     C -->|Yes| D[Push to ECR];
     D -->|Triggers via gh CLI| E(01 Deploy to EC2);
-    E -->|SSH| F[Bastion Host (dev)];
+    E -->|SSH| F["Bastion Host (dev)"];
     F -->|Pull & Keep New Version| G[Update Container];
     E -->|AWS CLI| H[Invalidate CloudFront];
 ```
