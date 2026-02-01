@@ -13,7 +13,7 @@
 
 **Este repositorio** orquesta el ciclo de vida completo de `agevega.com`, desde el código fuente del frontend hasta la infraestructura subyacente en **AWS**.
 
-Se ha construido una plataforma **AWS Cloud-Native** siguiendo los principios de **Seguridad, Automatización, Resiliencia, Escalabilidad, Granularidad y Optimización de Costes (FinOps)**. Todo provisionado 100% como código **(IaC)**.
+Se ha construido una plataforma **AWS Cloud-Native** siguiendo los principios de **Seguridad, Automatización, Resiliencia, Escalabilidad, Granularidad, Observabilidad y Optimización de Costes (FinOps)**. Todo provisionado 100% como código **(IaC)**.
 
 ---
 
