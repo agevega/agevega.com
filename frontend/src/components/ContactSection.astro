@@ -134,8 +134,8 @@
 </section>
 
 <script>
-  const API_URL =
-    "https://k38p21xht5.execute-api.eu-south-2.amazonaws.com/send"; // Real API URL from Terraform
+  import { PUBLIC_API_URL } from 'astro:env/client';
+  const API_URL = `${PUBLIC_API_URL}/send`;
 
   const form = document.getElementById("contact-form") as HTMLFormElement;
   const submitBtn = document.getElementById("submit-btn") as HTMLButtonElement;

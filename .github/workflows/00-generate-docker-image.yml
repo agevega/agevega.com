@@ -8,6 +8,7 @@ on:
 env:
   AWS_REGION: eu-south-2
   ECR_REPOSITORY: agevegacom-frontend
+  SSM_API_URL_PATH: /agevegacom/contact-api/endpoint
 
 jobs:
   deploy:
@@ -39,6 +40,12 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
+      - name: Get API URL from SSM
+        id: get-api-url
+        run: |
+          API_URL=$(aws ssm get-parameter --name "${{ env.SSM_API_URL_PATH }}" --query "Parameter.Value" --output text)
+          echo "API_URL=$API_URL" >> $GITHUB_OUTPUT
+
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
@@ -50,6 +57,7 @@ jobs:
             ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:latest
           build-args: |
             PUBLIC_APP_VERSION=${{ github.ref_name }}
+            PUBLIC_API_URL=${{ steps.get-api-url.outputs.API_URL }}
           provenance: false
 
       - name: Trigger Deploy to EC2

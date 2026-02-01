@@ -138,3 +138,18 @@ resource "aws_lambda_permission" "api_gw" {
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_apigatewayv2_api.http_api.execution_arn}/*/*"
 }
+
+# ------------------------------------------------------------------------------
+# SSM Parameter (for CI/CD to read dynamically)
+# ------------------------------------------------------------------------------
+resource "aws_ssm_parameter" "api_endpoint" {
+  name        = "/${var.project_name}/contact-api/endpoint"
+  description = "Contact API Gateway endpoint URL"
+  type        = "String"
+  value       = aws_apigatewayv2_api.http_api.api_endpoint
+
+  tags = merge(var.common_tags, {
+    Module = "03-backend-serverless/00-contact-api"
+  })
+}
+

@@ -7,6 +7,7 @@ export default defineConfig({
   env: {
     schema: {
       PUBLIC_APP_VERSION: envField.string({ context: 'client', access: 'public', optional: true, default: 'dev' }),
+      PUBLIC_API_URL: envField.string({ context: 'client', access: 'public', optional: false }),
     },
   },
 });
