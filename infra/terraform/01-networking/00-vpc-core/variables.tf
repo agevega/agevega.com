@@ -22,7 +22,7 @@ variable "common_tags" {
   default = {
     Project     = "agevegacom"
     Owner       = "Alejandro Vega"
-    Environment = "lab"
+    Environment = "global"
     ManagedBy   = "terraform"
   }
 }

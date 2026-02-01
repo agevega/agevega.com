@@ -21,7 +21,7 @@ variable "common_tags" {
   type        = map(string)
   default     = {
     Project     = "agevegacom"
-    Environment = "lab"
+    Environment = "global"
     ManagedBy   = "terraform"
     Module      = "05-cloudfront-WAF-S3/00-s3-assets"
   }
