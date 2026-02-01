@@ -143,7 +143,7 @@ resource "aws_lambda_permission" "api_gw" {
 # SSM Parameter (for CI/CD to read dynamically)
 # ------------------------------------------------------------------------------
 resource "aws_ssm_parameter" "api_endpoint" {
-  name        = "/${var.project_name}/contact-api/endpoint"
+  name        = "/${var.project_name}/03-backend-serverless/00-contact-api/endpoint"
   description = "Contact API Gateway endpoint URL"
   type        = "String"
   value       = aws_apigatewayv2_api.http_api.api_endpoint
