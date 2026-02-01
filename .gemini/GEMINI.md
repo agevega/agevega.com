@@ -12,6 +12,7 @@
   - **IaC Total**: Toda la infraestructura se define en Terraform. Cero cambios manuales en consola.
   - **Commits**: Nunca realizar commits. El usuario es el único responsable de versionar el código.
   - **Tags**: Nunca realizar tags. El usuario es el único responsable de versionar el código.
+  - **Modulos**: Cualquier configuracion aplicada al waf o a cloudfront del modulo 04 o 05 debe tambien hacerse al modulo respectivo, deben ser lo mas similares posible.
 
 ## 🌍 Arquitectura Global
 
