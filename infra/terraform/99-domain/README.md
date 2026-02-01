@@ -4,41 +4,47 @@ Módulo para la gestión centralizada de DNS (Route53).
 
 ## 🎯 Objetivo
 
-Controlar la zona alojada (Hosted Zone) principal `agevega.com` y sus registros DNS asociados, permitiendo conectar los recursos de infraestructura (CloudFront, Load Balancers) con nombres de dominio amigables.
+Controlar la zona alojada (Hosted Zone) principal `agevega.com` y sus registros DNS asociados. Este módulo actúa como el "pegamento" final que conecta la infraestructura (CloudFront, ACM) con el mundo exterior.
 
-## 🛠️ Recursos
+## 🛠️ Arquitectura Dinámica
 
-- **aws_route53_zone**: La zona principal del dominio.
-- **aws_route53_record**: Registros DNS (CNAME, A, etc.).
-  - `dev.agevega.com`: CNAME apuntando a la distribución CloudFront del entorno Bastion (leído dinámicamente desde el state remoto).
+Este módulo **no tiene valores hardcodeados**. Lee el estado de otros módulos para configurarse automáticamente:
+
+1.  **Bastion CloudFront (`04-bastion-host`)**: Para `dev.agevega.com`.
+2.  **Prod CloudFront (`05-high-availability`)**: Para `agevega.com` y `www`.
+3.  **ACM Certificates (`02-shared-resources`)**: Para autogenerar los registros CNAME de validación SSL.
+
+## 📦 Recursos Gestionados
+
+- **aws_route53_zone**: La zona principal `agevega.com`.
+- **aws_route53_record (Alias A)**: Usamos Alias en lugar de CNAME para el vértice del dominio (Apex) y subdominios, por rendimiento y coste.
+  - `agevega.com` -> CloudFront Prod
+  - `www.agevega.com` -> CloudFront Prod
+  - `dev.agevega.com` -> CloudFront Bastion
+- **aws_route53_record (CNAME)**:
+  - Validaciones de ACM (generadas dinámicamente mediante `for_each`).
 
 ## 🚀 Despliegue e Importación
 
-### ⚠️ IMPORTANTE: Si la zona ya existe en AWS
+### ⚠️ IMPORTANTE: Zona Existente
 
-Si compraste el dominio en AWS o ya creaste la zona manualmente, **NO** ejecutes `terraform apply` directamente, o fallará intentando crear una zona duplicada.
-
-Debes **importarla** al estado de Terraform primero:
-
-1.  Obtén el **Zone ID** de tu consola AWS (Route53 -> Hosted zones).
-2.  Ejecuta el comando de importación:
+Como la zona ya existe en AWS (`Z08740021EDUKT5DV84WS`), debes **importarla** antes de aplicar:
 
 ```bash
-# Sintaxis: terraform import aws_route53_zone.main <ZONE_ID>
-terraform import aws_route53_zone.main Z0123456789ABCDEF
+cd infra/terraform/99-domain
+terraform init
+terraform import aws_route53_zone.main Z08740021EDUKT5DV84WS
 ```
 
-### Despliegue Normal
+### Aplicar Cambios
 
-Una vez importada la zona (o si es una zona completamente nueva):
+Una vez importada la zona, aplica el resto de la configuración. Terraform detectará que los registros ya existen (si los creaste a mano) o los creará si faltan.
 
 ```bash
-terraform init
-terraform plan
 terraform apply
 ```
 
 ## 📄 Outputs
 
-- `zone_id`: El ID de la zona Route53 gestionada.
-- `dev_url`: La URL completa del entorno de desarrollo (`https://dev.agevega.com`).
+- `zone_id`: El ID de la zona Route53.
+- `dev_url`: URL del entorno Dev (`https://dev.agevega.com`).
