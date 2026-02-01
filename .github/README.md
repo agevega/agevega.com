@@ -40,9 +40,9 @@ Para que los pipelines funcionen, el repositorio debe tener configurados los sig
 
 | Nombre                  | Tipo     | Descripción                                               |
 | :---------------------- | :------- | :-------------------------------------------------------- |
-| `AWS_ACCESS_KEY_ID`     | Secret   | Credenciales de AWS IAM User (GitHubActions).             |
-| `AWS_SECRET_ACCESS_KEY` | Secret   | Credenciales de AWS IAM User.                             |
-| `EC2_SSH_KEY`           | Secret   | Clave privada `.pem` para acceder al Bastion.             |
+| `AWS_ACCESS_KEY_ID`     | Secret   | Credenciales de AWS IAM User (User: terraform).           |
+| `AWS_SECRET_ACCESS_KEY` | Secret   | Credenciales de AWS IAM User (User: terraform).           |
+| `EC2_SSH_KEY`           | Secret   | Clave privada ssh para acceder al Bastion.                |
 | `AWS_REGION`            | Variable | Región de AWS (e.g., `eu-south-2`).                       |
 | `ECR_REPOSITORY`        | Variable | Nombre del repositorio ECR (e.g., `agevegacom-frontend`). |
 
