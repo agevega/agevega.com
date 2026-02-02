@@ -1,42 +1,86 @@
-# 99-domain
+# 🌍 99-domain
 
-Modulo para la gestión centralizada de DNS (Route53).
+Este módulo centraliza la gestión de la identidad del dominio (`agevega.com`) y la seguridad (SSL/TLS).  
+Es el punto de partida de la infraestructura pública, estableciendo la zona DNS y los certificados necesarios para el tráfico HTTPS.
 
-## 📂 Estructura
+---
 
-```text
-99-domain/
-├── 00-dns-zone        # Crea la Hosted Zone (agevega.com)
-├── 01-acm-certificate # Certificado SSL (Singular)
-├── 02-acm-validation  # Lee ACM (01) y crea registros de validación
+## 🏛️ Arquitectura
+
+La gestión del dominio se desacopla para evitar dependencias circulares y permitir que múltiples entornos (Dev/Prod) compartan la misma identidad base.
+
+- **DNS Autoritativo**: Route53 Hosted Zone gestiona todos los registros del dominio.
+- **Seguridad en Tránsito**: Certificados ACM públicos desplegados en `us-east-1` para compatibilidad global con CloudFront.
+- **Validación Automática**: Validación de certificados mediante registros DNS CNAME, gestionada enteramente como código.
+
+---
+
+## 📂 Componentes (Submódulos)
+
+### 1. [00-dns-zone](./00-dns-zone)
+
+- **Función**: Zona DNS Base.
+- **Recursos**: Route53 Hosted Zone (`agevega.com`).
+- **Nota**: Si el dominio fue registrado manualmente, se debe importar la zona existente.
+
+### 2. [01-acm-certificate](./01-acm-certificate)
+
+- **Función**: Identidad SSL/TLS.
+- **Recursos**: AWS Certificate Manager (ACM) Certificate.
+- **Región**: `us-east-1` (Requerido por CloudFront).
+
+### 3. [02-acm-validation](./02-acm-validation)
+
+- **Función**: Validación de Dominio.
+- **Recursos**: Route53 Records (CNAME) para completar el desafío de validación de ACM.
+
+---
+
+## 🚀 Guía de Despliegue
+
+Debido a la naturaleza de la validación DNS, el orden de despliegue es estricto.
+
+### 1. Hosted Zone (00-dns-zone)
+
+```bash
+cd 00-dns-zone
+terraform init
+terraform apply
 ```
 
-> **Nota**: Los registros DNS de aplicación (`A` Alias) se han movido a sus respectivos módulos para permitir despliegues independientes:
->
-> - `dev.agevega.com` -> `04-bastion-host/05-dns-record`
-> - `agevega.com`, `www` -> `05-high-availability/04-dns-record`
+### 2. Certificado SSL (01-acm-certificate)
 
-## 🚀 Despliegue Secuencial
+```bash
+cd ../01-acm-certificate
+terraform init
+terraform apply
+```
 
-Orden de ejecución recomendado para evitar dependencias circulares:
+_El certificado quedará en estado `Pending Validation`._
 
-1.  **00-dns-zone**:
-    - Crea la zona base.
-    - `terraform import aws_route53_zone.main Z08740021EDUKT5DV84WS` (Si ya existe).
-    - `terraform apply`
+### 3. Validación (02-acm-validation)
 
-2.  **01-acm-certificate**:
-    - Crea el certificado SSL (Estado: Pending Validation).
-    - `terraform apply`
+```bash
+cd ../02-acm-validation
+terraform init
+terraform apply
+```
 
-3.  **02-acm-validation**:
-    - Crea los CNAMEs para validar el certificado.
-    - `terraform apply` -> Esperar a "Issued".
+_Terraform esperará hasta que el certificado cambie a estado `Issued` (normalmente < 5 min)._
 
-4.  **04-bastion-host**:
-    - ... `04-cloudfront` (Crea la distribución usando el cert validado).
-    - `05-dns-record` (Crea el registro `dev` apuntando a la distribución).
+---
 
-5.  **05-high-availability**:
-    - ... `03-cloudfront` (Crea la distribución de Prod).
-    - `04-dns-record` (Crea los registros `root` y `www`).
+## 🔧 Variables Clave
+
+| Variable      | Descripción                  | Valor por Defecto |
+| :------------ | :--------------------------- | :---------------- |
+| `domain_name` | Dominio raíz del proyecto    | `agevega.com`     |
+| `aws_region`  | Región para la zona DNS      | `eu-south-2`      |
+| `common_tags` | Etiquetas estándar (Project) | `agevegacom`      |
+
+---
+
+## ⚡ Optimización y Costes
+
+- **Certificados Gratuitos**: Los certificados públicos de ACM son **gratuitos** y se renuevan automáticamente, eliminando costes de mantenimiento y compra de SSLs de terceros.
+- **DNS Gestionado**: Route53 garantiza SLA del 100% para resolución DNS, crítico para la disponibilidad de toda la plataforma.
