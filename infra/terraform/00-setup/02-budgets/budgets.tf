@@ -52,7 +52,6 @@ resource "aws_budgets_budget" "monthly" {
 
   tags = merge(var.common_tags, {
     Name   = "My 10 USD Budget"
-    Module = "00-setup/02-budgets"
   })
 }
 
@@ -114,6 +113,5 @@ resource "aws_budgets_budget" "daily" {
 
   tags = merge(var.common_tags, {
     Name   = "My Daily 1 USD Budget"
-    Module = "00-setup/02-budgets"
   })
 }

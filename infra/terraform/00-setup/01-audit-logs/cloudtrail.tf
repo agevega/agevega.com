@@ -11,7 +11,6 @@ resource "aws_s3_bucket" "cloudtrail_logs" {
   tags = merge(var.common_tags, {
     Name   = var.cloudtrail_bucket_name
     Role   = "cloudtrail-logs"
-    Module = "00-setup/01-audit-logs"
   })
 }
 
@@ -123,7 +122,6 @@ resource "aws_cloudtrail" "main" {
 
   tags = merge(var.common_tags, {
     Name   = var.cloudtrail_name
-    Module = "01-audit-logs"
   })
 
   depends_on = [aws_s3_bucket_policy.cloudtrail_logs]

@@ -29,5 +29,6 @@ variable "common_tags" {
     Owner       = "Alejandro Vega"
     Environment = "global"
     ManagedBy   = "terraform"
+    Module      = "02-shared-resources/00-ssh-keys"
   }
 }

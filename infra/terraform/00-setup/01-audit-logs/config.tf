@@ -9,7 +9,6 @@ resource "aws_s3_bucket" "config_logs" {
   tags = merge(var.common_tags, {
     Name   = var.config_bucket_name
     Role   = "config-logs"
-    Module = "00-setup/01-audit-logs"
   })
 }
 

@@ -13,7 +13,6 @@ resource "aws_lb" "app_alb" {
 
   tags = merge(var.common_tags, {
     Name   = "ha-cluster-alb"
-    Module = "05-high-availability/01-ec2-autoscaling"
   })
 }
 
@@ -34,9 +33,7 @@ resource "aws_lb_target_group" "app_tg" {
     unhealthy_threshold = 2
   }
 
-  tags = merge(var.common_tags, {
-    Module = "05-high-availability/01-ec2-autoscaling"
-  })
+  tags = var.common_tags
 }
 
 resource "aws_lb_listener" "http" {

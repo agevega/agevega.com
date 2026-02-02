@@ -30,5 +30,6 @@ variable "common_tags" {
     Owner       = "Alejandro Vega"
     Environment = "dev"
     ManagedBy   = "terraform"
+    Module      = "04-bastion-host/02-ec2-instance"
   }
 }
