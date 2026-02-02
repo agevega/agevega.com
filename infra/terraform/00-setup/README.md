@@ -58,7 +58,7 @@ terraform init -migrate-state
 ### 2. Auditoría (01-audit-logs)
 
 ```bash
-cd ../01-audit-logs
+cd 01-audit-logs
 terraform init
 terraform apply
 ```
@@ -66,7 +66,7 @@ terraform apply
 ### 3. Presupuestos (02-budgets)
 
 ```bash
-cd ../02-budgets
+cd 02-budgets
 terraform init
 terraform apply
 ```
