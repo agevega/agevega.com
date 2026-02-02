@@ -31,7 +31,7 @@ Este proyecto se aborda con una **perspectiva de ingeniería de infraestructura*
 
 ## 🏗 Arquitectura del Sistema
 
-Diseño AWS Cloud-Native optimizado para alta disponibilidad y eficiencia de costes. Infraestructura gestionada 100% como código (IaC) con Terraform y CI/CD mediante GitHub Actions.
+Diseño **100% AWS Cloud-Native** optimizado para alta disponibilidad y eficiencia de costes. **Infraestructura gestionada como Código (IaC)** con Terraform y gestión del ciclo de vida (CI/CD) mediante GitHub Actions.
 
 ### 🌐 Infraestructura (AWS)
 
