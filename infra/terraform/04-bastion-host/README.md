@@ -43,6 +43,11 @@ Este módulo despliega el punto de entrada administrativo y la distribución de 
 - **Función**: CDN Global.
 - **Recursos**: Distribución con orígenes múltiples (S3 y EC2).
 
+### 6. [05-dns-record](./05-dns-record)
+
+- **Función**: Registro DNS Final.
+- **Recursos**: Registro `A` (Alias) en Route53 (`dev.agevega.com`) apuntando a CloudFront.
+
 ---
 
 ## 🚀 Guía de Despliegue
@@ -89,6 +94,14 @@ terraform init
 terraform apply
 ```
 
+### 6. DNS Record
+
+```bash
+cd ../05-dns-record
+terraform init
+terraform apply
+```
+
 ## 🛑 Gestión del WAF
 
 Para destruir o desvincular el WAF sin errores:
@@ -112,6 +125,7 @@ Para destruir o desvincular el WAF sin errores:
 | :-------- | :------------------------ | :---------------------- | :----------------- |
 | `00`      | `allowed_ssh_cidr_blocks` | IPs permitidas para SSH | `["0.0.0.0/0"]`    |
 | `02`      | `instance_type`           | Tipo de instancia EC2   | `t4g.nano` (ARM64) |
+| `05`      | `domain_name`             | Dominio raíz            | `agevega.com`      |
 
 ---
 

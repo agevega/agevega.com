@@ -37,6 +37,11 @@ Arquitectura tolerante a fallos distribuida en 3 zonas de disponibilidad.
 - **Función**: CDN Global.
 - **Recursos**: Distribución con orígenes múltiples (S3 y ALB).
 
+### 5. [04-dns-record](./04-dns-record)
+
+- **Función**: Registro DNS Final.
+- **Recursos**: Registro `A` (Alias) en Route53 (`agevega.com` y `www.agevega.com`) apuntando a CloudFront.
+
 ---
 
 ## 🚀 Guía de Despliegue
@@ -73,6 +78,14 @@ terraform init
 terraform apply
 ```
 
+### 5. DNS Record
+
+```bash
+cd ../04-dns-record
+terraform init
+terraform apply
+```
+
 ## 🛑 Gestión del WAF
 
 Para destruir o desvincular el WAF sin errores:
@@ -98,6 +111,7 @@ Para destruir o desvincular el WAF sin errores:
 | `01`      | `min_size`         | Mínimo de instancias en ASG     | `1`               |
 | `01`      | `max_size`         | Máximo de instancias (escalado) | `3`               |
 | `01`      | `instance_type`    | Familia de instancias           | `t4g.nano`        |
+| `04`      | `domain_name`      | Dominio raíz                    | `agevega.com`     |
 
 ---
 
