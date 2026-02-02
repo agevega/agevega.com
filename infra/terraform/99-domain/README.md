@@ -6,9 +6,9 @@ Modulo para la gestión centralizada de DNS (Route53).
 
 ```text
 99-domain/
-├── 00-dns-zone       # Crea la Hosted Zone (agevega.com)
+├── 00-dns-zone        # Crea la Hosted Zone (agevega.com)
 ├── 01-acm-certificate # Certificado SSL (Singular)
-├── 02-acm-validation # Lee ACM (01) y crea registros de validación
+├── 02-acm-validation  # Lee ACM (01) y crea registros de validación
 ```
 
 > **Nota**: Los registros DNS de aplicación (`A` Alias) se han movido a sus respectivos módulos para permitir despliegues independientes:
