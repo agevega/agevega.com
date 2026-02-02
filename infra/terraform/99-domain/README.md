@@ -45,6 +45,8 @@ Debido a la naturaleza de la validación DNS, el orden de despliegue es estricto
 ```bash
 cd 00-dns-zone
 terraform init
+# Si la zona ya existe en AWS (creada manualmente):
+terraform import aws_route53_zone.main <HOSTED_ZONE_ID>
 terraform apply
 ```
 
