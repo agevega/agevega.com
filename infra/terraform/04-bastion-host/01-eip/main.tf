@@ -3,7 +3,6 @@ resource "aws_eip" "bastion_eip" {
   tags = merge(var.common_tags, {
     Name        = "bastion-eip"
     Environment = var.environment
-    Module      = "04-bastion-host/01-eip"
   })
 }
 
@@ -13,7 +12,5 @@ resource "aws_ssm_parameter" "bastion_ip" {
   type        = "String"
   value       = aws_eip.bastion_eip.public_ip
 
-  tags = merge(var.common_tags, {
-    Module = "04-bastion-host/01-eip"
-  })
+  tags = var.common_tags
 }

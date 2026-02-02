@@ -95,9 +95,7 @@ resource "aws_cloudfront_distribution" "prod_distribution" {
     minimum_protocol_version = "TLSv1.2_2021"
   }
 
-  tags = merge(var.common_tags, {
-    Module = "05-high-availability/03-cloudfront"
-  })
+  tags = var.common_tags
 }
 
 resource "aws_ssm_parameter" "cloudfront_distribution_id" {
@@ -106,7 +104,5 @@ resource "aws_ssm_parameter" "cloudfront_distribution_id" {
   type        = "String"
   value       = aws_cloudfront_distribution.prod_distribution.id
 
-  tags = merge(var.common_tags, {
-    Module = "05-high-availability/03-cloudfront"
-  })
+  tags = var.common_tags
 }

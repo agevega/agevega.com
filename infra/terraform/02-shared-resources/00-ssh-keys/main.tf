@@ -4,6 +4,5 @@ resource "aws_key_pair" "bastion_key" {
 
   tags = merge(var.common_tags, {
     Environment = var.environment
-    Module      = "02-shared-resources/00-ssh-keys"
   })
 }

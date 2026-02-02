@@ -5,7 +5,6 @@ resource "aws_eip" "nat_eip" {
     var.common_tags,
     {
       Name   = "${var.resource_prefix}-nat-eip"
-      Module = "01-networking/01-nat-gateway"
     },
   )
 }
@@ -18,7 +17,6 @@ resource "aws_nat_gateway" "nat_gw" {
     var.common_tags,
     {
       Name   = "${var.resource_prefix}-nat-gw"
-      Module = "01-networking/01-nat-gateway"
     },
   )
 }

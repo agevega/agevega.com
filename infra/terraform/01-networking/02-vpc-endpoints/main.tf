@@ -14,7 +14,6 @@ resource "aws_vpc_endpoint" "vpce_s3" {
     var.common_tags,
     {
       Name   = "${var.resource_prefix}-vpce-s3"
-      Module = "01-networking/02-vpc-endpoints"
     },
   )
 }

@@ -8,7 +8,6 @@ resource "aws_ecr_repository" "this" {
 
   tags = merge(var.common_tags, {
     Name   = var.repository_name
-    Module = "02-shared-resources/03-ecr-repositories"
   })
 }
 
@@ -39,7 +38,5 @@ resource "aws_ssm_parameter" "ecr_repository_name" {
   type        = "String"
   value       = aws_ecr_repository.this.name
 
-  tags = merge(var.common_tags, {
-    Module = "02-shared-resources/03-ecr-repositories"
-  })
+  tags = var.common_tags
 }

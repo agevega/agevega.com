@@ -24,7 +24,6 @@ resource "aws_security_group" "alb_sg" {
 
   tags = merge(var.common_tags, {
     Name   = "ha-cluster-alb-sg"
-    Module = "05-high-availability/00-security"
   })
 }
 
@@ -58,6 +57,5 @@ resource "aws_security_group" "instance_sg" {
 
   tags = merge(var.common_tags, {
     Name   = "ha-cluster-instance-sg"
-    Module = "05-high-availability/00-security"
   })
 }

@@ -98,9 +98,7 @@ resource "aws_cloudfront_distribution" "distribution" {
     minimum_protocol_version = "TLSv1.2_2021"
   }
 
-  tags = merge(var.common_tags, {
-    Module = "04-bastion-host/04-cloudfront"
-  })
+  tags = var.common_tags
 }
 
 resource "aws_ssm_parameter" "cloudfront_distribution_id" {
@@ -109,7 +107,5 @@ resource "aws_ssm_parameter" "cloudfront_distribution_id" {
   type        = "String"
   value       = aws_cloudfront_distribution.distribution.id
 
-  tags = merge(var.common_tags, {
-    Module = "04-bastion-host/04-cloudfront"
-  })
+  tags = var.common_tags
 }
