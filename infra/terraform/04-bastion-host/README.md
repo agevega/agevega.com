@@ -9,7 +9,7 @@ Este módulo despliega el punto de entrada administrativo y la distribución de 
 ## 🏛️ Arquitectura
 
 - **Bastion Host**: Instancia EC2 mínima (`t4g.nano`) en subred pública para tunelización SSH hacia recursos privados.
-- **CDN Global**: CloudFront actúa como frontal para servir contenido estático (assets) y enrutar tráfico dinámico (si fuera necesario).
+- **CDN Global**: CloudFront actúa como frontal para el contenido estatico del bastion host sirviendo este como entorno de desarrollo.
 - **Seguridad**:
   - **WAF**: Protege la distribución CloudFront contra ataques web comunes.
   - **Security Groups**: Whitelist para acceso SSH.
