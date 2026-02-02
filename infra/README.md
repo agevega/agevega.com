@@ -14,7 +14,7 @@ La infraestructura sigue una filosofía **Cloud Native** y **Serverless First** 
 - **Seguridad**:
   - **WAF**: Reglas gestionadas de AWS protegiendo CloudFront.
   - **CloudFront + OAC**: Distribución global de contenido estático desde S3 privado.
-  - **EC2 Aislado**: Instancias en subredes privadas, accesisbles solo via Bastion (SSH) o ALB (HTTP).
+  - **EC2 Aislado**: Instancias en subredes privadas, accesibles solo via Bastion (SSH) o ALB (HTTP).
 - **Eficiencia de Costes**:
   - **ARM64 (Graviton)**: Uso exclusivo de procesadores Graviton (`t4g.*`) en cómputo y Lambda.
   - **Spot Instances**: Entornos de alta disponibilidad sobre instancias Spot.
@@ -25,14 +25,15 @@ La infraestructura sigue una filosofía **Cloud Native** y **Serverless First** 
 
 La infraestructura se organiza en módulos numerados secuencialmente según su orden de despliegue.
 
-| Módulo                                                         | Descripción              | Componentes Clave                                          |
-| :------------------------------------------------------------- | :----------------------- | :--------------------------------------------------------- |
-| **[00-setup](./terraform/00-setup)**                           | **IaC & Gobierno**       | Backend S3/DynamoDB, CloudTrail, AWS Config, Budgets.      |
-| **[01-networking](./terraform/01-networking)**                 | **Recursos de Red**      | VPC (3-Tier), Subnets, NAT (Opcional), VPC Endpoints.      |
-| **[02-shared-resources](./terraform/02-shared-resources)**     | **Recursos Compartidos** | S3 Assets, ECR, ACM Certs, SSH Keys.                       |
-| **[03-backend-serverless](./terraform/03-backend-serverless)** | **Serverless Backend**   | Lambda (Python), API Gateway, SES.                         |
-| **[04-bastion-host](./terraform/04-bastion-host)**             | **Bastion SSH**          | EC2 Bastion, Elastic IP, Security Groups, WAF, CloudFront. |
-| **[05-high-availability](./terraform/05-high-availability)**   | **Alta Disponibilidad**  | ASG (Spot), ALB, CloudFront, WAF, Auto-Scaling.            |
+| Módulo                                                         | Descripción              | Componentes Clave                                                      |
+| :------------------------------------------------------------- | :----------------------- | :--------------------------------------------------------------------- |
+| **[00-setup](./terraform/00-setup)**                           | **IaC & Gobierno**       | Backend S3/DynamoDB, CloudTrail, AWS Config, Budgets.                  |
+| **[01-networking](./terraform/01-networking)**                 | **Recursos de Red**      | VPC (3-Tier), Subnets, NAT (Opcional), VPC Endpoints.                  |
+| **[02-shared-resources](./terraform/02-shared-resources)**     | **Recursos Compartidos** | SSH Keys, ECR, S3 Assets.                                              |
+| **[03-backend-serverless](./terraform/03-backend-serverless)** | **Serverless Backend**   | Lambda (Python), API Gateway, SES.                                     |
+| **[04-bastion-host](./terraform/04-bastion-host)**             | **Bastion SSH**          | EC2 Bastion, Elastic IP, Security Groups, WAF, CloudFront, DNS Record. |
+| **[05-high-availability](./terraform/05-high-availability)**   | **Alta Disponibilidad**  | ASG (Spot), ALB, CloudFront, WAF, Auto-Scaling, DNS Record.            |
+| **[99-domain](./terraform/99-domain)**                         | **Gestión de Dominio**   | Hosted Zones (Route53), ACM Certificates, DNS Validation.              |
 
 ---
 
@@ -188,3 +189,14 @@ El estado de Terraform se almacena de forma remota y segura:
 - Optimización regional: S3/CloudFront en Madrid (eu-south-2), ACM/WAF en N. Virginia (us-east-1).
 - WAF opcional ("Plug & Play") para ahorro de costes.
   ➡️ [Detalles](changelog/2026-01-24_refactorizacion-cloudfront.md)
+
+### 02/02/2026 — Refactorización Dominios y Estandarización
+
+- **Reorganización de Infraestructura**:
+  - Creación del nuevo módulo raíz `99-domain` para centralizar la gestión de DNS y Certificados.
+  - Movimiento de `02-shared-resources/01-acm-certificates` -> `99-domain/01-acm-certificate` (Singular).
+  - Movimiento de `02-shared-resources/03-ecr-repositories` -> `02-shared-resources/01-ecr-repositories` para llenar huecos.
+  - Creación de submodulos `dns-record` en `04-bastion` y `05-ha` para registros finales.
+- **Auditoría de Calidad**:
+  - Revisión completa de `tags` en todos los submódulos.
+    ➡️ [Detalles](changelog/2026-02-02_refactorizacion-dominios.md)
