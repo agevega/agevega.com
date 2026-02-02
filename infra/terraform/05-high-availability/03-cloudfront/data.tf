@@ -2,7 +2,7 @@ data "terraform_remote_state" "acm" {
   backend = "s3"
   config = {
     bucket  = "agevegacom-terraform-state"
-    key     = "modules/02-shared-resources/01-acm-certificates/terraform.tfstate"
+    key     = "modules/99-domain/01-acm-certificate/terraform.tfstate"
     region  = "eu-south-2"
     profile = "terraform"
   }

@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
     bucket         = "agevegacom-terraform-state"
-    key            = "modules/02-shared-resources/01-acm-certificates/terraform.tfstate"
+    key            = "modules/99-domain/01-acm-certificate/terraform.tfstate"
     region         = "eu-south-2"
     dynamodb_table = "terraform-state-lock"
     encrypt        = true

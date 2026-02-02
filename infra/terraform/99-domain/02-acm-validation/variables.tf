@@ -17,6 +17,6 @@ variable "common_tags" {
     Project     = "agevegacom"
     Environment = "global"
     ManagedBy   = "terraform"
-    Module      = "99-domain/01-acm-validation"
+    Module      = "99-domain/02-acm-validation"
   }
 }
