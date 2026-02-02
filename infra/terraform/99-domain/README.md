@@ -1,50 +1,38 @@
 # 99-domain
 
-Módulo para la gestión centralizada de DNS (Route53).
+Modulo para la gestión centralizada de DNS (Route53), dividido en submódulos para resolver dependencias circulares (Chicken & Egg) con certificados ACM y CloudFront.
 
-## 🎯 Objetivo
+## 📂 Estructura
 
-Controlar la zona alojada (Hosted Zone) principal `agevega.com` y sus registros DNS asociados. Este módulo actúa como el "pegamento" final que conecta la infraestructura (CloudFront, ACM) con el mundo exterior.
-
-## 🛠️ Arquitectura Dinámica
-
-Este módulo **no tiene valores hardcodeados**. Lee el estado de otros módulos para configurarse automáticamente:
-
-1.  **Bastion CloudFront (`04-bastion-host`)**: Para `dev.agevega.com`.
-2.  **Prod CloudFront (`05-high-availability`)**: Para `agevega.com` y `www`.
-3.  **ACM Certificates (`02-shared-resources`)**: Para autogenerar los registros CNAME de validación SSL.
-
-## 📦 Recursos Gestionados
-
-- **aws_route53_zone**: La zona principal `agevega.com`.
-- **aws_route53_record (Alias A)**: Usamos Alias en lugar de CNAME para el vértice del dominio (Apex) y subdominios, por rendimiento y coste.
-  - `agevega.com` -> CloudFront Prod
-  - `www.agevega.com` -> CloudFront Prod
-  - `dev.agevega.com` -> CloudFront Bastion
-- **aws_route53_record (CNAME)**:
-  - Validaciones de ACM (generadas dinámicamente mediante `for_each`).
-
-## 🚀 Despliegue e Importación
-
-### ⚠️ IMPORTANTE: Zona Existente
-
-Como la zona ya existe en AWS (`Z08740021EDUKT5DV84WS`), debes **importarla** antes de aplicar:
-
-```bash
-cd infra/terraform/99-domain
-terraform init
-terraform import aws_route53_zone.main Z08740021EDUKT5DV84WS
+```text
+99-domain/
+├── 00-dns-zone       # Crea la Hosted Zone (agevega.com)
+├── 01-acm-validation # Lee ACM (02) y crea registros de validación
+└── 02-dns-records    # Lee CloudFronts (04, 05) y crea registros Alias A
 ```
 
-### Aplicar Cambios
+## 🚀 Despliegue Secuencial (Chicken/Egg Fix)
 
-Una vez importada la zona, aplica el resto de la configuración. Terraform detectará que los registros ya existen (si los creaste a mano) o los creará si faltan.
+Debes desplegar en este orden específico para resolver las dependencias:
 
-```bash
-terraform apply
-```
+1.  **00-dns-zone**:
+    - Crea la zona para que existan los Name Servers.
+    - `terraform import aws_route53_zone.main Z08740021EDUKT5DV84WS` (Si ya existe).
+    - `terraform apply`
 
-## 📄 Outputs
+2.  **02-shared-resources/01-acm-certificates** (Fuera de este módulo):
+    - Crea el certificado. Se quedará en "Pending Validation" hasta el paso 3.
+    - `terraform apply`
 
-- `zone_id`: El ID de la zona Route53.
-- `dev_url`: URL del entorno Dev (`https://dev.agevega.com`).
+3.  **01-acm-validation**:
+    - Lee el certificado pendiente y crea los CNAME de validación en la zona del paso 1.
+    - `terraform apply`
+    - **Espera** a que el certificado pase a "Issued".
+
+4.  **04-bastion-host/04-cloudfront** (y 05):
+    - Ahora que el certificado es válido, CloudFront puede usarlo.
+    - `terraform apply`
+
+5.  **02-dns-records**:
+    - Ahora que CloudFront existe, podemos crear los Alias A (`dev`, `www`, `root`).
+    - `terraform apply`

@@ -16,12 +16,6 @@ variable "domain_name" {
   default     = "agevega.com"
 }
 
-variable "project_name" {
-  description = "Project Name"
-  type        = string
-  default     = "agevegacom"
-}
-
 variable "common_tags" {
   description = "Common tags"
   type        = map(string)
@@ -29,6 +23,6 @@ variable "common_tags" {
     Project     = "agevegacom"
     Environment = "global"
     ManagedBy   = "terraform"
-    Module      = "99-domain"
+    Module      = "99-domain/00-dns-zone"
   }
 }
