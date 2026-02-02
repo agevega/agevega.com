@@ -108,11 +108,10 @@ Para destruir o desvincular el WAF sin errores:
 
 ## 🔧 Variables Clave
 
-| Variable                  | Descripción             | Valor por Defecto  |
-| :------------------------ | :---------------------- | :----------------- |
-| `allowed_ssh_cidr_blocks` | IPs permitidas para SSH | `["0.0.0.0/0"]`    |
-| `instance_type`           | Tipo de instancia EC2   | `t4g.nano` (ARM64) |
-| `environment`             | Tag de entorno          | `dev`              |
+| Submódulo | Variable                  | Descripción             | Valor por Defecto  |
+| :-------- | :------------------------ | :---------------------- | :----------------- |
+| `00`      | `allowed_ssh_cidr_blocks` | IPs permitidas para SSH | `["0.0.0.0/0"]`    |
+| `02`      | `instance_type`           | Tipo de instancia EC2   | `t4g.nano` (ARM64) |
 
 ---
 

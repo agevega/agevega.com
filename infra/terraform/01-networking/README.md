@@ -69,10 +69,10 @@ terraform apply
 
 ## 🔧 Variables Clave
 
-| Variable             | Descripción                    | Valor por Defecto                               |
-| :------------------- | :----------------------------- | :---------------------------------------------- |
-| `vpc_cidr`           | Rango CIDR de la VPC           | `10.0.0.0/16`                                   |
-| `availability_zones` | Zonas de disponibilidad a usar | `["eu-south-2a", "eu-south-2b", "eu-south-2c"]` |
+| Submódulo | Variable             | Descripción                    | Valor por Defecto                               |
+| :-------- | :------------------- | :----------------------------- | :---------------------------------------------- |
+| `00`      | `vpc_cidr`           | Rango CIDR de la VPC           | `10.0.0.0/16`                                   |
+| `00`      | `availability_zones` | Zonas de disponibilidad a usar | `["eu-south-2a", "eu-south-2b", "eu-south-2c"]` |
 
 ---
 

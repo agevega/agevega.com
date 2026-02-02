@@ -43,11 +43,11 @@ Tras el despliegue, obtendrás la URL del endpoint en el output `api_endpoint`.
 
 ## 🔧 Variables Clave
 
-| Variable          | Descripción                            | Valor por Defecto   |
-| :---------------- | :------------------------------------- | :------------------ |
-| `sender_email`    | Email verificado que envía los correos | `agevega@gmail.com` |
-| `recipient_email` | Email donde llegan los contactos       | `agevega@gmail.com` |
-| `ses_region`      | Región donde opera SES                 | `eu-west-1`         |
+| Submódulo | Variable          | Descripción                            | Valor por Defecto   |
+| :-------- | :---------------- | :------------------------------------- | :------------------ |
+| `00`      | `sender_email`    | Email verificado que envía los correos | `agevega@gmail.com` |
+| `00`      | `recipient_email` | Email donde llegan los contactos       | `agevega@gmail.com` |
+| `00`      | `ses_region`      | Región donde opera SES                 | `eu-west-1`         |
 
 ---
 

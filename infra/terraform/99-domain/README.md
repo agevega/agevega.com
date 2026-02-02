@@ -74,11 +74,9 @@ _Terraform esperará hasta que el certificado cambie a estado `Issued` (normalme
 
 ## 🔧 Variables Clave
 
-| Variable      | Descripción                  | Valor por Defecto |
-| :------------ | :--------------------------- | :---------------- |
-| `domain_name` | Dominio raíz del proyecto    | `agevega.com`     |
-| `aws_region`  | Región para la zona DNS      | `eu-south-2`      |
-| `common_tags` | Etiquetas estándar (Project) | `agevegacom`      |
+| Submódulo | Variable      | Descripción               | Valor por Defecto |
+| :-------- | :------------ | :------------------------ | :---------------- |
+| `00`/`01` | `domain_name` | Dominio raíz del proyecto | `agevega.com`     |
 
 ---
 

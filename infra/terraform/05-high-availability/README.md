@@ -92,12 +92,12 @@ Para destruir o desvincular el WAF sin errores:
 
 ## 🔧 Variables Clave
 
-| Variable           | Descripción                     | Valor por Defecto |
-| :----------------- | :------------------------------ | :---------------- |
-| `desired_capacity` | Número objetivo de instancias   | `2`               |
-| `min_size`         | Mínimo de instancias en ASG     | `1`               |
-| `max_size`         | Máximo de instancias (escalado) | `3`               |
-| `instance_type`    | Familia de instancias           | `t4g.nano`        |
+| Submódulo | Variable           | Descripción                     | Valor por Defecto |
+| :-------- | :----------------- | :------------------------------ | :---------------- |
+| `01`      | `desired_capacity` | Número objetivo de instancias   | `2`               |
+| `01`      | `min_size`         | Mínimo de instancias en ASG     | `1`               |
+| `01`      | `max_size`         | Máximo de instancias (escalado) | `3`               |
+| `01`      | `instance_type`    | Familia de instancias           | `t4g.nano`        |
 
 ---
 
