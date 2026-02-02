@@ -36,5 +36,6 @@ variable "common_tags" {
     Owner       = "Alejandro Vega"
     Environment = "global"
     ManagedBy   = "terraform"
+    Module      = "00-setup/00-tf-backend"
   }
 }
