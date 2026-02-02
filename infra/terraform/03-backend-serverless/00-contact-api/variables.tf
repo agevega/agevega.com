@@ -42,5 +42,6 @@ variable "common_tags" {
     Owner       = "Alejandro Vega"
     Environment = "global"
     ManagedBy   = "terraform"
+    Module      = "03-backend-serverless/00-contact-api"
   }
 }

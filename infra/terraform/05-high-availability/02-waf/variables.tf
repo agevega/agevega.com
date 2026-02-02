@@ -24,5 +24,6 @@ variable "common_tags" {
     Owner       = "Alejandro Vega"
     Environment = "prod"
     ManagedBy   = "terraform"
+    Module      = "05-high-availability/02-waf"
   }
 }

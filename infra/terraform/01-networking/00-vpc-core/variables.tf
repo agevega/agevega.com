@@ -24,6 +24,7 @@ variable "common_tags" {
     Owner       = "Alejandro Vega"
     Environment = "global"
     ManagedBy   = "terraform"
+    Module      = "01-networking/00-vpc-core"
   }
 }
 

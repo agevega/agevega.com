@@ -23,6 +23,6 @@ variable "common_tags" {
     Project     = "agevegacom"
     Environment = "global"
     ManagedBy   = "terraform"
-    Module      = "05-cloudfront-WAF-S3/00-s3-assets"
+    Module      = "02-shared-resources/02-s3-buckets"
   }
 }

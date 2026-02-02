@@ -17,6 +17,6 @@ variable "common_tags" {
     Project     = "agevegacom"
     Environment = "global"
     ManagedBy   = "terraform"
-    Module      = "05-cloudfront-WAF-S3/01-acm-certificate"
+    Module      = "02-shared-resources/01-acm-certificates"
   }
 }
