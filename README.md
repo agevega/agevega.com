@@ -31,7 +31,7 @@ Este proyecto se aborda con una **perspectiva de ingeniería de infraestructura*
 
 ## 🏗 Arquitectura del Sistema
 
-Diseño cloud-native orientado a la optimización de costes y alta disponibilidad, siguiendo una estrategia dual para equilibrar costes y disponibilidad, apoyada en componentes serverless globales.
+Diseño AWS Cloud-Native optimizado para alta disponibilidad y eficiencia de costes. Infraestructura gestionada 100% como código (IaC) con Terraform y CI/CD mediante GitHub Actions.
 
 ### 🌐 Infraestructura (AWS)
 
@@ -82,10 +82,11 @@ agevega.com/
 │   ├── terraform/                 # Código HCL de Terraform
 │   │   ├── 00-setup/              # Bootstrap, Auditoría y Budgets
 │   │   ├── 01-networking/         # VPC 3-Tier (Core, NAT, Endpoints)
-│   │   ├── 02-shared-resources/   # ECR, ACM, S3 Assets, SSH Keys
+│   │   ├── 02-shared-resources/   # SSH Keys, ECR, S3 Assets
 │   │   ├── 03-backend-serverless/ # Lambda Contact & SES
 │   │   ├── 04-bastion-host/       # Entorno Dev & Acceso SSH
-│   │   └── 05-high-availability/  # Entorno Prod (ASG + ALB)
+│   │   ├── 05-high-availability/  # Entorno Prod (ASG + ALB)
+│   │   └── 99-domain/             # DNS Zones & ACM Certificates
 │   └── changelog/                 # Registro de cambios
 └── scripts/                       # Scripts de utilidad
 ```
