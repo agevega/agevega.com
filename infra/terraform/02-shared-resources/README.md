@@ -9,7 +9,6 @@ Este módulo centraliza recursos compartidos que son prerequisitos para otros m�
 Los recursos aquí definidos son consumidos tanto por el entorno de desarrollo (Bastion) como por el de producción (HA).
 
 - **Gestión de Identidad (SSH)**: Clave pública centralizada para acceso EC2.
-- **Seguridad (TLS)**: Certificados ACM validados por DNS en `us-east-1` (requerido por CloudFront).
 - **Contenido Estático**: Buckets S3 privados accesibles solo vía OAC (CloudFront).
 - **Contenedores**: Repositorios ECR con políticas de ciclo de vida automáticas.
 
@@ -22,21 +21,15 @@ Los recursos aquí definidos son consumidos tanto por el entorno de desarrollo (
 - **Función**: Acceso e identidad.
 - **Recursos**: Key Pair. Sube tu clave pública SSH a AWS para permitir el acceso a las instancias.
 
-### 2. [01-acm-certificates](./01-acm-certificates)
+### 2. [01-ecr-repositories](./01-ecr-repositories)
 
-- **Función**: Cifrado en tránsito (HTTPS).
-- **Recursos**: Certificado ACM público.
-- **Nota**: Desplegado en `us-east-1` (Global).
+- **Función**: Registro de imágenes Docker.
+- **Recursos**: ECR Repository con escaneo de vulnerabilidades. Retención de últimas 10 imágenes.
 
 ### 3. [02-s3-buckets](./02-s3-buckets)
 
 - **Función**: Almacenamiento de assets (CV, imágenes).
 - **Recursos**: Bucket S3 privado con encriptación AES256.
-
-### 4. [03-ecr-repositories](./03-ecr-repositories)
-
-- **Función**: Registro de imágenes Docker.
-- **Recursos**: ECR Repository con escaneo de vulnerabilidades. Retención de últimas 10 imágenes.
 
 ---
 
@@ -52,10 +45,10 @@ terraform init
 terraform apply -var="public_key_path=~/.ssh/id_rsa.pub"
 ```
 
-### 2. Certificados CAS (Tarda unos minutos)
+### 2. ECR
 
 ```bash
-cd ../01-acm-certificates
+cd ../01-ecr-repositories
 terraform init
 terraform apply
 ```
@@ -64,14 +57,6 @@ terraform apply
 
 ```bash
 cd ../02-s3-buckets
-terraform init
-terraform apply
-```
-
-### 4. ECR
-
-```bash
-cd ../03-ecr-repositories
 terraform init
 terraform apply
 ```

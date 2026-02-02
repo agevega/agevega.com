@@ -7,7 +7,8 @@ Modulo para la gestión centralizada de DNS (Route53).
 ```text
 99-domain/
 ├── 00-dns-zone       # Crea la Hosted Zone (agevega.com)
-├── 01-acm-validation # Lee ACM (02) y crea registros de validación
+├── 01-acm-certificate # Certificado SSL (Singular)
+├── 02-acm-validation # Lee ACM (01) y crea registros de validación
 ```
 
 > **Nota**: Los registros DNS de aplicación (`A` Alias) se han movido a sus respectivos módulos para permitir despliegues independientes:
@@ -24,11 +25,11 @@ Orden de ejecución recomendado para evitar dependencias circulares:
     - `terraform import aws_route53_zone.main Z08740021EDUKT5DV84WS` (Si ya existe).
     - `terraform apply`
 
-2.  **02-shared-resources/01-acm-certificates**:
+2.  **01-acm-certificate**:
     - Crea el certificado SSL (Estado: Pending Validation).
     - `terraform apply`
 
-3.  **01-acm-validation**:
+3.  **02-acm-validation**:
     - Crea los CNAMEs para validar el certificado.
     - `terraform apply` -> Esperar a "Issued".
 
