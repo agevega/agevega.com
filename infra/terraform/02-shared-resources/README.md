@@ -1,16 +1,17 @@
 # 📦 02-shared-resources
 
-Este módulo centraliza recursos compartidos que son prerequisitos para otros módulos o que tienen un ciclo de vida global independiente.
+Este módulo centraliza recursos compartidos que son prerequisitos para otros módulos o que tienen un ciclo de vida global independiente.  
+Estos componentes son consumidos tanto por el entorno de desarrollo (Bastion) como por el de producción (HA).
 
 ---
 
 ## 🏛️ Arquitectura
 
-Los recursos aquí definidos son consumidos tanto por el entorno de desarrollo (Bastion) como por el de producción (HA).
-
 - **Gestión de Identidad (SSH)**: Clave pública centralizada para acceso EC2.
 - **Contenido Estático**: Buckets S3 privados accesibles solo vía OAC (CloudFront).
 - **Contenedores**: Repositorios ECR con políticas de ciclo de vida automáticas.
+
+_(Nota: La gestión de Certificados y Dominios se ha movido al módulo dedicado `99-domain`)_.
 
 ---
 
@@ -24,7 +25,7 @@ Los recursos aquí definidos son consumidos tanto por el entorno de desarrollo (
 ### 2. [01-ecr-repositories](./01-ecr-repositories)
 
 - **Función**: Registro de imágenes Docker.
-- **Recursos**: ECR Repository con escaneo de vulnerabilidades. Retención de últimas 10 imágenes.
+- **Recursos**: ECR Repository con escaneo de vulnerabilidades. Política de ciclo de vida para retener solo las últimas 10 imágenes.
 
 ### 3. [02-s3-buckets](./02-s3-buckets)
 
@@ -35,9 +36,9 @@ Los recursos aquí definidos son consumidos tanto por el entorno de desarrollo (
 
 ## 🚀 Guía de Despliegue
 
-Debido a la independencia de estos recursos, el orden dentro del módulo no es estricto, pero se recomienda seguir la numeración:
+Seguir la secuencia numérica para mantener el orden lógico.
 
-### 1. SSH Keys
+### 1. SSH Keys (00-ssh-keys)
 
 ```bash
 cd 00-ssh-keys
@@ -45,7 +46,7 @@ terraform init
 terraform apply -var="public_key_path=~/.ssh/id_rsa.pub"
 ```
 
-### 2. ECR
+### 2. ECR (01-ecr-repositories)
 
 ```bash
 cd ../01-ecr-repositories
@@ -53,7 +54,7 @@ terraform init
 terraform apply
 ```
 
-### 3. S3 Assets
+### 3. S3 Assets (02-s3-buckets)
 
 ```bash
 cd ../02-s3-buckets
@@ -65,16 +66,15 @@ terraform apply
 
 ## 🔧 Variables Clave
 
-| Variable          | Descripción                       | Valor por Defecto           |
-| :---------------- | :-------------------------------- | :-------------------------- |
-| `public_key_path` | Ruta a tu clave pública local     | `~/.ssh/id_rsa.pub`         |
-| `domain_name`     | Dominio para el certificado       | `agevega.com`               |
-| `bucket_name`     | Nombre único del bucket de assets | `agevegacom-assets-private` |
-| `repo_name`       | Nombre del repositorio ECR        | `agevega-app`               |
+| Submódulo | Variable             | Descripción                       | Valor por Defecto           |
+| :-------- | :------------------- | :-------------------------------- | :-------------------------- |
+| `00`      | `public_key_path`    | Ruta a tu clave pública local     | `~/.ssh/id_rsa.pub`         |
+| `01`      | `repository_name`    | Nombre del repositorio ECR        | `agevegacom-frontend`       |
+| `02`      | `assets_bucket_name` | Nombre único del bucket de assets | `agevegacom-assets-private` |
 
 ---
 
 ## ⚡ Optimización y Costes
 
-- **ECR Lifecycle**: Política de retención que mantiene solo las últimas 10 imágenes, evitando costes de almacenamiento innecesarios por builds antiguos.
+- **ECR Lifecycle**: Política de retención (Keep Last 10) para evitar costes de almacenamiento innecesarios por builds antiguos.
 - **Cero Tráfico S3 público**: Al usar OAC, el bucket no expone datos a internet, evitando ataques de listado y tráfico no deseado.
