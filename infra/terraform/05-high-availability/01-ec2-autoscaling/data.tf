@@ -12,7 +12,7 @@ data "terraform_remote_state" "ecr" {
   backend = "s3"
   config = {
     bucket  = "agevegacom-terraform-state"
-    key     = "modules/02-shared-resources/03-ecr-repositories/terraform.tfstate"
+    key     = "modules/02-shared-resources/01-ecr-repositories/terraform.tfstate"
     region  = "eu-south-2"
     profile = "terraform"
   }

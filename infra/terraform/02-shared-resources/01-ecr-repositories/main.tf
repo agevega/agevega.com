@@ -33,7 +33,7 @@ resource "aws_ecr_lifecycle_policy" "this" {
 }
 
 resource "aws_ssm_parameter" "ecr_repository_name" {
-  name        = "/${var.project_name}/02-shared-resources/03-ecr-repositories/ecr-repository"
+  name        = "/${var.project_name}/02-shared-resources/01-ecr-repositories/ecr-repository"
   description = "ECR Repository Name"
   type        = "String"
   value       = aws_ecr_repository.this.name

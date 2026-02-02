@@ -24,7 +24,7 @@ variable "common_tags" {
     Owner       = "Alejandro Vega"
     Environment = "global"
     ManagedBy   = "terraform"
-    Module      = "02-shared-resources/03-ecr-repositories"
+    Module      = "02-shared-resources/01-ecr-repositories"
   }
 }
 
