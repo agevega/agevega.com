@@ -11,7 +11,7 @@ variable "aws_profile" {
 }
 
 variable "domain_name" {
-  description = "Primary domain name"
+  description = "Primary domain name (e.g. agevega.com)"
   type        = string
   default     = "agevega.com"
 }
@@ -21,8 +21,8 @@ variable "common_tags" {
   type        = map(string)
   default     = {
     Project     = "agevegacom"
-    Environment = "global"
+    Environment = "dev"
     ManagedBy   = "terraform"
-    Module      = "99-domain/02-dns-records"
+    Module      = "04-bastion-host/05-dns-record"
   }
 }
