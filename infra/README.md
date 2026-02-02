@@ -83,7 +83,7 @@ El estado de Terraform se almacena de forma remota y segura:
 - Cambio del idioma de la consola a **English (US)**
 - Configuración de la **moneda de visualización y facturación en euros (EUR)**
 - Creación del presupuesto global **“My 10$ Budget”** con alertas al 10 %, 50 %, 100 % y 200 %
-- Creación del presupuesto global **“My Daily 1$ Budget”** con alertas al 50 %, 100 %, 200 %, 500 % y 1000 %
+- Creación del presupuesto global **“My Daily 1$ Budget”** con alertas al 50 %, 100 %, 200 %, 500 % y 1000 %  
   ➡️ [Detalles](changelog/2025-10-18_creacion-cuenta.md)
 
 ### 20/10/2025 — Configuración inicial de IAM
@@ -95,7 +95,7 @@ El estado de Terraform se almacena de forma remota y segura:
 ### 24/10/2025 — Activación de auditoría y registro de configuración
 
 - Habilitación de **AWS CloudTrail** con validación de logs y almacenamiento en S3 (`cloudtrail-logs-agevegacom`).
-- Habilitación de **AWS Config** con grabación continua de todos los recursos y entrega en S3 (`aws-config-logs-agevegacom`).
+- Habilitación de **AWS Config** con grabación continua de todos los recursos y entrega en S3 (`aws-config-logs-agevegacom`).  
   ➡️ [Detalles](changelog/2025-10-24_auditoria-y-configuracion-logs.md)
 
 ### 26/10/2025 — Configuración del backend remoto de Terraform (S3 + DynamoDB)
@@ -105,7 +105,7 @@ El estado de Terraform se almacena de forma remota y segura:
 - Activación de **versionado**, **cifrado SSE-AES256**, **bloqueo de acceso público** y **propiedad forzada al propietario**.
 - Aplicación de política **DenyInsecureTransport** y regla de ciclo de vida con transición a **GLACIER_IR (30 d)** y **DEEP_ARCHIVE (120 d)**.
 - Creación de la **tabla DynamoDB** `terraform-state-lock` para bloqueo de estado, con **SSE**, **PITR** y **protección contra borrado** habilitados.
-- Registro del par de claves de pruebas `${var.resource_prefix}-test-keypair`
+- Registro del par de claves de pruebas `${var.resource_prefix}-test-keypair`  
   ➡️ [Detalles](changelog/2025-10-26_configuracion-terraform-state.md)
 
 ### 01/11/2025 — Despliegue de red (VPC, subredes y componentes base)
@@ -128,14 +128,14 @@ El estado de Terraform se almacena de forma remota y segura:
 - **01-instance**: Despliegue de recursos efímeros (Instancia EC2 t3.micro) para optimización de costes.
 - Configuración de **Docker** y **Git** automática mediante User Data.
 - Habilitación de tráfico **HTTP/HTTPS** y **SSH** seguro.
-- Integración de clave SSH local existente.
+- Integración de clave SSH local existente.  
   ➡️ [Detalles](changelog/2025-12-06_despliegue-bastion-ec2.md)
 
 ### 07/12/2025 — Despliegue de repositorio ECR (Módulo 03)
 
 - Despliegue del código en `infra/terraform/03-ECR` para gestión de imágenes Docker.
 - Creación de repositorio **ECR** `agevegacom-frontend` con escaneo de seguridad y políticas de ciclo de vida.
-- Integración con el sistema de despliegue mediante Terraform backend S3.
+- Integración con el sistema de despliegue mediante Terraform backend S3.  
   ➡️ [Detalles](changelog/2025-12-07_despliegue-ecr.md)
 
 ### 11/01/2026 — Despliegue de Serverless Contact Form (Módulo 04)
@@ -143,14 +143,14 @@ El estado de Terraform se almacena de forma remota y segura:
 - Despliegue del módulo `04-lambda-SES` para gestionar el formulario de contacto.
 - Arquitectura **Serverless** (Lambda Python + API Gateway) para coste mínimo.
 - Configuración **Multi-Región** para SES (Irlanda) integrada con infraestructura en España.
-- Optimización de costes (ARM64, Logs 1 día, Throttling).
+- Optimización de costes (ARM64, Logs 1 día, Throttling).  
   ➡️ [Detalles](changelog/2026-01-11_despliegue-serverless-contact-form.md)
 
 ### 12/01/2026 — Optimización de Costes EC2 (Migración a ARM64)
 
 - Migración del Bastion Host a instancia **`t4g.nano`** (Graviton2).
 - Actualización de AMI y workflows de CI/CD para soporte **Multi-Arch (ARM64/AMD64)**.
-- Reducción de costes operativos al mínimo (~3€/mes).
+- Reducción de costes operativos al mínimo (~3€/mes).  
   ➡️ [Detalles](changelog/2026-01-12_optimizacion-ec2-arm.md)
 
 ### 13/01/2026 — Despliegue de CloudFront y WAF (Módulo 05)
@@ -158,32 +158,32 @@ El estado de Terraform se almacena de forma remota y segura:
 - Despliegue del módulo `05-cloudfront-waf`.
 - Implementación de **CloudFront** como CDN global con terminación SSL/TLS.
 - Implementación de **AWS WAF** (Desactivado para ahorro de costes) con reglas Core de AWS para seguridad perimetral.
-- Integración con EC2 a través de Security Group dinámico (Prefix List).
+- Integración con EC2 a través de Security Group dinámico (Prefix List).  
   ➡️ [Detalles](changelog/2026-01-13_despliegue-cloudfront-waf.md)
 
 ### 14/01/2026 — Consolidación de Assets y CloudFront (Módulo 05)
 
 - Fusión de S3 Assets dentro del módulo de CloudFront (`05-cloudfront-WAF-S3`).
-- Implementación de **OAC (Origin Access Control)** para acceso seguro a documentos privados (CV).
+- Implementación de **OAC (Origin Access Control)** para acceso seguro a documentos privados (CV).  
   ➡️ [Detalles](changelog/2026-01-14_consolidacion-s3-cloudfront.md)
 
 ### 22/01/2026 — Refactorización Networking y Auditoría
 
 - División de `01-networking` en submódulos (`vpc-core`, `nat-gateway`, `vpc-endpoints`) para gestión de costes.
-- Corrección integral de documentación y dependencias.
+- Corrección integral de documentación y dependencias.  
   ➡️ [Detalles](changelog/2026-01-22_refactorizacion-networking-y-doc.md)
 
 ### 23/01/2026 — Refactorización Bastion EC2 (Módulo 02)
 
 - Refactorización del módulo `02-bastion-EC2` en 4 submódulos (`security`, `ssh-key`, `eip`, `instance`) para granularidad total.
-- Restricción de acceso SSH a IP personal por defecto.
+- Restricción de acceso SSH a IP personal por defecto.  
   ➡️ [Detalles](changelog/2026-01-23_refactorizacion-bastion.md)
 
 ### 24/01/2026 — Refactorización CloudFront (Módulo 05)
 
 - Refactorización de `05-cloudfront-WAF-S3` en 4 submódulos secuenciales.
 - Optimización regional: S3/CloudFront en Madrid (eu-south-2), ACM/WAF en N. Virginia (us-east-1).
-- WAF opcional ("Plug & Play") para ahorro de costes.
+- WAF opcional ("Plug & Play") para ahorro de costes.  
   ➡️ [Detalles](changelog/2026-01-24_refactorizacion-cloudfront.md)
 
 ### 02/02/2026 — Refactorización Dominios y Estandarización
@@ -191,5 +191,5 @@ El estado de Terraform se almacena de forma remota y segura:
 - Creación del nuevo módulo raíz `99-domain` para centralizar la gestión de DNS y Certificados.
 - Movimiento de `02-shared-resources` a `99-domain` (Certificados) y reordenamiento interno.
 - Creación de submodulos `dns-record` en `04-bastion` y `05-ha` para registros finales.
-- Auditoría completa de `tags` y estandarización de nombres en todos los submódulos.
+- Auditoría completa de `tags` y estandarización de nombres en todos los submódulos.  
   ➡️ [Detalles](changelog/2026-02-02_refactorizacion-dominios.md)
