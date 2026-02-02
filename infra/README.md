@@ -175,11 +175,7 @@ El estado de Terraform se almacena de forma remota y segura:
 
 ### 23/01/2026 — Refactorización Bastion EC2 (Módulo 02)
 
-- Refactorización del módulo `02-bastion-EC2` en 4 submódulos para granularidad total.
-- **00-security**: Security Groups.
-- **01-ssh-key**: Key Pair.
-- **02-eip**: Elastic IP.
-- **03-instance**: Instancia EC2.
+- Refactorización del módulo `02-bastion-EC2` en 4 submódulos (`security`, `ssh-key`, `eip`, `instance`) para granularidad total.
 - Restricción de acceso SSH a IP personal por defecto.
   ➡️ [Detalles](changelog/2026-01-23_refactorizacion-bastion.md)
 
@@ -192,11 +188,8 @@ El estado de Terraform se almacena de forma remota y segura:
 
 ### 02/02/2026 — Refactorización Dominios y Estandarización
 
-- **Reorganización de Infraestructura**:
-  - Creación del nuevo módulo raíz `99-domain` para centralizar la gestión de DNS y Certificados.
-  - Movimiento de `02-shared-resources/01-acm-certificates` -> `99-domain/01-acm-certificate` (Singular).
-  - Movimiento de `02-shared-resources/03-ecr-repositories` -> `02-shared-resources/01-ecr-repositories` para llenar huecos.
-  - Creación de submodulos `dns-record` en `04-bastion` y `05-ha` para registros finales.
-- **Auditoría de Calidad**:
-  - Revisión completa de `tags` en todos los submódulos.
-    ➡️ [Detalles](changelog/2026-02-02_refactorizacion-dominios.md)
+- Creación del nuevo módulo raíz `99-domain` para centralizar la gestión de DNS y Certificados.
+- Movimiento de `02-shared-resources` a `99-domain` (Certificados) y reordenamiento interno.
+- Creación de submodulos `dns-record` en `04-bastion` y `05-ha` para registros finales.
+- Auditoría completa de `tags` y estandarización de nombres en todos los submódulos.
+  ➡️ [Detalles](changelog/2026-02-02_refactorizacion-dominios.md)
