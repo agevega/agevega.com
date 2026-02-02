@@ -78,5 +78,5 @@ terraform apply
 
 ## ⚡ Optimización y Costes
 
-- **NAT Gateway On-Demand**: El NAT Gateway es el componente más caro (~$0.045/hora + tráfico). Este diseño modular permite provisionarlo solo durante ventanas de mantenimiento (ej: `yum update` en instancias privadas) y destruirlo después, resultando en un ahorro significativo.
+- **NAT Gateway On-Demand**: El NAT Gateway es el componente más caro (~$0.045/hora + tráfico). Este diseño modular permite provisionarlo sólo si este es necesario y destruirlo en caso contrario, resultando en un ahorro significativo.
 - **VPC Endpoints (Gateway)**: Los endpoints de tipo Gateway para S3 son **gratuitos** y evitan pagar procesamiento de datos por el NAT Gateway.
