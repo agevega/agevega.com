@@ -37,7 +37,17 @@ terraform init
 terraform apply
 ```
 
-Tras el despliegue, obtendrás la URL del endpoint en el output `api_endpoint`.
+Tras el despliegue, la terminal mostrará la URL del endpoint (`api_endpoint`) y la identidad SES habrá sido creada.
+
+### 2. Verificación de Email (Crucial)
+
+AWS enviará automáticamente un correo a `sender_email` (por defecto `agevega@gmail.com`) desde Amazon Web Services.
+
+1.  **Revisa tu bandeja de entrada** (y spam).
+2.  Busca el correo con asunto: _"Amazon Web Services – Email Address Verification Request in region EU (Ireland)"_.
+3.  **Haz clic en el enlace** de verificación.
+
+> ⚠️ **Importante**: Si no verificas el email, SES bloqueará cualquier intento de envío y la Lambda fallará con error `MessageRejected`.
 
 ---
 
