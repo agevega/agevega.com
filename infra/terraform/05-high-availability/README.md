@@ -91,6 +91,16 @@ terraform apply
 
 ---
 
+## 🐞 Debug
+
+Conectar a una instancia del ASG por SSH a través del Bastion Host:
+
+```bash
+ssh -i ~/.ssh/id_rsa -J ec2-user@$(aws ec2 describe-instances --filters "Name=tag:Name,Values=bastion-host" "Name=instance-state-name,Values=running" --query "Reservations[*].Instances[*].[PublicDnsName]" --output text --profile=terraform) ec2-user@<IP_PRIVADA_DESTINO>
+```
+
+---
+
 ## 🔧 Variables Clave
 
 | Submódulo | Variable           | Descripción                     | Valor por Defecto |

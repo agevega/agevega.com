@@ -162,7 +162,7 @@ Para desvincular y destruir el WAF sin errores:
 Conectar al Bastion Host a través de SSH sin EIP asociada:
 
 ```bash
-ssh -A -i ~/.ssh/id_rsa.pub ec2-user@$(aws ec2 describe-instances --filters "Name=tag:Name,Values=bastion-host" "Name=instance-state-name,Values=running" --query "Reservations[*].Instances[*].[PublicDnsName]" --output text --profile=terraform)
+ssh -A -i ~/.ssh/id_rsa ec2-user@$(aws ec2 describe-instances --filters "Name=tag:Name,Values=bastion-host" "Name=instance-state-name,Values=running" --query "Reservations[*].Instances[*].[PublicDnsName]" --output text --profile=terraform)
 ```
 
 ---
