@@ -171,5 +171,6 @@ Para desvincular y destruir el WAF sin errores:
 
 ## ⚡ Optimización y Costes
 
+- **EIP y WAF opcionales**: Son los componentes mas costosos de este submódulo y no son estrictamente imprescindibles para su funcionamiento, al estar en un entorno de desarrollo se han deshabilitado por defecto por ahorro de costes.
 - **Instancia Nano ARM**: Uso de `t4g.nano` que ofrece el coste más bajo posible para una instancia EC2 on-demand, suficiente para un bastion host.
-- **Http Proxy**: CloudFront está configurado para cachear contenido estático de S3 agresivamente, reduciendo peticiones al origen y costes de transferencia de datos.
+- **Http Proxy**: CloudFront está configurado para cachear contenido estático de S3, reduciendo peticiones al origen y costes de transferencia de datos.
