@@ -10,6 +10,12 @@ variable "aws_profile" {
   default     = "terraform"
 }
 
+variable "project_name" {
+  description = "Project name"
+  type        = string
+  default     = "agevegacom"
+}
+
 variable "common_tags" {
   description = "Common tags"
   type        = map(string)
