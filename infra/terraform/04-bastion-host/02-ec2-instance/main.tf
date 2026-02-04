@@ -16,8 +16,9 @@ resource "aws_instance" "bastion" {
 }
 
 resource "aws_eip_association" "eip_assoc" {
+  count         = var.enable_eip ? 1 : 0
   instance_id   = aws_instance.bastion.id
-  allocation_id = data.terraform_remote_state.eip.outputs.eip_allocation_id
+  allocation_id = data.terraform_remote_state.eip[0].outputs.eip_allocation_id
 }
 
 resource "aws_ssm_parameter" "bastion_public_dns" {
@@ -28,4 +29,3 @@ resource "aws_ssm_parameter" "bastion_public_dns" {
 
   tags = var.common_tags
 }
-

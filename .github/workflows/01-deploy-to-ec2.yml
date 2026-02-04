@@ -35,10 +35,10 @@ jobs:
           echo "Fetching configuration from SSM..."
           ECR_REPO=$(aws ssm get-parameter --name "/${{ env.PROJECT_NAME }}/02-shared-resources/01-ecr-repositories/ecr-repository" --query "Parameter.Value" --output text)
           CLOUDFRONT_ID=$(aws ssm get-parameter --name "/${{ env.PROJECT_NAME }}/04-bastion-host/04-cloudfront/cloudfront-distribution-id" --query "Parameter.Value" --output text)
-          BASTION_IP=$(aws ssm get-parameter --name "/${{ env.PROJECT_NAME }}/04-bastion-host/01-eip/bastion-ip" --query "Parameter.Value" --output text)
+          BASTION_HOST=$(aws ssm get-parameter --name "/${{ env.PROJECT_NAME }}/04-bastion-host/02-ec2-instance/bastion-public-dns" --query "Parameter.Value" --output text)
           
-          echo "Found Bastion IP: $BASTION_IP"
-          echo "EC2_HOST=$BASTION_IP" >> $GITHUB_ENV
+          echo "Found Bastion Host: $BASTION_HOST"
+          echo "EC2_HOST=$BASTION_HOST" >> $GITHUB_ENV
           echo "ECR_REPO=$ECR_REPO" >> $GITHUB_OUTPUT
           echo "CLOUDFRONT_ID=$CLOUDFRONT_ID" >> $GITHUB_OUTPUT
 

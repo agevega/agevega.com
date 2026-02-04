@@ -40,3 +40,8 @@ variable "project_name" {
   default     = "agevegacom"
 }
 
+variable "enable_eip" {
+  description = "Enable Elastic IP for Bastion Host"
+  type        = bool
+  default     = false
+}

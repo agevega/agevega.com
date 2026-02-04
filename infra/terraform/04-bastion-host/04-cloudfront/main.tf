@@ -1,5 +1,5 @@
 locals {
-  origin_id    = "EC2-${data.terraform_remote_state.bastion_eip.outputs.eip_public_ip}"
+  origin_id    = "EC2-Bastion"
   s3_origin_id = "S3-Assets"
 }
 
@@ -24,7 +24,7 @@ resource "aws_cloudfront_distribution" "distribution" {
   aliases = ["dev.${var.domain_name}"]
 
   origin {
-    domain_name = data.terraform_remote_state.bastion_eip.outputs.eip_public_dns
+    domain_name = data.terraform_remote_state.bastion_instance.outputs.bastion_public_dns
     origin_id   = local.origin_id
 
     custom_origin_config {

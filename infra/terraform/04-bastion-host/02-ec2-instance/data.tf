@@ -29,6 +29,7 @@ data "terraform_remote_state" "ssh_key" {
 }
 
 data "terraform_remote_state" "eip" {
+  count   = var.enable_eip ? 1 : 0
   backend = "s3"
   config = {
     bucket  = "agevegacom-terraform-state"

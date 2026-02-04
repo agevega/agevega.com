@@ -18,11 +18,11 @@ data "terraform_remote_state" "acm" {
   }
 }
 
-data "terraform_remote_state" "bastion_eip" {
+data "terraform_remote_state" "bastion_instance" {
   backend = "s3"
   config = {
     bucket  = "agevegacom-terraform-state"
-    key     = "modules/04-bastion-host/01-eip/terraform.tfstate"
+    key     = "modules/04-bastion-host/02-ec2-instance/terraform.tfstate"
     region  = "eu-south-2"
     profile = "terraform"
   }

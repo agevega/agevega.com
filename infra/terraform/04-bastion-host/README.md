@@ -102,6 +102,34 @@ terraform init
 terraform apply
 ```
 
+## 🛑 Gestión de EIP
+
+Por defecto, la instancia no tiene IP elástica (EIP) y usa su Public DNS. Si necesitas una IP fija:
+
+1.  **Desplegar módulo EIP**:
+    ```bash
+    cd 01-eip
+    terraform apply
+    ```
+2.  **Activar en Instancia**:
+    ```bash
+    cd ../02-ec2-instance
+    terraform apply -var="enable_eip=true"
+    ```
+
+Para desactivar la EIP y volver a usar Public DNS:
+
+1.  **Desactivar en Instancia**:
+    ```bash
+    cd 02-ec2-instance
+    terraform apply -var="enable_eip=false"
+    ```
+2.  **Destruir EIP** (Opcional, para ahorrar costes):
+    ```bash
+    cd ../01-eip
+    terraform destroy
+    ```
+
 ## 🛑 Gestión del WAF
 
 Para destruir o desvincular el WAF sin errores:
