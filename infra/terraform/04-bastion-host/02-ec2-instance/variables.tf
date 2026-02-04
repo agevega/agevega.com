@@ -33,3 +33,10 @@ variable "common_tags" {
     Module      = "04-bastion-host/02-ec2-instance"
   }
 }
+
+variable "project_name" {
+  description = "Project name for SSM paths"
+  type        = string
+  default     = "agevegacom"
+}
+

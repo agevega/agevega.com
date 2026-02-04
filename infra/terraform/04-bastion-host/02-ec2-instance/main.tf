@@ -19,3 +19,13 @@ resource "aws_eip_association" "eip_assoc" {
   instance_id   = aws_instance.bastion.id
   allocation_id = data.terraform_remote_state.eip.outputs.eip_allocation_id
 }
+
+resource "aws_ssm_parameter" "bastion_public_dns" {
+  name        = "/${var.project_name}/04-bastion-host/02-ec2-instance/bastion-public-dns"
+  description = "Bastion Host Public DNS"
+  type        = "String"
+  value       = aws_instance.bastion.public_dns
+
+  tags = var.common_tags
+}
+
