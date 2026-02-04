@@ -11,7 +11,7 @@ graph TD;
     A[Push Tag v*.*.*] -->|Triggers| B(00 Build & Push);
     B -->|Builds Docker Image| C{Success?};
     C -->|Yes| D[Push to ECR];
-    D -->|Triggers via gh CLI| E(01 Deploy to EC2);
+    D -->|Triggers via gh CLI| E(01 Deploy to Bastion);
     E -->|SSH| F["Bastion Host (dev)"];
     F -->|Pull & Keep New Version| G[Update Container];
     E -->|AWS CLI| H[Invalidate CloudFront];
@@ -23,9 +23,9 @@ graph TD;
 - **Acción**:
   1. Construye la imagen Docker del frontend (multi-arch).
   2. Publica la imagen en **AWS ECR** con el tag de versión y `latest`.
-  3. **Dispara automáticamente** el siguiente workflow (`01-deploy-to-ec2`).
+  3. **Dispara automáticamente** el siguiente workflow (`01-deploy-bastion`).
 
-### 2. Deploy to EC2 (`01-deploy-to-ec2.yml`)
+### 2. Deploy to Bastion (`01-deploy-bastion.yml`)
 
 - **Trigger**: `workflow_dispatch` (generalmente invocado por el workflow anterior).
 - **Acción**:
@@ -53,4 +53,4 @@ Aunque el flujo es automático, puedes lanzar un despliegue manual desde la pest
 - Redesplegar una versión antigua (Rollback).
 - Forzar una actualización sin crear un tag nuevo.
 
-Selecciona el workflow **"01 Deploy to EC2"**, pulsa "Run workflow" e introduce el tag de la imagen manual (e.g., `v1.0.1`).
+Selecciona el workflow **"01 Deploy to Bastion"**, pulsa "Run workflow" e introduce el tag de la imagen manual (e.g., `v1.0.1`).
