@@ -43,9 +43,9 @@ jobs:
         id: get-ssm
         run: |
           echo "Fetching configuration from SSM..."
-          ECR_REPO=$(aws ssm get-parameter --name "/${{ env.PROJECT_NAME }}/02-shared-resources/03-ecr-repositories/ecr-repository" --query "Parameter.Value" --output text)
+          ECR_REPO=$(aws ssm get-parameter --name "/${{ env.PROJECT_NAME }}/02-shared-resources/01-ecr-repositories/ecr-repository" --query "Parameter.Value" --output text)
           API_URL=$(aws ssm get-parameter --name "/${{ env.PROJECT_NAME }}/03-backend-serverless/00-contact-api/endpoint" --query "Parameter.Value" --output text)
-          
+
           echo "ECR_REPO=$ECR_REPO" >> $GITHUB_OUTPUT
           echo "API_URL=$API_URL" >> $GITHUB_OUTPUT
 
