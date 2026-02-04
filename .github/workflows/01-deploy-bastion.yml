@@ -1,4 +1,4 @@
-name: 01 Deploy to EC2
+name: 01 Deploy to Bastion
 
 on:
   workflow_dispatch:
