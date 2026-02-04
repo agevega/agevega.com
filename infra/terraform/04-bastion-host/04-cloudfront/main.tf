@@ -63,7 +63,7 @@ resource "aws_cloudfront_distribution" "distribution" {
   }
 
   ordered_cache_behavior {
-    path_pattern     = "/instance.html"
+    path_pattern     = "/meta.json"
     allowed_methods  = ["GET", "HEAD", "OPTIONS"]
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = local.origin_id
