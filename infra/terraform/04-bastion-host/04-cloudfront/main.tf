@@ -63,10 +63,11 @@ resource "aws_cloudfront_distribution" "distribution" {
   }
 
   ordered_cache_behavior {
-    path_pattern     = "/meta.json"
-    allowed_methods  = ["GET", "HEAD", "OPTIONS"]
-    cached_methods   = ["GET", "HEAD"]
-    target_origin_id = local.origin_id
+    path_pattern             = "/meta.json"
+    allowed_methods          = ["GET", "HEAD", "OPTIONS"]
+    cached_methods           = ["GET", "HEAD"]
+    target_origin_id         = local.origin_id
+    response_headers_policy_id = aws_cloudfront_response_headers_policy.no_cache.id
 
     forwarded_values {
       query_string = true
@@ -121,6 +122,19 @@ resource "aws_cloudfront_distribution" "distribution" {
   }
 
   tags = var.common_tags
+}
+
+resource "aws_cloudfront_response_headers_policy" "no_cache" {
+  name    = "bastion-no-cache-dev"
+  comment = "Disable browser caching for dynamic paths (Dev)"
+
+  custom_headers_config {
+    items {
+      header   = "Cache-Control"
+      override = true
+      value    = "no-cache, no-store, must-revalidate"
+    }
+  }
 }
 
 resource "aws_ssm_parameter" "cloudfront_distribution_id" {
