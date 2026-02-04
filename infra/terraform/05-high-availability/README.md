@@ -1,17 +1,18 @@
 # 🚀 05-high-availability
 
-Este módulo despliega el entorno de **Producción**, diseñado para máxima disponibilidad y escalabilidad automática utilizando instancias Spot.
+Este módulo despliega el entorno de **Producción**, diseñado para máxima disponibilidad, resiliencia y escalabilidad utilizando instancias Spot.
 
 ---
 
 ## 🏛️ Arquitectura
 
-Arquitectura tolerante a fallos distribuida en 3 zonas de disponibilidad.
-
-- **Spot Fleet**: Cluster de instancias `t4g.nano` gestionadas por ASG, logrando hasta un 90% de descuento en cómputo.
+- **Spot Fleet**: Cluster de instancias `t4g.nano` gestionadas por un ASG en 3 zonas de disponibilidad, logrando hasta un 90% de descuento en cómputo.
 - **Load Balancing**: ALB interno que distribuye tráfico y realiza health checks.
-- **Frontal Seguro**: El tráfico entra exclusivamente por CloudFront + WAF. El ALB solo acepta peticiones de CloudFront (verificado por Prefix List).
-- **Seguridad Instancias**: IMDSv2 forzado para mitigación de SSRF.
+- **Frontal Seguro**: El tráfico entra exclusivamente por CloudFront ya que el ALB solo acepta peticiones de este.
+- **Seguridad**:
+  - **IMDSv2**: Forzado en todas las instancias para mitigar SSRF.
+  - **Prefix List**: El ALB solo acepta tráfico desde CloudFront.
+  - **WAF (Opcional)**: Protección contra ataques web comunes (habilitado por defecto).
 
 ---
 
@@ -46,6 +47,8 @@ Arquitectura tolerante a fallos distribuida en 3 zonas de disponibilidad.
 
 ## 🚀 Guía de Despliegue
 
+> El orden es **estricto** debido a las dependencias.
+
 ### 1. Seguridad
 
 ```bash
@@ -57,7 +60,7 @@ terraform apply
 ### 2. Computación (ASG + ALB)
 
 ```bash
-cd ../01-ec2-autoscaling
+cd 01-ec2-autoscaling
 terraform init
 terraform apply
 ```
@@ -65,7 +68,7 @@ terraform apply
 ### 3. WAF Production
 
 ```bash
-cd ../02-waf
+cd 02-waf
 terraform init
 terraform apply
 ```
@@ -73,7 +76,7 @@ terraform apply
 ### 4. CloudFront Final
 
 ```bash
-cd ../03-cloudfront
+cd 03-cloudfront
 terraform init
 terraform apply
 ```
@@ -81,25 +84,10 @@ terraform apply
 ### 5. DNS Record
 
 ```bash
-cd ../04-dns-record
+cd 04-dns-record
 terraform init
 terraform apply
 ```
-
-## 🛑 Gestión del WAF
-
-Para destruir o desvincular el WAF sin errores:
-
-1. **Desvincular en CloudFront**:
-   ```bash
-   cd 03-cloudfront
-   terraform apply -var="enable_waf=false"
-   ```
-2. **Destruir WAF**:
-   ```bash
-   cd ../02-waf
-   terraform destroy
-   ```
 
 ---
 
@@ -111,11 +99,13 @@ Para destruir o desvincular el WAF sin errores:
 | `01`      | `min_size`         | Mínimo de instancias en ASG     | `1`               |
 | `01`      | `max_size`         | Máximo de instancias (escalado) | `3`               |
 | `01`      | `instance_type`    | Familia de instancias           | `t4g.nano`        |
+| `03`      | `enable_waf`       | Activa asociación de Web ACL    | `true`            |
 | `04`      | `domain_name`      | Dominio raíz                    | `agevega.com`     |
 
 ---
 
 ## ⚡ Optimización y Costes
 
-- **Spot Instances**: El uso de instancias Spot para el entorno de producción reduce drásticamente los costes. Al estar detrás de un ASG y ALB, la posible interrupción de una instancia es manejada automáticamente reemplazándola por otra.
-- **Prefix List Security**: Implementación de Security Groups basados en Prefix Lists de CloudFront para restringir el acceso al ALB. Esto permite prescindir de un WAF regional, optimizando costes y delegando la seguridad de capa 7 íntegramente a CloudFront WAF.
+- **Spot Instances**: Uso de instancias Spot (`t4g.nano`) logrando hasta un ~70-90% de ahorro frente a On-Demand. El ASG maneja las interrupciones automáticamente.
+- **Prefix List Security**: El ALB solo es accesible desde CloudFront, eliminando la necesidad de un WAF regional exclusivo para el ALB.
+- **WAF Opcional**: Aunque recomendado para producción, el diseño permite desactivarlo para optimizar costes en escenarios de bajo riesgo o tráfico.
