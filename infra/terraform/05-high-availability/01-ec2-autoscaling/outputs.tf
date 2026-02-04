@@ -7,3 +7,8 @@ output "asg_name" {
   description = "Name of the Auto Scaling Group"
   value       = aws_autoscaling_group.app_asg.name
 }
+
+output "ssm_image_tag_name" {
+  description = "Name of the SSM parameter storing the image tag"
+  value       = aws_ssm_parameter.image_tag.name
+}

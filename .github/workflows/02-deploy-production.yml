@@ -1,0 +1,57 @@
+name: 02 Deploy to Production
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: "Image tag to deploy (e.g., v1.0.0)"
+        required: true
+        default: "latest"
+
+env:
+  AWS_REGION: eu-south-2
+  SSM_PARAM_NAME: "/agevegacom/production/image_tag"
+  ASG_NAME: "ha-cluster-asg"
+
+jobs:
+  deploy:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Update Image Tag in SSM
+        run: |
+          echo "Updating SSM Parameter: ${{ env.SSM_PARAM_NAME }} -> ${{ inputs.image_tag }}"
+          aws ssm put-parameter \
+            --name "${{ env.SSM_PARAM_NAME }}" \
+            --value "${{ inputs.image_tag }}" \
+            --type "String" \
+            --overwrite
+
+      - name: Start Instance Refresh
+        run: |
+          echo "Starting Instance Refresh for ASG: ${{ env.ASG_NAME }}"
+          
+          # Check if a refresh is already in progress
+          REFRESH_ID=$(aws autoscaling describe-instance-refreshes \
+            --auto-scaling-group-name "${{ env.ASG_NAME }}" \
+            --query "InstanceRefreshes[?Status=='InProgress'].InstanceRefreshId" \
+            --output text)
+            
+          if [ -n "$REFRESH_ID" ]; then
+            echo "Instance Refresh already in progress: $REFRESH_ID"
+            echo "Cancelling previous refresh..."
+            aws autoscaling cancel-instance-refresh --auto-scaling-group-name "${{ env.ASG_NAME }}"
+            sleep 5
+          fi
+
+          echo "Triggering new refresh..."
+          aws autoscaling start-instance-refresh \
+            --auto-scaling-group-name "${{ env.ASG_NAME }}" \
+            --preferences '{"MinHealthyPercentage": 50, "InstanceWarmup": 300}'
