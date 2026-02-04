@@ -1,6 +1,6 @@
 # 🛡️ 04-bastion-host
 
-Este módulo despliega el punto de entrada administrativo y la distribución de contenido por defecto de la infraestructura o servidor de desarrollo (dev). Combina seguridad perimetral y acceso remoto seguro.
+Este módulo despliega el punto de entrada administrativo y la distribución de contenido de la infraestructura de desarrollo (dev). Combina seguridad perimetral y acceso remoto seguro.
 
 ![Architecture Diagram](../../diagrams/02-bastion-EC2.png)
 
@@ -8,11 +8,12 @@ Este módulo despliega el punto de entrada administrativo y la distribución de 
 
 ## 🏛️ Arquitectura
 
-- **Bastion Host**: Instancia EC2 mínima (`t4g.nano`) en subred pública para tunelización SSH hacia recursos privados.
-- **CDN Global**: CloudFront actúa como frontal para el contenido estatico del bastion host sirviendo este como entorno de desarrollo.
+- **Bastion Host**: Instancia EC2 mínima (`t4g.nano`) en subred pública para tunelización SSH.
+- **CDN Global**: CloudFront actúa como frontal para el contenido estático, sirviendo como entorno de desarrollo.
 - **Seguridad**:
-  - **WAF**: Protege la distribución CloudFront contra ataques web comunes.
   - **Security Groups**: Whitelist para acceso SSH.
+  - **WAF (Opcional)**: Protección contra ataques web comunes (deshabilitado por defecto).
+  - **EIP (Opcional)**: IP estática para persistencia DNS (deshabilitado por defecto).
 
 ---
 
@@ -23,7 +24,7 @@ Este módulo despliega el punto de entrada administrativo y la distribución de 
 - **Función**: Firewall de red.
 - **Recursos**: Security Groups para Bastion (SSH 22, HTTP 80, HTTPS 443).
 
-### 2. [01-eip](./01-eip)
+### 2. [01-eip](./01-eip) (Opcional)
 
 - **Función**: IP Estática.
 - **Recursos**: Elastic IP para asegurar persistencia de DNS en el Bastion.
@@ -33,7 +34,7 @@ Este módulo despliega el punto de entrada administrativo y la distribución de 
 - **Función**: Cómputo.
 - **Recursos**: Instancia EC2 Amazon Linux 2023.
 
-### 4. [03-waf](./03-waf)
+### 4. [03-waf](./03-waf) (Opcional)
 
 - **Función**: Protección Web.
 - **Recursos**: Web ACL (AWS Managed Rules) en `us-east-1`.
@@ -52,7 +53,7 @@ Este módulo despliega el punto de entrada administrativo y la distribución de 
 
 ## 🚀 Guía de Despliegue
 
-El orden es **estricto** debido a las dependencias en cadena.
+> El orden es **estricto** debido a las dependencias. Por defecto, **NO** se despliegan ni EIP ni WAF para optimizar costes.
 
 ### 1. Grupos de Seguridad
 
@@ -62,69 +63,78 @@ terraform init
 terraform apply
 ```
 
-### 2. Elastic IP
+### 2. Instancia Bastion (con/sin EIP)
+
+**Opción A: Sin IP Elástica (Recomendado/Default)**
+Usa Public DNS dinámico. Más barato aunque el DNS cambia si reinicias la instancia.
 
 ```bash
-cd ../01-eip
+cd 02-ec2-instance
 terraform init
 terraform apply
+# Variable enable_eip es false por defecto
 ```
 
-### 3. Instancia Bastion
+**Opción B: Con IP Elástica**
+IP fija y persistente. Coste adicional.
 
 ```bash
-cd ../02-ec2-instance
+# 1. Crear EIP
+cd 01-eip
 terraform init
 terraform apply
+
+# 2. Asociar a Instancia
+cd 02-ec2-instance
+terraform init
+terraform apply -var="enable_eip=true"
 ```
 
-### 4. WAF
+### 3. CloudFront (con/sin WAF)
+
+**Opción A: Sin WAF (Recomendado/Default)**
+Despliegue rápido y económico.
 
 ```bash
-cd ../03-waf
+cd 04-cloudfront
 terraform init
 terraform apply
+# Variable enable_waf es false por defecto
 ```
 
-### 5. CloudFront
+**Opción B: Con WAF**
+Protección extra. Coste adicional (~$5/mes + tráfico).
 
 ```bash
-cd ../04-cloudfront
+# 1. Crear WAF
+cd 03-waf
 terraform init
 terraform apply
+
+# 2. Asociar a CloudFront
+cd 04-cloudfront
+terraform init
+terraform apply -var="enable_waf=true"
 ```
 
-### 6. DNS Record
+### 4. DNS Record
 
 ```bash
-cd ../05-dns-record
+cd 05-dns-record
 terraform init
 terraform apply
 ```
 
 ## 🛑 Gestión de EIP
 
-Por defecto, la instancia no tiene IP elástica (EIP) y usa su Public DNS. Si necesitas una IP fija:
-
-1.  **Desplegar módulo EIP**:
-    ```bash
-    cd 01-eip
-    terraform apply
-    ```
-2.  **Activar en Instancia**:
-    ```bash
-    cd ../02-ec2-instance
-    terraform apply -var="enable_eip=true"
-    ```
-
-Para desactivar la EIP y volver a usar Public DNS:
+Para desactivar y borrar la EIP:
 
 1.  **Desactivar en Instancia**:
     ```bash
     cd 02-ec2-instance
     terraform apply -var="enable_eip=false"
     ```
-2.  **Destruir EIP** (Opcional, para ahorrar costes):
+2.  **Destruir EIP**:
     ```bash
     cd ../01-eip
     terraform destroy
@@ -132,7 +142,7 @@ Para desactivar la EIP y volver a usar Public DNS:
 
 ## 🛑 Gestión del WAF
 
-Para destruir o desvincular el WAF sin errores:
+Para desvincular y destruir el WAF sin errores:
 
 1. **Desvincular en CloudFront**:
    ```bash
@@ -149,11 +159,13 @@ Para destruir o desvincular el WAF sin errores:
 
 ## 🔧 Variables Clave
 
-| Submódulo | Variable                  | Descripción             | Valor por Defecto  |
-| :-------- | :------------------------ | :---------------------- | :----------------- |
-| `00`      | `allowed_ssh_cidr_blocks` | IPs permitidas para SSH | `["0.0.0.0/0"]`    |
-| `02`      | `instance_type`           | Tipo de instancia EC2   | `t4g.nano` (ARM64) |
-| `05`      | `domain_name`             | Dominio raíz            | `agevega.com`      |
+| Submódulo | Variable                  | Descripción                     | Default            |
+| :-------- | :------------------------ | :------------------------------ | :----------------- |
+| `00`      | `allowed_ssh_cidr_blocks` | IPs permitidas para SSH         | `["0.0.0.0/0"]`    |
+| `02`      | `instance_type`           | Tipo de instancia EC2           | `t4g.nano` (ARM64) |
+| `02`      | `enable_eip`              | Activa asociación de Elastic IP | `false`            |
+| `04`      | `enable_waf`              | Activa asociación de Web ACL    | `false`            |
+| `05`      | `domain_name`             | Dominio raíz                    | `agevega.com`      |
 
 ---
 
