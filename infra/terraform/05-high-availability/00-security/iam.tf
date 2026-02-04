@@ -17,20 +17,22 @@ resource "aws_iam_role" "ec2_role" {
   tags = merge(var.common_tags, {
     Module = "05-high-availability/00-security"
   })
+}
 
-  inline_policy {
-    name = "ssm_access"
-    policy = jsonencode({
-      Version = "2012-10-17"
-      Statement = [
-        {
-          Action   = "ssm:GetParameter"
-          Effect   = "Allow"
-          Resource = "arn:aws:ssm:*:*:parameter/${var.project_name}/production/image_tag"
-        }
-      ]
-    })
-  }
+resource "aws_iam_role_policy" "ssm_access" {
+  name = "ssm_access"
+  role = aws_iam_role.ec2_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action   = "ssm:GetParameter"
+        Effect   = "Allow"
+        Resource = "arn:aws:ssm:*:*:parameter/${var.project_name}/production/image_tag"
+      }
+    ]
+  })
 }
 
 resource "aws_iam_role_policy_attachment" "ecr_readonly" {
