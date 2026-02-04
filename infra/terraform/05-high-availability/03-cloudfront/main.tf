@@ -16,7 +16,7 @@ resource "aws_cloudfront_distribution" "prod_distribution" {
   is_ipv6_enabled = true
   comment         = "High Availability Cluster Origin (Module 05) - Distribution for ${var.domain_name}, www.${var.domain_name}"
 
-  web_acl_id = var.enable_waf ? try(data.terraform_remote_state.waf.outputs.web_acl_arn, null) : null
+  web_acl_id = var.enable_waf ? data.terraform_remote_state.waf[0].outputs.web_acl_arn : null
 
   aliases = ["${var.domain_name}", "www.${var.domain_name}"]
 

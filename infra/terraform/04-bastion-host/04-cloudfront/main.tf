@@ -19,7 +19,7 @@ resource "aws_cloudfront_distribution" "distribution" {
   
   # Auto-attach WAF if module 02 is deployed AND enable_waf is true.
   # Gracefully fallback to null if state is missing or enable_waf is false.
-  web_acl_id = var.enable_waf ? try(data.terraform_remote_state.waf.outputs.web_acl_arn, null) : null
+  web_acl_id = var.enable_waf ? data.terraform_remote_state.waf[0].outputs.web_acl_arn : null
 
   aliases = ["dev.${var.domain_name}"]
 

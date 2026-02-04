@@ -9,6 +9,7 @@ data "terraform_remote_state" "acm" {
 }
 
 data "terraform_remote_state" "waf" {
+  count   = var.enable_waf ? 1 : 0
   backend = "s3"
   config = {
     bucket  = "agevegacom-terraform-state"
