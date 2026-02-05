@@ -34,6 +34,17 @@ graph TD;
   3. **Deploy**: Ejecuta el script `scripts/01_deploy_frontend.sh` en el servidor para rotar contenedores.
   4. **Cache Purge**: Invalida la caché de CloudFront para el entorno de desarrollo (`dev.agevega.com`).
 
+### 3. Deploy to Production (`02-deploy-production.yml`)
+
+- **Trigger**: Ejecución manual (`workflow_dispatch`) tras verificar en desarrollo.
+- **Acción**:
+  1. **SSM Parameter**: Actualiza la versión de la imagen en Parameter Store (`/agevegacom/production/image_tag`).
+  2. **Instance Refresh**: Inicia la rotación de instancias en el Auto Scaling Group.
+     - **Síncrono**: El pipeline espera y monitorea el estado del refresco.
+     - Si falla o se cancela, el pipeline se detiene.
+     - Solo continúa cuando el 100% de las instancias están saludables.
+  3. **Invalidate Cache**: Purga la caché de CloudFront (Producción) para asegurar que los usuarios reciban el nuevo frontend inmediatamente.
+
 ## 🔐 Secretos Requeridos
 
 Para que los pipelines funcionen, el repositorio debe tener configurados los siguientes **Secrets** y **Variables**:
