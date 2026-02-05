@@ -97,7 +97,7 @@ jobs:
               break
             fi
             
-            if [[ "$STATUS" == "Failed" || "$STATUS" == "Cancelled" ]]; then
+            if [[ "$STATUS" == "Failed" || "$STATUS" == "Cancelling" || "$STATUS" == "Cancelled" ]]; then
               echo "Instance refresh failed or cancelled. Aborting."
               exit 1
             fi
