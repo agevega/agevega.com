@@ -6,7 +6,6 @@ REGION="Local"
 AZ="Unknown (Local/Error)"
 INSTANCE_ID="Unknown (Local/Error)"
 INSTANCE_TYPE="Unknown (Local/Error)"
-ARCH=$(uname -m)
 
 # Try to get AWS IMDSv2 Token (Timeout 2s to not block startup long)
 TOKEN=$(curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600" -s --connect-timeout 2)
@@ -20,8 +19,6 @@ if [ -n "$TOKEN" ]; then
     AZ=$(curl -f -H "X-aws-ec2-metadata-token: $TOKEN" -s --connect-timeout 2 http://169.254.169.254/latest/meta-data/placement/availability-zone | tr -d '\n\r"')
     INSTANCE_ID=$(curl -f -H "X-aws-ec2-metadata-token: $TOKEN" -s --connect-timeout 2 http://169.254.169.254/latest/meta-data/instance-id | tr -d '\n\r"')
     INSTANCE_TYPE=$(curl -f -H "X-aws-ec2-metadata-token: $TOKEN" -s --connect-timeout 2 http://169.254.169.254/latest/meta-data/instance-type | tr -d '\n\r"')
-    ARCH_META=$(curl -f -H "X-aws-ec2-metadata-token: $TOKEN" -s --connect-timeout 2 http://169.254.169.254/latest/meta-data/architecture | tr -d '\n\r"')
-    if [ -n "$ARCH_META" ]; then ARCH="$ARCH_META"; fi
 fi
 
 # Generate meta.json in Nginx root
@@ -32,7 +29,7 @@ cat <<EOF > /usr/share/nginx/html/meta.json
   "availabilityZone": "$AZ",
   "instanceId": "$INSTANCE_ID",
   "instanceType": "$INSTANCE_TYPE",
-  "architecture": "$ARCH"
+  "deploymentVersion": "${DEPLOYMENT_VERSION:-Localhost}"
 }
 EOF
 

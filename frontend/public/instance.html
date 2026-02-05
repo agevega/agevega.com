@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -160,9 +160,15 @@
         color: #8b949e;
         margin-right: 8px;
       }
-      .log-info { color: var(--text-color); }
-      .log-warn { color: var(--warning); }
-      .log-error { color: var(--danger); }
+      .log-info {
+        color: var(--text-color);
+      }
+      .log-warn {
+        color: var(--warning);
+      }
+      .log-error {
+        color: var(--danger);
+      }
 
       @keyframes fadeIn {
         from {
@@ -201,12 +207,12 @@
           bottom: -100px;
         }
       }
-      
+
       /* Accessibility: Reduced Motion */
       @media (prefers-reduced-motion: reduce) {
         * {
-            animation: none !important;
-            transition: none !important;
+          animation: none !important;
+          transition: none !important;
         }
       }
     </style>
@@ -217,7 +223,11 @@
       <div class="scan-line" aria-hidden="true"></div>
 
       <header>
-        <button class="dot red" aria-label="Close window" onclick="window.close()"></button>
+        <button
+          class="dot red"
+          aria-label="Close window"
+          onclick="window.close()"
+        ></button>
         <div class="dot yellow" role="presentation"></div>
         <div class="dot green" role="presentation"></div>
         <div class="title">admin@agevega-instance:~/diagnostics</div>
@@ -226,66 +236,68 @@
       <main>
         <h1>SYSTEM DIAGNOSTICS</h1>
 
-            <!-- Static Infrastructure Info -->
+        <!-- Static Infrastructure Info -->
         <section aria-labelledby="infra-title">
-            <h2 id="infra-title">_INFRASTRUCTURE</h2>
-            <div class="grid">
+          <h2 id="infra-title">_INFRASTRUCTURE</h2>
+          <div class="grid">
             <div class="metric-card">
-                <div class="label">Cloud Provider</div>
-                <div class="value highlight" id="provider">Fetching...</div>
-            </div>
-            <div class="metric-card">
-                <div class="label">Region</div>
-                <div class="value" id="region">Fetching...</div>
+              <div class="label">Cloud Provider</div>
+              <div class="value highlight" id="provider">Fetching...</div>
             </div>
             <div class="metric-card">
-                <div class="label">Availability Zone</div>
-                <div class="value" id="az">Fetching...</div>
+              <div class="label">Region</div>
+              <div class="value" id="region">Fetching...</div>
             </div>
             <div class="metric-card">
-                <div class="label">Instance ID</div>
-                <div class="value" id="instance-id">Fetching...</div>
+              <div class="label">Availability Zone</div>
+              <div class="value" id="az">Fetching...</div>
             </div>
             <div class="metric-card">
-                <div class="label">Instance Type</div>
-                <div class="value" id="instance-type">Fetching...</div>
+              <div class="label">Instance ID</div>
+              <div class="value" id="instance-id">Fetching...</div>
             </div>
             <div class="metric-card">
-                <div class="label">Architecture</div>
-                <div class="value text-green" id="architecture">Fetching...</div>
+              <div class="label">Instance Type</div>
+              <div class="value" id="instance-type">Fetching...</div>
             </div>
+            <div class="metric-card">
+              <div class="label">Deployment Version</div>
+              <div class="value text-green" id="deployment-version">
+                Fetching...
+              </div>
             </div>
+          </div>
         </section>
 
         <!-- Dynamic Client Info -->
         <section aria-labelledby="client-title">
-            <h2 id="client-title">_CLIENT_TELEMETRY</h2>
-            <div class="grid">
+          <h2 id="client-title">_CLIENT_TELEMETRY</h2>
+          <div class="grid">
             <div class="metric-card">
-                <div class="label">Your IP (Public)</div>
-                <div class="value" id="client-ip">Resolving...</div>
-            </div>
-            <div class="metric-card">
-                <div class="label">Connection Protocol</div>
-                <div class="value" id="protocol">Checking...</div>
+              <div class="label">Your IP (Public)</div>
+              <div class="value" id="client-ip">Resolving...</div>
             </div>
             <div class="metric-card">
-                <div class="label">Viewport</div>
-                <div class="value" id="viewport">Calculating...</div>
+              <div class="label">Connection Protocol</div>
+              <div class="value" id="protocol">Checking...</div>
             </div>
             <div class="metric-card">
-                <div class="label">Network Type</div>
-                <div class="value" id="network-type">Unknown</div>
+              <div class="label">Viewport</div>
+              <div class="value" id="viewport">Calculating...</div>
             </div>
+            <div class="metric-card">
+              <div class="label">Network Type</div>
+              <div class="value" id="network-type">Unknown</div>
             </div>
+          </div>
         </section>
 
         <!-- Fake Logs -->
         <section aria-labelledby="logs-title">
-            <h2 id="logs-title">_SYSTEM_LOGS</h2>
-            <div class="log-area" id="console-logs" aria-live="polite" role="log">
+          <h2 id="logs-title">_SYSTEM_LOGS</h2>
+          <div class="log-area" id="console-logs" aria-live="polite" role="log">
             <!-- Logs injected via JS -->
-            </div>
+          </div>
         </section>
       </main>
     </div>
@@ -298,140 +310,161 @@
       (() => {
         // --- Constants & Config ---
         const CONFIG = {
-            apiTimeout: 3000
+          apiTimeout: 3000,
         };
 
         // --- Logger ---
         const Logger = {
-            el: document.getElementById("console-logs"),
-            
-            add(msg, type = 'info') {
-                const entry = document.createElement("div");
-                entry.className = "log-entry";
-                
-                const timeStr = new Date().toISOString().split("T")[1].split(".")[0];
-                
-                const timeSpan = document.createElement("span");
-                timeSpan.className = "log-time";
-                timeSpan.textContent = `[${timeStr}]`;
-                
-                const msgSpan = document.createElement("span");
-                msgSpan.className = `log-${type}`;
-                msgSpan.textContent = msg;
+          el: document.getElementById("console-logs"),
 
-                entry.appendChild(timeSpan);
-                entry.appendChild(msgSpan);
-                
-                this.el.appendChild(entry);
-                this.el.scrollTop = this.el.scrollHeight;
-            },
-            info(msg) { this.add(msg, 'info'); },
-            warn(msg) { this.add(msg, 'warn'); },
-            error(msg) { this.add(msg, 'error'); }
+          add(msg, type = "info") {
+            const entry = document.createElement("div");
+            entry.className = "log-entry";
+
+            const timeStr = new Date()
+              .toISOString()
+              .split("T")[1]
+              .split(".")[0];
+
+            const timeSpan = document.createElement("span");
+            timeSpan.className = "log-time";
+            timeSpan.textContent = `[${timeStr}]`;
+
+            const msgSpan = document.createElement("span");
+            msgSpan.className = `log-${type}`;
+            msgSpan.textContent = msg;
+
+            entry.appendChild(timeSpan);
+            entry.appendChild(msgSpan);
+
+            this.el.appendChild(entry);
+            this.el.scrollTop = this.el.scrollHeight;
+          },
+          info(msg) {
+            this.add(msg, "info");
+          },
+          warn(msg) {
+            this.add(msg, "warn");
+          },
+          error(msg) {
+            this.add(msg, "error");
+          },
         };
 
         // --- Core Logic ---
 
         async function fetchWithTimeout(resource, options = {}) {
-            const { timeout = CONFIG.apiTimeout } = options;
-            
-            const controller = new AbortController();
-            const id = setTimeout(() => controller.abort(), timeout);
-            
-            const response = await fetch(resource, {
-                ...options,
-                signal: controller.signal  
-            });
-            clearTimeout(id);
-            return response;
+          const { timeout = CONFIG.apiTimeout } = options;
+
+          const controller = new AbortController();
+          const id = setTimeout(() => controller.abort(), timeout);
+
+          const response = await fetch(resource, {
+            ...options,
+            signal: controller.signal,
+          });
+          clearTimeout(id);
+          return response;
         }
 
         async function fetchMetadata() {
-            Logger.info("Querying instance metadata service (IMDSv2 via proxy)...");
-            try {
-                const res = await fetchWithTimeout("/meta.json");
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                
-                const data = await res.json();
-                
-                // Safe DOM updates with defaults handled by entrypoint or fallback here
-                document.getElementById("provider").textContent = data.provider || "Unknown";
-                document.getElementById("region").textContent = data.region || "Unknown";
-                document.getElementById("az").textContent = data.availabilityZone || "Unknown";
-                document.getElementById("instance-id").textContent = data.instanceId || "Unknown";
-                document.getElementById("instance-type").textContent = data.instanceType || "Unknown";
-                
-                let arch = data.architecture || "Unknown";
-                // Cosmetic cleanup for arch if needed, but raw is fine too.
-                // aarch64 -> ARM64 (Graviton)
-                if (arch === "aarch64") arch = "ARM64 (Graviton)";
-                if (arch === "x86_64") arch = "x86_64 (Intel/AMD)";
-                document.getElementById("architecture").textContent = arch;
+          Logger.info(
+            "Querying instance metadata service (IMDSv2 via proxy)...",
+          );
+          try {
+            const res = await fetchWithTimeout("/meta.json");
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
-                Logger.info("Metadata retrieved successfully.");
-            } catch (e) {
-                Logger.warn(`Metadata fetch failed: ${e.message}`);
-                Logger.info("Falling back to local/default configuration.");
-                
-                // Fallback for visual confirmation if meta.json 404s (e.g. not generated yet)
-                document.getElementById("provider").textContent = "Localhost";
-                document.getElementById("region").textContent = "Unknown";
-                document.getElementById("az").textContent = "Unknown";
-                document.getElementById("instance-id").textContent = "Unknown";
-                document.getElementById("instance-type").textContent = "Unknown";
-                document.getElementById("architecture").textContent = "Unknown";
-            }
+            const data = await res.json();
+
+            // Safe DOM updates with defaults handled by entrypoint or fallback here
+            document.getElementById("provider").textContent =
+              data.provider || "Unknown";
+            document.getElementById("region").textContent =
+              data.region || "Unknown";
+            document.getElementById("az").textContent =
+              data.availabilityZone || "Unknown";
+            document.getElementById("instance-id").textContent =
+              data.instanceId || "Unknown";
+            document.getElementById("instance-type").textContent =
+              data.instanceType || "Unknown";
+            document.getElementById("deployment-version").textContent =
+              data.deploymentVersion || "Unknown";
+
+
+
+            Logger.info("Metadata retrieved successfully.");
+          } catch (e) {
+            Logger.warn(`Metadata fetch failed: ${e.message}`);
+            Logger.info("Falling back to local/default configuration.");
+
+            // Fallback for visual confirmation if meta.json 404s (e.g. not generated yet)
+            document.getElementById("provider").textContent = "Localhost";
+            document.getElementById("region").textContent = "Unknown";
+            document.getElementById("az").textContent = "Unknown";
+            document.getElementById("instance-id").textContent = "Unknown";
+            document.getElementById("instance-type").textContent = "Unknown";
+            document.getElementById("deployment-version").textContent = "Localhost";
+          }
         }
 
         function updateClientStats() {
-            const w = window.innerWidth;
-            const h = window.innerHeight;
-            document.getElementById("viewport").textContent = `${w}x${h}px`;
+          const w = window.innerWidth;
+          const h = window.innerHeight;
+          document.getElementById("viewport").textContent = `${w}x${h}px`;
 
-            const protocol = window.location.protocol.replace(":", "").toUpperCase();
-            document.getElementById("protocol").textContent = protocol;
+          const protocol = window.location.protocol
+            .replace(":", "")
+            .toUpperCase();
+          document.getElementById("protocol").textContent = protocol;
 
-            const connType = navigator.connection ? navigator.connection.effectiveType : "Unknown";
-            document.getElementById("network-type").textContent = connType.toUpperCase();
+          const connType = navigator.connection
+            ? navigator.connection.effectiveType
+            : "Unknown";
+          document.getElementById("network-type").textContent =
+            connType.toUpperCase();
         }
 
         async function getIP() {
-            Logger.info("Resolving Client IP via public Resolver...");
-            try {
-                const res = await fetchWithTimeout("https://api.ipify.org?format=json", { timeout: 4000 });
-                if (!res.ok) throw new Error("IP Service Unreachable");
-                const data = await res.json();
-                
-                document.getElementById("client-ip").textContent = data.ip;
-                document.getElementById("client-ip").classList.add("highlight");
-                Logger.info(`Client IP Identified: ${data.ip}`);
-            } catch (e) {
-                Logger.error("Failed to resolve Client IP.");
-                document.getElementById("client-ip").textContent = "Unknown / Blocked";
-            }
+          Logger.info("Resolving Client IP via public Resolver...");
+          try {
+            const res = await fetchWithTimeout(
+              "https://api.ipify.org?format=json",
+              { timeout: 4000 },
+            );
+            if (!res.ok) throw new Error("IP Service Unreachable");
+            const data = await res.json();
+
+            document.getElementById("client-ip").textContent = data.ip;
+            document.getElementById("client-ip").classList.add("highlight");
+            Logger.info(`Client IP Identified: ${data.ip}`);
+          } catch (e) {
+            Logger.error("Failed to resolve Client IP.");
+            document.getElementById("client-ip").textContent =
+              "Unknown / Blocked";
+          }
         }
 
         // --- Lifecycle ---
 
         function init() {
-            Logger.info("System initialized.");
-            Logger.info("Loading kernel modules... OK");
+          Logger.info("System initialized.");
+          Logger.info("Loading kernel modules... OK");
 
-            fetchMetadata();
-            updateClientStats();
-            getIP();
+          fetchMetadata();
+          updateClientStats();
+          getIP();
         }
 
         // --- Event Listeners ---
         window.addEventListener("load", init);
-        
+
         // Debounced resize
         let resizeTimeout;
         window.addEventListener("resize", () => {
-            clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(updateClientStats, 200);
+          clearTimeout(resizeTimeout);
+          resizeTimeout = setTimeout(updateClientStats, 200);
         });
-
       })();
     </script>
   </body>
