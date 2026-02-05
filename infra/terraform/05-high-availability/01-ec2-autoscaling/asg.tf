@@ -1,6 +1,10 @@
 resource "aws_autoscaling_group" "app_asg" {
   name = "ha-cluster-asg"
-  vpc_zone_identifier = [
+  vpc_zone_identifier = var.deploy_in_public_subnets ? [
+    data.terraform_remote_state.vpc.outputs.subnet_public_1_id,
+    data.terraform_remote_state.vpc.outputs.subnet_public_2_id,
+    data.terraform_remote_state.vpc.outputs.subnet_public_3_id
+  ] : [
     data.terraform_remote_state.vpc.outputs.subnet_private_1_id,
     data.terraform_remote_state.vpc.outputs.subnet_private_2_id,
     data.terraform_remote_state.vpc.outputs.subnet_private_3_id

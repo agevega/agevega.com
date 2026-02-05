@@ -59,10 +59,23 @@ terraform apply
 
 ### 2. Computación (ASG + ALB)
 
+**Opción A: Despliegue en Subred Privada (Recomendado/Default)**
+Máxima seguridad. Requiere NAT Gateway para salir a internet.
+
 ```bash
 cd 01-ec2-autoscaling
 terraform init
 terraform apply
+# Variable deploy_in_public_subnets es false por defecto
+```
+
+**Opción B: Despliegue en Subred Pública**
+Ahorro de costes (se puede prescindir del NAT Gateway). Las instancias tienen IP pública pero están protegidas por Security Groups.
+
+```bash
+cd 01-ec2-autoscaling
+terraform init
+terraform apply -var="deploy_in_public_subnets=true"
 ```
 
 ### 3. WAF Production
@@ -103,14 +116,15 @@ ssh -i ~/.ssh/id_rsa -J ec2-user@$(aws ec2 describe-instances --filters "Name=ta
 
 ## 🔧 Variables Clave
 
-| Submódulo | Variable           | Descripción                     | Valor por Defecto |
-| :-------- | :----------------- | :------------------------------ | :---------------- |
-| `01`      | `desired_capacity` | Número objetivo de instancias   | `2`               |
-| `01`      | `min_size`         | Mínimo de instancias en ASG     | `1`               |
-| `01`      | `max_size`         | Máximo de instancias (escalado) | `3`               |
-| `01`      | `instance_type`    | Familia de instancias           | `t4g.nano`        |
-| `03`      | `enable_waf`       | Activa asociación de Web ACL    | `true`            |
-| `04`      | `domain_name`      | Dominio raíz                    | `agevega.com`     |
+| Submódulo | Variable                   | Descripción                     | Valor por Defecto |
+| :-------- | :------------------------- | :------------------------------ | :---------------- |
+| `01`      | `desired_capacity`         | Número objetivo de instancias   | `2`               |
+| `01`      | `min_size`                 | Mínimo de instancias en ASG     | `1`               |
+| `01`      | `max_size`                 | Máximo de instancias (escalado) | `3`               |
+| `01`      | `instance_type`            | Familia de instancias           | `t4g.nano`        |
+| `01`      | `deploy_in_public_subnets` | Despliegue en subredes públicas | `false`           |
+| `03`      | `enable_waf`               | Activa asociación de Web ACL    | `true`            |
+| `04`      | `domain_name`              | Dominio raíz                    | `agevega.com`     |
 
 ---
 
@@ -119,3 +133,4 @@ ssh -i ~/.ssh/id_rsa -J ec2-user@$(aws ec2 describe-instances --filters "Name=ta
 - **Spot Instances**: Uso de instancias Spot (`t4g.nano`) logrando hasta un ~70-90% de ahorro frente a On-Demand. El ASG maneja las interrupciones automáticamente.
 - **Prefix List Security**: El ALB solo es accesible desde CloudFront, eliminando la necesidad de un WAF regional exclusivo para el ALB.
 - **WAF Opcional**: Aunque recomendado para producción, el diseño permite desactivarlo para optimizar costes en escenarios de bajo riesgo o tráfico.
+- **NAT Gateway Opcional**: Posibilidad de desplegar en subredes públicas, eliminando la necesidad de un NAT Gateway para la salida a internet de las instancias, reduciendo significativamente los costes de infraestructura.

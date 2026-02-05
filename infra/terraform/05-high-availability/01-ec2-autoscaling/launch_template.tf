@@ -8,7 +8,10 @@ resource "aws_launch_template" "app_lt" {
     name = data.terraform_remote_state.security.outputs.instance_profile_name
   }
 
-  vpc_security_group_ids = [data.terraform_remote_state.security.outputs.instance_sg_id]
+  network_interfaces {
+    associate_public_ip_address = var.deploy_in_public_subnets
+    security_groups             = [data.terraform_remote_state.security.outputs.instance_sg_id]
+  }
 
   user_data = base64encode(templatefile("${path.module}/user_data.sh.tpl", {
     aws_region         = var.aws_region

@@ -33,3 +33,9 @@ variable "instance_type" {
   type        = string
   default     = "t4g.nano"
 }
+
+variable "deploy_in_public_subnets" {
+  description = "Deploy instances in public subnets with public IPs"
+  type        = bool
+  default     = false
+}
