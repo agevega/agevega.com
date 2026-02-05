@@ -36,7 +36,7 @@ graph TD;
 
 ### 3. Deploy to Production (`02-deploy-production.yml`)
 
-- **Trigger**: Ejecución manual (`workflow_dispatch`) tras verificar en desarrollo.
+- **Trigger**: Ejecución **manual** tras verificar en desarrollo. Se le indica la versión que queremos desplegar.
 - **Acción**:
   1. **SSM Parameter**: Actualiza la versión de la imagen en Parameter Store (`/agevegacom/production/image_tag`).
   2. **Instance Refresh**: Inicia la rotación de instancias en el Auto Scaling Group.
