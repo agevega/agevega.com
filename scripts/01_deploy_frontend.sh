@@ -11,11 +11,16 @@ docker rm frontend || true
 echo "Removing local image to force re-pull..."
 docker rmi -f "$IMAGE_NAME" || true
 
+# Extract tag from IMAGE_NAME (everything after the last colon)
+TAG="${IMAGE_NAME##*:}"
+echo "Detected Deployment Version: $TAG"
+
 # Start new container
 echo "Starting new container..."
 docker run -d \
   --restart always \
   -p 80:80 \
+  -e DEPLOYMENT_VERSION="$TAG" \
   --name frontend \
   "$IMAGE_NAME"
 
