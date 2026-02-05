@@ -48,7 +48,29 @@ jobs:
             echo "Instance Refresh already in progress: $REFRESH_ID"
             echo "Cancelling previous refresh..."
             aws autoscaling cancel-instance-refresh --auto-scaling-group-name "${{ env.ASG_NAME }}"
-            sleep 5
+            
+            echo "Waiting for cleanup..."
+            while true; do
+                STATUS=$(aws autoscaling describe-instance-refreshes \
+                    --auto-scaling-group-name "${{ env.ASG_NAME }}" \
+                    --instance-refresh-ids "$REFRESH_ID" \
+                    --query "InstanceRefreshes[0].Status" \
+                    --output text)
+                
+                echo "Current status: $STATUS"
+                
+                if [[ "$STATUS" == "Cancelled" || "$STATUS" == "Failed" || "$STATUS" == "Successful" ]]; then
+                    echo "Previous refresh stopped."
+                    break
+                fi
+                
+                if [ -z "$STATUS" ]; then
+                     echo "Status not found, assuming finished."
+                     break
+                fi
+                
+                sleep 10
+            done
           fi
 
           echo "Triggering new refresh..."
