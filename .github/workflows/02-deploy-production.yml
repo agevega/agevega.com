@@ -74,6 +74,46 @@ jobs:
           fi
 
           echo "Triggering new refresh..."
-          aws autoscaling start-instance-refresh \
+          NEW_REFRESH_ID=$(aws autoscaling start-instance-refresh \
             --auto-scaling-group-name "${{ env.ASG_NAME }}" \
-            --preferences '{"MinHealthyPercentage": 50, "InstanceWarmup": 300}'
+            --preferences '{"MinHealthyPercentage": 50, "InstanceWarmup": 300}' \
+            --query 'InstanceRefreshId' \
+            --output text)
+          
+          echo "Instance Refresh started: $NEW_REFRESH_ID"
+          echo "Waiting for refresh to complete (this may take several minutes)..."
+          
+          while true; do
+            STATUS=$(aws autoscaling describe-instance-refreshes \
+              --auto-scaling-group-name "${{ env.ASG_NAME }}" \
+              --instance-refresh-ids "$NEW_REFRESH_ID" \
+              --query "InstanceRefreshes[0].Status" \
+              --output text)
+              
+            echo "[$(date +%T)] Refresh Status: $STATUS"
+            
+            if [ "$STATUS" == "Successful" ]; then
+              echo "Instance refresh completed successfully."
+              break
+            fi
+            
+            if [[ "$STATUS" == "Failed" || "$STATUS" == "Cancelled" ]]; then
+              echo "Instance refresh failed or cancelled. Aborting."
+              exit 1
+            fi
+            
+            sleep 30
+          done
+
+      - name: Invalidate CloudFront Cache
+        if: success()
+        run: |
+          echo "Fetching CloudFront Distribution ID..."
+          DIST_ID=$(aws ssm get-parameter --name "/agevegacom/05-high-availability/03-cloudfront/cloudfront-distribution-id" --query "Parameter.Value" --output text || echo "")
+          
+          if [ -n "$DIST_ID" ] && [ "$DIST_ID" != "None" ]; then
+            echo "Invalidating successfully deployed distribution: $DIST_ID"
+            aws cloudfront create-invalidation --distribution-id "$DIST_ID" --paths "/*"
+          else
+            echo "CloudFront Distribution ID not found. Skipping invalidation."
+          fi
