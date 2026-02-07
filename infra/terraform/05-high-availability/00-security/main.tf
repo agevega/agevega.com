@@ -12,21 +12,21 @@ resource "aws_security_group" "alb_sg" {
   })
 }
 
-resource "aws_security_group_rule" "alb_ingress_cloudfront" {
+resource "aws_security_group_rule" "alb_ingress_https_cloudfront" {
   type              = "ingress"
-  description       = "HTTP from CloudFront"
-  from_port         = 80
-  to_port           = 80
+  description       = "HTTPS from CloudFront"
+  from_port         = 443
+  to_port           = 443
   protocol          = "tcp"
   prefix_list_ids   = [data.aws_ec2_managed_prefix_list.cloudfront.id]
   security_group_id = aws_security_group.alb_sg.id
 }
 
-resource "aws_security_group_rule" "alb_egress_to_instances" {
+resource "aws_security_group_rule" "alb_egress_https_to_instances" {
   type                     = "egress"
-  description              = "HTTP to instances (health checks and traffic)"
-  from_port                = 80
-  to_port                  = 80
+  description              = "HTTPS to instances (health checks and traffic)"
+  from_port                = 443
+  to_port                  = 443
   protocol                 = "tcp"
   security_group_id        = aws_security_group.alb_sg.id
   source_security_group_id = aws_security_group.instance_sg.id
@@ -52,11 +52,11 @@ resource "aws_security_group_rule" "instance_ingress_ssh_from_bastion" {
   source_security_group_id = data.terraform_remote_state.bastion.outputs.security_group_id
 }
 
-resource "aws_security_group_rule" "instance_ingress_http_from_alb" {
+resource "aws_security_group_rule" "instance_ingress_https_from_alb" {
   type                     = "ingress"
-  description              = "HTTP from ALB"
-  from_port                = 80
-  to_port                  = 80
+  description              = "HTTPS from ALB"
+  from_port                = 443
+  to_port                  = 443
   protocol                 = "tcp"
   security_group_id        = aws_security_group.instance_sg.id
   source_security_group_id = aws_security_group.alb_sg.id

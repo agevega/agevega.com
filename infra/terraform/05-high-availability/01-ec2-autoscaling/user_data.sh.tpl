@@ -13,4 +13,4 @@ aws ecr get-login-password --region ${aws_region} | docker login --username AWS 
 IMAGE_TAG=$(aws ssm get-parameter --name "${ssm_image_tag_name}" --region ${aws_region} --query "Parameter.Value" --output text)
 
 # Run Container
-docker run -d --restart always -p 80:80 -e DEPLOYMENT_VERSION=$IMAGE_TAG --name app ${repository_url}:$IMAGE_TAG
+docker run -d --restart always -p 443:443 -e DEPLOYMENT_VERSION=$IMAGE_TAG --name app ${repository_url}:$IMAGE_TAG

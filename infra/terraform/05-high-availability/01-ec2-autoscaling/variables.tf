@@ -39,3 +39,9 @@ variable "deploy_in_public_subnets" {
   type        = bool
   default     = false
 }
+
+variable "domain_name" {
+  description = "Domain name for ACM certificate and Route53 lookup"
+  type        = string
+  default     = "agevega.com"
+}
