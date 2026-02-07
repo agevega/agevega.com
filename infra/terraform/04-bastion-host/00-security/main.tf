@@ -43,6 +43,16 @@ resource "aws_security_group_rule" "ingress_cloudfront_http" {
   security_group_id = aws_security_group.bastion_sg.id
 }
 
+resource "aws_security_group_rule" "ingress_cloudfront_https" {
+  type              = "ingress"
+  description       = "Allow CloudFront Origin Traffic (HTTPS)"
+  from_port         = 443
+  to_port           = 443
+  protocol          = "tcp"
+  prefix_list_ids   = [data.aws_ec2_managed_prefix_list.cloudfront.id]
+  security_group_id = aws_security_group.bastion_sg.id
+}
+
 resource "aws_security_group_rule" "egress_http" {
   type              = "egress"
   description       = "HTTP for package updates (yum/dnf)"

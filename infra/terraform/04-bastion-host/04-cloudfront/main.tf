@@ -15,22 +15,34 @@ resource "aws_cloudfront_distribution" "distribution" {
   enabled             = true
   is_ipv6_enabled     = true
   comment             = "Bastion Host Origin (Module 04) - Distribution for dev.${var.domain_name}"
-  default_root_object = "" # Not needed for proxy to EC2
+  default_root_object = ""
   
-  # Auto-attach WAF if module 02 is deployed AND enable_waf is true.
-  # Gracefully fallback to null if state is missing or enable_waf is false.
   web_acl_id = var.enable_waf ? data.terraform_remote_state.waf[0].outputs.web_acl_arn : null
 
   aliases = ["dev.${var.domain_name}"]
 
+  # Origin for HTTP (ACME Challenge)
   origin {
     domain_name = data.terraform_remote_state.bastion_instance.outputs.bastion_public_dns
-    origin_id   = local.origin_id
+    origin_id   = "${local.origin_id}-HTTP"
 
     custom_origin_config {
       http_port              = 80
       https_port             = 443
-      origin_protocol_policy = "http-only" # Connect to EC2 via HTTP (Port 80)
+      origin_protocol_policy = "http-only"
+      origin_ssl_protocols   = ["TLSv1.2"]
+    }
+  }
+
+  # Origin for HTTPS (Application)
+  origin {
+    domain_name = data.terraform_remote_state.bastion_instance.outputs.bastion_public_dns
+    origin_id   = "${local.origin_id}-HTTPS"
+
+    custom_origin_config {
+      http_port              = 80
+      https_port             = 443
+      origin_protocol_policy = "https-only"
       origin_ssl_protocols   = ["TLSv1.2"]
     }
   }
@@ -41,10 +53,11 @@ resource "aws_cloudfront_distribution" "distribution" {
     origin_access_control_id = aws_cloudfront_origin_access_control.s3_oac.id
   }
 
+  # Default Behavior (Application - HTTPS)
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
     cached_methods   = ["GET", "HEAD"]
-    target_origin_id = local.origin_id
+    target_origin_id = "${local.origin_id}-HTTPS"
     
     forwarded_values {
       query_string = true
@@ -62,11 +75,34 @@ resource "aws_cloudfront_distribution" "distribution" {
     compress               = true
   }
 
+  # ACME Challenge Behavior (HTTP)
+  ordered_cache_behavior {
+    path_pattern     = "/.well-known/acme-challenge/*"
+    allowed_methods  = ["GET", "HEAD", "OPTIONS"]
+    cached_methods   = ["GET", "HEAD"]
+    target_origin_id = "${local.origin_id}-HTTP"
+
+    forwarded_values {
+      query_string = false
+      headers      = ["Host"]
+
+      cookies {
+        forward = "none"
+      }
+    }
+
+    viewer_protocol_policy = "allow-all" # Allow HTTP for validation
+    min_ttl                = 0
+    default_ttl            = 0
+    max_ttl                = 0
+    compress               = false
+  }
+
   ordered_cache_behavior {
     path_pattern             = "/meta.json"
     allowed_methods          = ["GET", "HEAD", "OPTIONS"]
     cached_methods           = ["GET", "HEAD"]
-    target_origin_id         = local.origin_id
+    target_origin_id         = "${local.origin_id}-HTTPS"
     response_headers_policy_id = aws_cloudfront_response_headers_policy.no_cache.id
 
     forwarded_values {

@@ -55,8 +55,8 @@ jobs:
 
       - name: Copy deployment script
         run: |
-          scp -i ~/.ssh/id_rsa scripts/01_deploy_frontend.sh ${{ env.EC2_USER }}@${{ env.EC2_HOST }}:~/
-          ssh -i ~/.ssh/id_rsa ${{ env.EC2_USER }}@${{ env.EC2_HOST }} "chmod +x ~/01_deploy_frontend.sh"
+          scp -i ~/.ssh/id_rsa scripts/01_deploy_frontend.sh scripts/00_generate_cert.sh ${{ env.EC2_USER }}@${{ env.EC2_HOST }}:~/
+          ssh -i ~/.ssh/id_rsa ${{ env.EC2_USER }}@${{ env.EC2_HOST }} "chmod +x ~/01_deploy_frontend.sh ~/00_generate_cert.sh"
 
       - name: Deploy on EC2
         env:
@@ -72,7 +72,11 @@ jobs:
           ssh -i ~/.ssh/id_rsa ${{ env.EC2_USER }}@${{ env.EC2_HOST }} \
           "docker login --username AWS --password-stdin $ECR_REGISTRY"
 
-          # Execute the deployment script
+          # 1. Generate/Renew Certificates
+          ssh -i ~/.ssh/id_rsa ${{ env.EC2_USER }}@${{ env.EC2_HOST }} \
+          "./00_generate_cert.sh"
+
+          # 2. Deploy Container
           ssh -i ~/.ssh/id_rsa ${{ env.EC2_USER }}@${{ env.EC2_HOST }} \
           "./01_deploy_frontend.sh $FULL_IMAGE_URI"
 

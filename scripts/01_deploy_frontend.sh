@@ -19,7 +19,7 @@ echo "Detected Deployment Version: $TAG"
 echo "Starting new container..."
 docker run -d \
   --restart always \
-  -p 80:80 \
+  -p 443:443 \
   -e DEPLOYMENT_VERSION="$TAG" \
   --name frontend \
   "$IMAGE_NAME"
