@@ -10,7 +10,7 @@ output "instance_sg_id" {
 
 output "instance_profile_name" {
   description = "IAM Instance Profile name for EC2 instances"
-  value       = aws_iam_instance_profile.app_profile.name
+  value       = aws_iam_instance_profile.ec2_profile.name
 }
 
 output "certificate_arn" {
