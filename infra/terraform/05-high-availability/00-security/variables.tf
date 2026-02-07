@@ -27,3 +27,9 @@ variable "common_tags" {
     Module      = "05-high-availability/00-security"
   }
 }
+
+variable "domain_name" {
+  description = "Domain name for ACM certificate and Route53 lookup"
+  type        = string
+  default     = "agevega.com"
+}

@@ -47,8 +47,3 @@ data "aws_ami" "amazon_linux_2023" {
     values = ["al2023-ami-2023.*-arm64"]
   }
 }
-
-data "aws_route53_zone" "selected" {
-  name         = var.domain_name
-  private_zone = false
-}

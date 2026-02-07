@@ -1,14 +1,19 @@
-output "instance_sg_id" {
-  description = "Security Group ID for Instances"
-  value       = aws_security_group.instance_sg.id
-}
-
 output "alb_sg_id" {
   description = "Security Group ID for ALB"
   value       = aws_security_group.alb_sg.id
 }
 
+output "instance_sg_id" {
+  description = "Security Group ID for EC2 instances"
+  value       = aws_security_group.instance_sg.id
+}
+
 output "instance_profile_name" {
-  description = "IAM Instance Profile Name"
-  value       = aws_iam_instance_profile.ec2_profile.name
+  description = "IAM Instance Profile name for EC2 instances"
+  value       = aws_iam_instance_profile.app_profile.name
+}
+
+output "certificate_arn" {
+  description = "ARN of the ACM certificate for ALB"
+  value       = aws_acm_certificate.cert.arn
 }

@@ -2,7 +2,6 @@ resource "aws_acm_certificate" "cert" {
   domain_name       = var.domain_name
   validation_method = "DNS"
 
-  # We include the root domain and wildcards
   subject_alternative_names = ["*.${var.domain_name}"]
 
   tags = var.common_tags
