@@ -7,6 +7,12 @@ resource "aws_instance" "bastion" {
 
   vpc_security_group_ids = [data.terraform_remote_state.security.outputs.security_group_id]
 
+  # Force IMDSv2 to prevent SSRF credential theft
+  metadata_options {
+    http_endpoint = "enabled"
+    http_tokens   = "required"
+  }
+
   tags = merge(var.common_tags, {
     Name        = "bastion-host"
     Environment = var.environment

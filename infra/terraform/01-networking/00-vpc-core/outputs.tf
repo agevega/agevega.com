@@ -1,3 +1,8 @@
+output "vpc_cidr" {
+  description = "CIDR block of the VPC"
+  value       = aws_vpc.agevegacom_vpc.cidr_block
+}
+
 output "vpc_id" {
   description = "ID of the deployed VPC"
   value       = aws_vpc.agevegacom_vpc.id
@@ -58,7 +63,6 @@ output "public_route_table_id" {
   value       = aws_route_table.public_route_table.id
 }
 
-# Exposed private route tables for other modules (like NAT Gateway) to add routes to
 output "private_route_table_ids" {
   description = "Map of private route table IDs by AZ"
   value = {

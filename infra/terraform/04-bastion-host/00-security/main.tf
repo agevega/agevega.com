@@ -1,3 +1,7 @@
+data "aws_ec2_managed_prefix_list" "cloudfront" {
+  name = "com.amazonaws.global.cloudfront.origin-facing"
+}
+
 resource "aws_security_group" "bastion_sg" {
   name        = "bastion-sg"
   description = "Security group for Bastion Host"
@@ -19,23 +23,14 @@ resource "aws_security_group_rule" "ingress_ssh" {
   security_group_id = aws_security_group.bastion_sg.id
 }
 
-
-
-resource "aws_security_group_rule" "egress_all" {
+resource "aws_security_group_rule" "egress_ssh_to_vpc" {
   type              = "egress"
-  description       = "Allow all outbound traffic"
-  from_port         = 0
-  to_port           = 0
-  protocol          = "-1"
-  cidr_blocks       = ["0.0.0.0/0"]
+  description       = "SSH to instances in VPC"
+  from_port         = 22
+  to_port           = 22
+  protocol          = "tcp"
+  cidr_blocks       = [data.terraform_remote_state.networking.outputs.vpc_cidr]
   security_group_id = aws_security_group.bastion_sg.id
-}
-
-# ------------------------------------------------------------------------------
-# CloudFront Access Rule
-# ------------------------------------------------------------------------------
-data "aws_ec2_managed_prefix_list" "cloudfront" {
-  name = "com.amazonaws.global.cloudfront.origin-facing"
 }
 
 resource "aws_security_group_rule" "ingress_cloudfront_http" {
@@ -48,3 +43,22 @@ resource "aws_security_group_rule" "ingress_cloudfront_http" {
   security_group_id = aws_security_group.bastion_sg.id
 }
 
+resource "aws_security_group_rule" "egress_http" {
+  type              = "egress"
+  description       = "HTTP for package updates (yum/dnf)"
+  from_port         = 80
+  to_port           = 80
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.bastion_sg.id
+}
+
+resource "aws_security_group_rule" "egress_https" {
+  type              = "egress"
+  description       = "HTTPS for AWS services (ECR, SSM, etc.)"
+  from_port         = 443
+  to_port           = 443
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.bastion_sg.id
+}
