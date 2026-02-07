@@ -43,6 +43,8 @@ resource "aws_lb_listener" "https" {
   ssl_policy        = "ELBSecurityPolicy-TLS13-1-2-2021-06"
   certificate_arn   = aws_acm_certificate.cert.arn
 
+  depends_on = [aws_acm_certificate_validation.cert]
+
   default_action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.app_tg.arn
