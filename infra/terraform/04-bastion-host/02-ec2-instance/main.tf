@@ -4,6 +4,8 @@ resource "aws_instance" "bastion" {
   subnet_id     = data.terraform_remote_state.networking.outputs.subnet_public_1_id
 
   key_name = data.terraform_remote_state.ssh_key.outputs.key_name
+  
+  iam_instance_profile = data.terraform_remote_state.security.outputs.iam_instance_profile_name
 
   vpc_security_group_ids = [data.terraform_remote_state.security.outputs.security_group_id]
 

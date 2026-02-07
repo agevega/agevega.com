@@ -33,16 +33,6 @@ resource "aws_security_group_rule" "egress_ssh_to_vpc" {
   security_group_id = aws_security_group.bastion_sg.id
 }
 
-resource "aws_security_group_rule" "ingress_cloudfront_http" {
-  type              = "ingress"
-  description       = "Allow CloudFront Origin Traffic"
-  from_port         = 80
-  to_port           = 80
-  protocol          = "tcp"
-  prefix_list_ids   = [data.aws_ec2_managed_prefix_list.cloudfront.id]
-  security_group_id = aws_security_group.bastion_sg.id
-}
-
 resource "aws_security_group_rule" "ingress_cloudfront_https" {
   type              = "ingress"
   description       = "Allow CloudFront Origin Traffic (HTTPS)"

@@ -19,9 +19,9 @@ fi
 echo "Stopping any running frontend container..."
 sudo docker stop frontend || true
 
-# 3. Request Certificate
-echo "Requesting certificate for $DOMAIN and www.$DOMAIN..."
-sudo certbot certonly --standalone \
+# 3. Request Certificate (DNS-01 Challenge)
+echo "Requesting certificate for $DOMAIN and www.$DOMAIN using DNS-01..."
+sudo certbot certonly --dns-route53 \
   -d "$DOMAIN" -d "www.$DOMAIN" \
   --email "$EMAIL" \
   --agree-tos \
