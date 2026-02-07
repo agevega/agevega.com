@@ -12,8 +12,3 @@ output "instance_profile_name" {
   description = "IAM Instance Profile name for EC2 instances"
   value       = aws_iam_instance_profile.ec2_profile.name
 }
-
-output "certificate_arn" {
-  description = "ARN of the ACM certificate for ALB"
-  value       = aws_acm_certificate.cert.arn
-}

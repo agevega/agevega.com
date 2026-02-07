@@ -1,8 +1,8 @@
 resource "aws_acm_certificate" "cert" {
-  domain_name       = var.domain_name
+  domain_name       = data.terraform_remote_state.dns.outputs.domain_name
   validation_method = "DNS"
 
-  subject_alternative_names = ["*.${var.domain_name}"]
+  subject_alternative_names = ["*.${data.terraform_remote_state.dns.outputs.domain_name}"]
 
   tags = var.common_tags
 

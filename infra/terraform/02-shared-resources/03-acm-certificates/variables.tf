@@ -24,6 +24,6 @@ variable "common_tags" {
     Owner       = "Alejandro Vega"
     Environment = "prod"
     ManagedBy   = "terraform"
-    Module      = "05-high-availability/00-security"
+    Module      = "02-shared-resources/03-acm-certificates"
   }
 }

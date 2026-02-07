@@ -38,6 +38,16 @@ data "terraform_remote_state" "security" {
   }
 }
 
+data "terraform_remote_state" "acm" {
+  backend = "s3"
+  config = {
+    bucket  = "agevegacom-terraform-state"
+    key     = "modules/02-shared-resources/03-acm-certificates/terraform.tfstate"
+    region  = "eu-south-2"
+    profile = "terraform"
+  }
+}
+
 data "aws_ami" "amazon_linux_2023" {
   most_recent = true
   owners      = ["amazon"]
