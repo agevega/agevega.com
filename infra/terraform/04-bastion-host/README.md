@@ -165,6 +165,12 @@ Conectar al Bastion Host a través de SSH sin EIP asociada:
 ssh -A -i ~/.ssh/id_rsa ec2-user@$(aws ec2 describe-instances --filters "Name=tag:Name,Values=bastion-host" "Name=instance-state-name,Values=running" --query "Reservations[*].Instances[*].[PublicDnsName]" --output text --profile=terraform)
 ```
 
+Ver logs de inicialización de la instancia:
+
+```bash
+sudo tail -f /var/log/cloud-init-output.log
+```
+
 ---
 
 ## 🔧 Variables Clave
