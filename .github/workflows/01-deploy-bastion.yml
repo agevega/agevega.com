@@ -55,7 +55,9 @@ jobs:
 
       - name: Copy deployment scripts
         run: |
+          # Copiamos ambos scripts al bastion
           scp -i ~/.ssh/id_rsa scripts/00_generate_cert.sh scripts/01_deploy_frontend.sh ${{ env.EC2_USER }}@${{ env.EC2_HOST }}:~/
+          # Damos permisos de ejecución a ambos
           ssh -i ~/.ssh/id_rsa ${{ env.EC2_USER }}@${{ env.EC2_HOST }} "chmod +x ~/00_generate_cert.sh ~/01_deploy_frontend.sh"
 
       - name: Deploy on EC2
@@ -67,18 +69,16 @@ jobs:
           FULL_IMAGE_URI="$ECR_REGISTRY/$ECR_REPO:$IMAGE_TAG"
           echo "Deploying image: $FULL_IMAGE_URI"
 
-          # Login to ECR on the remote instance (piping credentials)
+          # Login to ECR on the remote instance
           aws ecr get-login-password --region $AWS_REGION | \
           ssh -i ~/.ssh/id_rsa ${{ env.EC2_USER }}@${{ env.EC2_HOST }} \
           "docker login --username AWS --password-stdin $ECR_REGISTRY"
 
-          # 1. Generate/Renew Certificates
-          ssh -i ~/.ssh/id_rsa ${{ env.EC2_USER }}@${{ env.EC2_HOST }} \
-          "./00_generate_cert.sh dev.agevega.com admin@agevega.com"
+          # 1. Ejecutar generación de certificados (Rescatado)
+          ssh -i ~/.ssh/id_rsa ${{ env.EC2_USER }}@${{ env.EC2_HOST }} "./00_generate_cert.sh"
 
-          # 2. Deploy Container
-          ssh -i ~/.ssh/id_rsa ${{ env.EC2_USER }}@${{ env.EC2_HOST }} \
-          "./01_deploy_frontend.sh $FULL_IMAGE_URI dev.agevega.com"
+          # 2. Ejecutar el script de despliegue
+          ssh -i ~/.ssh/id_rsa ${{ env.EC2_USER }}@${{ env.EC2_HOST }} "./01_deploy_frontend.sh $FULL_IMAGE_URI"
 
       - name: Invalidate CloudFront Cache
         if: success()
