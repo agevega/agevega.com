@@ -26,7 +26,7 @@ sudo docker stop frontend || true
 # 3. Request Certificate (Using Route53)
 echo "Requesting certificate for $DOMAIN and www.$DOMAIN using Route53..."
 sudo certbot certonly --dns-route53 \
-  -d "$DOMAIN" -d "www.$DOMAIN" \
+  -d "$DOMAIN" -d "www.$DOMAIN" -d "dev.$DOMAIN" \
   --email "$EMAIL" \
   --agree-tos \
   --non-interactive \
