@@ -1,6 +1,6 @@
 # 🛡️ 04-bastion-host
 
-Este módulo despliega el punto de entrada administrativo y la distribución de contenido de la infraestructura de desarrollo (dev). Combina seguridad perimetral y acceso remoto seguro.
+Este módulo despliega el punto de entrada de la red y la distribución de contenido de desarrollo (dev). Combina seguridad perimetral y acceso remoto seguro.
 
 ![Architecture Diagram](../../diagrams/02-bastion-EC2.png)
 
@@ -9,11 +9,12 @@ Este módulo despliega el punto de entrada administrativo y la distribución de 
 ## 🏛️ Arquitectura
 
 - **Bastion Host**: Instancia EC2 mínima (`t4g.nano`) en subred pública para tunelización SSH.
-- **CDN Global**: CloudFront actúa como frontal para el contenido estático, sirviendo como entorno de desarrollo.
+- **CDN Global**: CloudFront actúa como frontal para el contenido estático de desarrollo.
 - **Seguridad**:
+  - **HTTPS-Only**: Tráfico cifrado End-to-End desde CloudFront hasta la aplicación (puerto 443), con validación DNS-01.
   - **Security Groups**: Whitelist para acceso SSH.
-  - **WAF (Opcional)**: Protección contra ataques web comunes (deshabilitado por defecto).
-  - **EIP (Opcional)**: IP estática para persistencia DNS (deshabilitado por defecto).
+  - **EIP (Opcional)**: IP estática para el bastion (deshabilitado por defecto).
+  - **WAF (Opcional)**: Protección contra ataques web (deshabilitado por defecto).
 
 ---
 
@@ -22,12 +23,12 @@ Este módulo despliega el punto de entrada administrativo y la distribución de 
 ### 1. [00-security](./00-security)
 
 - **Función**: Firewall de red.
-- **Recursos**: Security Groups para Bastion (SSH 22, HTTP 80, HTTPS 443).
+- **Recursos**: Security Groups (SSH 22, HTTPS 443) y IAM Role para el Bastion.
 
 ### 2. [01-eip](./01-eip) (Opcional)
 
 - **Función**: IP Estática.
-- **Recursos**: Elastic IP para asegurar persistencia de DNS en el Bastion.
+- **Recursos**: Elastic IP para persistencia de DNS en el Bastion.
 
 ### 3. [02-ec2-instance](./02-ec2-instance)
 
@@ -189,4 +190,3 @@ sudo tail -f /var/log/cloud-init-output.log
 
 - **EIP y WAF opcionales**: Son los componentes mas costosos de este submódulo y no son estrictamente imprescindibles para su funcionamiento, al estar en un entorno de desarrollo se han deshabilitado por defecto por ahorro de costes.
 - **Instancia Nano ARM**: Uso de `t4g.nano` que ofrece el coste más bajo posible para una instancia EC2 on-demand, suficiente para un bastion host.
-- **Http Proxy**: CloudFront está configurado para cachear contenido estático de S3, reduciendo peticiones al origen y costes de transferencia de datos.
