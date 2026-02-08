@@ -1,15 +1,13 @@
 #!/bin/bash
 
-# LEGACY SCRIPT
-
 # Configuration
-DOMAIN="${1:-dev.agevega.com}"
-EMAIL="${2:-admin@agevega.com}"
+DOMAIN="agevega.com"
+EMAIL="admin@agevega.com" # Replace with valid email if needed
 
 # 1. Install Certbot
 if ! command -v certbot &> /dev/null; then
     echo "Installing Certbot..."
-    sudo dnf install -y certbot
+    sudo dnf install -y certbot python3-certbot-dns-route53
 else
     echo "Certbot is already installed."
 fi
@@ -18,8 +16,8 @@ fi
 echo "Stopping any running frontend container..."
 sudo docker stop frontend || true
 
-# 3. Request Certificate (DNS-01 Challenge)
-echo "Requesting certificate for $DOMAIN and www.$DOMAIN using DNS-01..."
+# 3. Request Certificate (Using Route53)
+echo "Requesting certificate for $DOMAIN and www.$DOMAIN using Route53..."
 sudo certbot certonly --dns-route53 \
   -d "$DOMAIN" -d "www.$DOMAIN" \
   --email "$EMAIL" \
