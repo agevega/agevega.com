@@ -53,10 +53,10 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ env.EC2_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Copy deployment script
+      - name: Copy deployment scripts
         run: |
-          scp -i ~/.ssh/id_rsa scripts/01_deploy_frontend.sh scripts/00_generate_cert.sh ${{ env.EC2_USER }}@${{ env.EC2_HOST }}:~/
-          ssh -i ~/.ssh/id_rsa ${{ env.EC2_USER }}@${{ env.EC2_HOST }} "chmod +x ~/01_deploy_frontend.sh ~/00_generate_cert.sh"
+          scp -i ~/.ssh/id_rsa scripts/00_generate_cert.sh scripts/01_deploy_frontend.sh ${{ env.EC2_USER }}@${{ env.EC2_HOST }}:~/
+          ssh -i ~/.ssh/id_rsa ${{ env.EC2_USER }}@${{ env.EC2_HOST }} "chmod +x ~/00_generate_cert.sh ~/01_deploy_frontend.sh"
 
       - name: Deploy on EC2
         env:
