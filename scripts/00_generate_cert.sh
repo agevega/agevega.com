@@ -3,7 +3,6 @@
 # LEGACY SCRIPT
 
 # Configuration
-# Configuration
 DOMAIN="${1:-dev.agevega.com}"
 EMAIL="${2:-admin@agevega.com}"
 
