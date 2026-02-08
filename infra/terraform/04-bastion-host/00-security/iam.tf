@@ -30,14 +30,14 @@ resource "aws_iam_policy" "route53_policy" {
         Effect = "Allow"
         Action = [
           "route53:ChangeResourceRecordSets",
-          "route53:GetChange",
-          "route53:ListResourceRecordSets" # Useful for debugging
+          "route53:ListResourceRecordSets"
         ]
-        Resource = "arn:aws:route53:::hostedzone/*" # Scope down if zone ID is available via data source
+        Resource = "arn:aws:route53:::hostedzone/*"
       },
       {
         Effect = "Allow"
         Action = [
+          "route53:GetChange",
           "route53:ListHostedZones",
           "route53:ListHostedZonesByName"
         ]
