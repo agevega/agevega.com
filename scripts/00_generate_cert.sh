@@ -7,7 +7,7 @@ EMAIL="admin@agevega.com" # Replace with valid email if needed
 # 1. Install Certbot y asegurar el plugin solo si faltan
 if [ ! -f "/opt/certbot/bin/certbot" ]; then
     echo "Entorno Certbot no encontrado en /opt/certbot. Instalando..."
-    sudo python3 -m venv /opt/certbot/
+    sudo python3.14 -m venv /opt/certbot/
     sudo /opt/certbot/bin/pip install --upgrade pip
     sudo /opt/certbot/bin/pip install certbot certbot-dns-route53
     sudo ln -sf /opt/certbot/bin/certbot /usr/bin/certbot
