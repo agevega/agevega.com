@@ -25,7 +25,7 @@ variable "enable_waf" {
 variable "common_tags" {
   description = "Common tags for all resources"
   type        = map(string)
-  default     = {
+  default = {
     Project     = "agevegacom"
     Environment = "dev"
     ManagedBy   = "terraform"

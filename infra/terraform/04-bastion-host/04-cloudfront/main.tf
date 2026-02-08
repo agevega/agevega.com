@@ -16,7 +16,7 @@ resource "aws_cloudfront_distribution" "distribution" {
   is_ipv6_enabled     = true
   comment             = "Bastion Host Origin (Module 04) - Distribution for dev.${var.domain_name}"
   default_root_object = ""
-  
+
   web_acl_id = var.enable_waf ? data.terraform_remote_state.waf[0].outputs.web_acl_arn : null
 
   aliases = ["dev.${var.domain_name}"]
@@ -31,6 +31,11 @@ resource "aws_cloudfront_distribution" "distribution" {
       origin_protocol_policy = "https-only"
       origin_ssl_protocols   = ["TLSv1.2"]
     }
+
+    custom_header {
+      name  = "Host"
+      value = "dev.${var.domain_name}"
+    }
   }
 
   origin {
@@ -44,7 +49,7 @@ resource "aws_cloudfront_distribution" "distribution" {
     allowed_methods  = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = local.origin_id
-    
+
     forwarded_values {
       query_string = true
       headers      = ["Host", "Origin"] # Important for Nginx and CORS
@@ -53,7 +58,7 @@ resource "aws_cloudfront_distribution" "distribution" {
         forward = "none"
       }
     }
-    
+
     viewer_protocol_policy = "redirect-to-https"
     min_ttl                = 0
     default_ttl            = 3600
@@ -62,10 +67,10 @@ resource "aws_cloudfront_distribution" "distribution" {
   }
 
   ordered_cache_behavior {
-    path_pattern             = "/meta.json"
-    allowed_methods          = ["GET", "HEAD", "OPTIONS"]
-    cached_methods           = ["GET", "HEAD"]
-    target_origin_id         = local.origin_id
+    path_pattern               = "/meta.json"
+    allowed_methods            = ["GET", "HEAD", "OPTIONS"]
+    cached_methods             = ["GET", "HEAD"]
+    target_origin_id           = local.origin_id
     response_headers_policy_id = aws_cloudfront_response_headers_policy.no_cache.id
 
     forwarded_values {
