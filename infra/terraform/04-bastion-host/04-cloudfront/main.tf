@@ -32,10 +32,6 @@ resource "aws_cloudfront_distribution" "distribution" {
       origin_ssl_protocols   = ["TLSv1.2"]
     }
 
-    custom_header {
-      name  = "Host"
-      value = "dev.${var.domain_name}"
-    }
   }
 
   origin {
