@@ -42,6 +42,14 @@ resource "aws_iam_policy" "route53_policy" {
           "route53:ListHostedZonesByName"
         ]
         Resource = "*"
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "ssm:GetParameter",
+          "ssm:GetParameters"
+        ]
+        Resource = "arn:aws:ssm:*:*:parameter/${var.project_name}/*"
       }
     ]
   })

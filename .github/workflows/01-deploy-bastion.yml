@@ -74,7 +74,7 @@ jobs:
           ssh -i ~/.ssh/id_rsa ${{ env.EC2_USER }}@${{ env.EC2_HOST }} \
           "docker login --username AWS --password-stdin $ECR_REGISTRY"
 
-          # 1. Ejecutar generación de certificados (Rescatado)
+          # 1. Ejecutar generación de certificados
           ssh -i ~/.ssh/id_rsa ${{ env.EC2_USER }}@${{ env.EC2_HOST }} "./00_generate_cert.sh"
 
           # 2. Ejecutar el script de despliegue

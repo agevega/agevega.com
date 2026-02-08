@@ -16,6 +16,11 @@ variable "allowed_ssh_cidr_blocks" {
   default     = ["0.0.0.0/0"]
 }
 
+variable "project_name" {
+  description = "Project name for tagging and resource naming"
+  type        = string
+  default     = "agevegacom"
+}
 
 variable "environment" {
   description = "Environment name"
