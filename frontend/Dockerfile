@@ -23,9 +23,10 @@ FROM nginx:alpine
 RUN apk add --no-cache curl openssl
 
 # Generate self-signed certificate
+RUN mkdir -p /etc/nginx/certs
 RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-    -keyout /etc/nginx/server.key \
-    -out /etc/nginx/server.crt \
+    -keyout /etc/nginx/certs/privkey.pem \
+    -out /etc/nginx/certs/fullchain.pem \
     -subj "/C=ES/ST=Madrid/L=Madrid/O=Internal/OU=IT/CN=localhost"
 
 # Copy static config and entrypoint
