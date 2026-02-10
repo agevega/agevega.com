@@ -5,28 +5,29 @@ variable "aws_region" {
 }
 
 variable "aws_profile" {
-  description = "AWS CLI profile to use for credentials"
+  description = "AWS CLI profile"
   type        = string
   default     = "terraform"
 }
 
 variable "domain_name" {
-  description = "Primary domain name for the certificate and distribution"
+  description = "Domain name"
   type        = string
   default     = "agevega.com"
 }
 
 variable "enable_waf" {
-  description = "Enable WAF auto-discovery. Set to false to force WAF detachment before destroying the WAF module."
+  description = "Enable WAF attachment to CloudFront"
   type        = bool
   default     = false
 }
 
 variable "common_tags" {
-  description = "Common tags for all resources"
+  description = "Common tags"
   type        = map(string)
   default = {
     Project     = "agevegacom"
+    Owner       = "Alejandro Vega"
     Environment = "dev"
     ManagedBy   = "terraform"
     Module      = "04-bastion-host/04-cloudfront"

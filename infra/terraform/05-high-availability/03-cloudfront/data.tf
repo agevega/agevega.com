@@ -8,12 +8,11 @@ data "terraform_remote_state" "acm" {
   }
 }
 
-data "terraform_remote_state" "waf" {
-  count   = var.enable_waf ? 1 : 0
+data "terraform_remote_state" "s3_assets" {
   backend = "s3"
   config = {
     bucket  = "agevegacom-terraform-state"
-    key     = "modules/05-high-availability/02-waf/terraform.tfstate"
+    key     = "modules/02-shared-resources/02-s3-buckets/terraform.tfstate"
     region  = "eu-south-2"
     profile = "terraform"
   }
@@ -29,11 +28,12 @@ data "terraform_remote_state" "compute" {
   }
 }
 
-data "terraform_remote_state" "s3_assets" {
+data "terraform_remote_state" "waf" {
+  count   = var.enable_waf ? 1 : 0
   backend = "s3"
   config = {
     bucket  = "agevegacom-terraform-state"
-    key     = "modules/02-shared-resources/02-s3-buckets/terraform.tfstate"
+    key     = "modules/05-high-availability/02-waf/terraform.tfstate"
     region  = "eu-south-2"
     profile = "terraform"
   }

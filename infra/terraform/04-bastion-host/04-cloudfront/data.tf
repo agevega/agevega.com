@@ -1,18 +1,18 @@
-data "terraform_remote_state" "s3_assets" {
-  backend = "s3"
-  config = {
-    bucket  = "agevegacom-terraform-state"
-    key     = "modules/02-shared-resources/02-s3-buckets/terraform.tfstate"
-    region  = "eu-south-2"
-    profile = "terraform"
-  }
-}
-
 data "terraform_remote_state" "acm" {
   backend = "s3"
   config = {
     bucket  = "agevegacom-terraform-state"
     key     = "modules/99-domain/01-acm-certificate/terraform.tfstate"
+    region  = "eu-south-2"
+    profile = "terraform"
+  }
+}
+
+data "terraform_remote_state" "s3_assets" {
+  backend = "s3"
+  config = {
+    bucket  = "agevegacom-terraform-state"
+    key     = "modules/02-shared-resources/02-s3-buckets/terraform.tfstate"
     region  = "eu-south-2"
     profile = "terraform"
   }
