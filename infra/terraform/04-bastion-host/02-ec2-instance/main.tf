@@ -4,7 +4,7 @@ resource "aws_instance" "bastion" {
   subnet_id     = data.terraform_remote_state.networking.outputs.subnet_public_1_id
 
   key_name = data.terraform_remote_state.ssh_key.outputs.key_name
-  
+
   iam_instance_profile = data.terraform_remote_state.security.outputs.iam_instance_profile_name
 
   vpc_security_group_ids = [data.terraform_remote_state.security.outputs.security_group_id]
@@ -33,7 +33,7 @@ resource "aws_ssm_parameter" "bastion_public_dns" {
   name        = "/${var.project_name}/04-bastion-host/02-ec2-instance/bastion-public-dns"
   description = "Bastion Host Public DNS"
   type        = "String"
-  value       = aws_instance.bastion.public_dns
+  value       = var.enable_eip ? data.terraform_remote_state.eip[0].outputs.eip_public_dns : aws_instance.bastion.public_dns
 
   tags = var.common_tags
 }
