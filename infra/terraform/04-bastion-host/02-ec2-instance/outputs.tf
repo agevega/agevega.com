@@ -10,5 +10,5 @@ output "bastion_instance_id" {
 
 output "bastion_public_dns" {
   description = "Public DNS of the Bastion Host"
-  value       = aws_instance.bastion.public_dns
+  value       = var.enable_eip ? data.terraform_remote_state.eip[0].outputs.eip_public_dns : aws_instance.bastion.public_dns
 }
