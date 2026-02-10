@@ -11,7 +11,7 @@ variable "aws_profile" {
 }
 
 variable "domain_name" {
-  description = "Primary domain name (e.g. agevega.com)"
+  description = "Primary domain name"
   type        = string
   default     = "agevega.com"
 }
