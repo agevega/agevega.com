@@ -1,6 +1,6 @@
 resource "aws_wafv2_web_acl" "main" {
-  name        = "${var.project_name}-waf-cloudfront"
-  description = "WAF for CloudFront distribution protection"
+  name        = "${var.project_name}-bastion-waf-cloudfront"
+  description = "WAF for Bastion CloudFront distribution protection"
   scope       = "CLOUDFRONT"
 
   default_action {
@@ -9,7 +9,7 @@ resource "aws_wafv2_web_acl" "main" {
 
   visibility_config {
     cloudwatch_metrics_enabled = true
-    metric_name                = "${var.project_name}-waf-cloudfront"
+    metric_name                = "${var.project_name}-bastion-waf-cloudfront"
     sampled_requests_enabled   = true
   }
 

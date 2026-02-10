@@ -1,6 +1,6 @@
 resource "aws_wafv2_web_acl" "main" {
-  name        = "${var.project_name}-waf-prod"
-  description = "WAF for Production CloudFront distribution"
+  name        = "${var.project_name}-prod-waf-cloudfront"
+  description = "WAF for Production CloudFront distribution protection"
   scope       = "CLOUDFRONT"
 
   default_action {
@@ -9,7 +9,7 @@ resource "aws_wafv2_web_acl" "main" {
 
   visibility_config {
     cloudwatch_metrics_enabled = true
-    metric_name                = "${var.project_name}-waf-prod"
+    metric_name                = "${var.project_name}-prod-waf-cloudfront"
     sampled_requests_enabled   = true
   }
 

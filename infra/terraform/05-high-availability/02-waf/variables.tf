@@ -13,7 +13,7 @@ variable "aws_profile" {
 variable "project_name" {
   description = "Project name for WAF"
   type        = string
-  default     = "agevegacom-prod"
+  default     = "agevegacom"
 }
 
 variable "common_tags" {
