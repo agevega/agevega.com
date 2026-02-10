@@ -5,7 +5,7 @@ output "alb_sg_id" {
 
 output "instance_sg_id" {
   description = "Security Group ID for EC2 instances"
-  value       = aws_security_group.instance_sg.id
+  value       = aws_security_group.instances_sg.id
 }
 
 output "instance_profile_name" {

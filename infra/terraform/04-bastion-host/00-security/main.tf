@@ -8,8 +8,7 @@ resource "aws_security_group" "bastion_sg" {
   vpc_id      = data.terraform_remote_state.networking.outputs.vpc_id
 
   tags = merge(var.common_tags, {
-    Name        = "bastion-sg"
-    Environment = var.environment
+    Name = "bastion-sg"
   })
 }
 

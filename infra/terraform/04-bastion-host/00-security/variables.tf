@@ -5,31 +5,19 @@ variable "aws_region" {
 }
 
 variable "aws_profile" {
-  description = "AWS CLI profile to use for credentials"
+  description = "AWS CLI profile"
   type        = string
   default     = "terraform"
 }
 
-variable "allowed_ssh_cidr_blocks" {
-  description = "List of CIDR blocks allowed to SSH into the bastion host"
-  type        = list(string)
-  default     = ["0.0.0.0/0"]
-}
-
 variable "project_name" {
-  description = "Project name for tagging and resource naming"
+  description = "Project name"
   type        = string
   default     = "agevegacom"
 }
 
-variable "environment" {
-  description = "Environment name"
-  type        = string
-  default     = "lab"
-}
-
 variable "common_tags" {
-  description = "Common tags to apply to all resources"
+  description = "Common tags"
   type        = map(string)
   default = {
     Project     = "agevegacom"
@@ -38,4 +26,10 @@ variable "common_tags" {
     ManagedBy   = "terraform"
     Module      = "04-bastion-host/00-security"
   }
+}
+
+variable "allowed_ssh_cidr_blocks" {
+  description = "List of CIDR blocks allowed to SSH into the bastion host"
+  type        = list(string)
+  default     = ["0.0.0.0/0"]
 }
