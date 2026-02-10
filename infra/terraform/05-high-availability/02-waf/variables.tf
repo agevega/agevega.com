@@ -1,9 +1,3 @@
-variable "aws_region" {
-  description = "AWS Region"
-  type        = string
-  default     = "eu-south-2"
-}
-
 variable "aws_profile" {
   description = "AWS CLI profile"
   type        = string
@@ -11,7 +5,7 @@ variable "aws_profile" {
 }
 
 variable "project_name" {
-  description = "Project name for WAF"
+  description = "Project name"
   type        = string
   default     = "agevegacom"
 }

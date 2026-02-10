@@ -1,5 +1,5 @@
 variable "aws_profile" {
-  description = "AWS CLI profile to use for credentials"
+  description = "AWS CLI profile"
   type        = string
   default     = "terraform"
 }
@@ -11,10 +11,11 @@ variable "project_name" {
 }
 
 variable "common_tags" {
-  description = "Common tags for all resources"
+  description = "Common tags"
   type        = map(string)
-  default     = {
+  default = {
     Project     = "agevegacom"
+    Owner       = "Alejandro Vega"
     Environment = "dev"
     ManagedBy   = "terraform"
     Module      = "04-bastion-host/03-waf"

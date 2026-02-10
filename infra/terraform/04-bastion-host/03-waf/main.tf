@@ -13,13 +13,12 @@ resource "aws_wafv2_web_acl" "main" {
     sampled_requests_enabled   = true
   }
 
-  # AWS Managed Rules - Core Rule Set
   rule {
     name     = "AWS-AWSManagedRulesCommonRuleSet"
     priority = 10
 
     override_action {
-      none {} # Use default action configured in the rule group
+      none {}
     }
 
     statement {
