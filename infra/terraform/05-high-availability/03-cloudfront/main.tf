@@ -60,10 +60,10 @@ resource "aws_cloudfront_distribution" "prod_distribution" {
   }
 
   ordered_cache_behavior {
-    path_pattern             = "/meta.json"
-    allowed_methods          = ["GET", "HEAD", "OPTIONS"]
-    cached_methods           = ["GET", "HEAD"]
-    target_origin_id         = local.origin_id
+    path_pattern               = "/meta.json"
+    allowed_methods            = ["GET", "HEAD", "OPTIONS"]
+    cached_methods             = ["GET", "HEAD"]
+    target_origin_id           = local.origin_id
     response_headers_policy_id = aws_cloudfront_response_headers_policy.no_cache.id
 
     forwarded_values {
@@ -136,7 +136,7 @@ resource "aws_cloudfront_response_headers_policy" "no_cache" {
 
 resource "aws_ssm_parameter" "cloudfront_distribution_id" {
   name        = "/${var.project_name}/05-high-availability/03-cloudfront/cloudfront-distribution-id"
-  description = "CloudFront Distribution ID (HA)"
+  description = "CloudFront Distribution ID (Prod)"
   type        = "String"
   value       = aws_cloudfront_distribution.prod_distribution.id
 

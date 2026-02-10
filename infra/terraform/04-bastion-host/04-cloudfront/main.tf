@@ -11,11 +11,10 @@ resource "aws_cloudfront_origin_access_control" "s3_oac" {
   signing_protocol                  = "sigv4"
 }
 
-resource "aws_cloudfront_distribution" "distribution" {
-  enabled             = true
-  is_ipv6_enabled     = true
-  comment             = "Bastion Host Origin (Module 04) - Distribution for dev.${var.domain_name}"
-  default_root_object = ""
+resource "aws_cloudfront_distribution" "bastion_distribution" {
+  enabled         = true
+  is_ipv6_enabled = true
+  comment         = "Bastion Host Origin (Module 04) - Distribution for dev.${var.domain_name}"
 
   web_acl_id = var.enable_waf ? data.terraform_remote_state.waf[0].outputs.web_acl_arn : null
 
@@ -31,7 +30,6 @@ resource "aws_cloudfront_distribution" "distribution" {
       origin_protocol_policy = "https-only"
       origin_ssl_protocols   = ["TLSv1.2"]
     }
-
   }
 
   origin {
@@ -40,7 +38,6 @@ resource "aws_cloudfront_distribution" "distribution" {
     origin_access_control_id = aws_cloudfront_origin_access_control.s3_oac.id
   }
 
-  # Default Behavior (Application - HTTPS)
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
     cached_methods   = ["GET", "HEAD"]
@@ -48,7 +45,7 @@ resource "aws_cloudfront_distribution" "distribution" {
 
     forwarded_values {
       query_string = true
-      headers      = ["Host", "Origin"] # Important for Nginx and CORS
+      headers      = ["Host", "Origin"]
 
       cookies {
         forward = "none"
@@ -107,7 +104,7 @@ resource "aws_cloudfront_distribution" "distribution" {
     viewer_protocol_policy = "redirect-to-https"
   }
 
-  price_class = "PriceClass_100" # Use PriceClass_100 (USA/Europe) to minimize cost as requested
+  price_class = "PriceClass_100"
 
   restrictions {
     geo_restriction {
@@ -126,7 +123,7 @@ resource "aws_cloudfront_distribution" "distribution" {
 
 resource "aws_cloudfront_response_headers_policy" "no_cache" {
   name    = "bastion-no-cache"
-  comment = "Disable browser caching for dynamic paths (Dev)"
+  comment = "Disable browser caching for dynamic paths (Bastion)"
 
   custom_headers_config {
     items {
@@ -141,7 +138,7 @@ resource "aws_ssm_parameter" "cloudfront_distribution_id" {
   name        = "/${var.project_name}/04-bastion-host/04-cloudfront/cloudfront-distribution-id"
   description = "CloudFront Distribution ID (Bastion)"
   type        = "String"
-  value       = aws_cloudfront_distribution.distribution.id
+  value       = aws_cloudfront_distribution.bastion_distribution.id
 
   tags = var.common_tags
 }
