@@ -4,8 +4,8 @@ locals {
 }
 
 resource "aws_cloudfront_origin_access_control" "s3_oac" {
-  name                              = "s3-assets-oac"
-  description                       = "OAC for S3 Assets"
+  name                              = "s3-assets-oac-bastion"
+  description                       = "OAC for S3 Assets (Bastion)"
   origin_access_control_origin_type = "s3"
   signing_behavior                  = "always"
   signing_protocol                  = "sigv4"
@@ -125,7 +125,7 @@ resource "aws_cloudfront_distribution" "distribution" {
 }
 
 resource "aws_cloudfront_response_headers_policy" "no_cache" {
-  name    = "bastion-no-cache-dev"
+  name    = "bastion-no-cache"
   comment = "Disable browser caching for dynamic paths (Dev)"
 
   custom_headers_config {

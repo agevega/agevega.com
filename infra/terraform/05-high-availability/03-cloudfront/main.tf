@@ -122,7 +122,7 @@ resource "aws_cloudfront_distribution" "prod_distribution" {
 }
 
 resource "aws_cloudfront_response_headers_policy" "no_cache" {
-  name    = "ha-cluster-no-cache-prod"
+  name    = "prod-no-cache"
   comment = "Disable browser caching for dynamic paths (Prod)"
 
   custom_headers_config {
