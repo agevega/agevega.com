@@ -16,6 +16,18 @@ variable "project_name" {
   default     = "agevegacom"
 }
 
+variable "common_tags" {
+  description = "Common tags to apply to all resources"
+  type        = map(string)
+  default = {
+    Project     = "agevegacom"
+    Owner       = "Alejandro Vega"
+    Environment = "global"
+    ManagedBy   = "terraform"
+    Module      = "00-setup/02-budgets"
+  }
+}
+
 variable "monthly_budget_amount" {
   description = "Monthly budget amount in USD"
   type        = string
@@ -32,16 +44,4 @@ variable "notification_email" {
   description = "Email address for budget notifications"
   type        = string
   default     = "agevega@gmail.com"
-}
-
-variable "common_tags" {
-  description = "Common tags to apply to all resources"
-  type        = map(string)
-  default = {
-    Project     = "agevegacom"
-    Owner       = "Alejandro Vega"
-    Environment = "global"
-    ManagedBy   = "terraform"
-    Module      = "00-setup/02-budgets"
-  }
 }
