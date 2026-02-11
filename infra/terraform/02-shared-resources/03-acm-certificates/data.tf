@@ -8,7 +8,7 @@ data "terraform_remote_state" "dns" {
   config = {
     bucket  = "agevegacom-terraform-state"
     key     = "modules/99-domain/00-dns-zone/terraform.tfstate"
-    region  = "eu-south-2"
-    profile = "terraform"
+    region  = var.aws_region
+    profile = var.aws_profile
   }
 }

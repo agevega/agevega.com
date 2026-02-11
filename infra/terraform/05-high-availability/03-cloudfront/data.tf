@@ -3,8 +3,8 @@ data "terraform_remote_state" "acm" {
   config = {
     bucket  = "agevegacom-terraform-state"
     key     = "modules/99-domain/01-acm-certificate/terraform.tfstate"
-    region  = "eu-south-2"
-    profile = "terraform"
+    region  = var.aws_region
+    profile = var.aws_profile
   }
 }
 
@@ -13,8 +13,8 @@ data "terraform_remote_state" "s3_assets" {
   config = {
     bucket  = "agevegacom-terraform-state"
     key     = "modules/02-shared-resources/02-s3-buckets/terraform.tfstate"
-    region  = "eu-south-2"
-    profile = "terraform"
+    region  = var.aws_region
+    profile = var.aws_profile
   }
 }
 
@@ -23,8 +23,8 @@ data "terraform_remote_state" "compute" {
   config = {
     bucket  = "agevegacom-terraform-state"
     key     = "modules/05-high-availability/01-ec2-autoscaling/terraform.tfstate"
-    region  = "eu-south-2"
-    profile = "terraform"
+    region  = var.aws_region
+    profile = var.aws_profile
   }
 }
 
@@ -34,7 +34,7 @@ data "terraform_remote_state" "waf" {
   config = {
     bucket  = "agevegacom-terraform-state"
     key     = "modules/05-high-availability/02-waf/terraform.tfstate"
-    region  = "eu-south-2"
-    profile = "terraform"
+    region  = var.aws_region
+    profile = var.aws_profile
   }
 }
