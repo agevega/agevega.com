@@ -16,8 +16,7 @@ resource "aws_instance" "bastion" {
   }
 
   tags = merge(var.common_tags, {
-    Name        = "bastion-host"
-    Environment = var.environment
+    Name = "bastion-host"
   })
 
   user_data = file("${path.module}/user_data.sh")

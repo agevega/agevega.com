@@ -10,16 +10,10 @@ variable "aws_profile" {
   default     = "terraform"
 }
 
-variable "instance_type" {
-  description = "EC2 Instance Type"
+variable "project_name" {
+  description = "Project name for SSM paths"
   type        = string
-  default     = "t4g.nano"
-}
-
-variable "environment" {
-  description = "Environment name"
-  type        = string
-  default     = "lab"
+  default     = "agevegacom"
 }
 
 variable "common_tags" {
@@ -34,10 +28,10 @@ variable "common_tags" {
   }
 }
 
-variable "project_name" {
-  description = "Project name for SSM paths"
+variable "instance_type" {
+  description = "EC2 Instance Type"
   type        = string
-  default     = "agevegacom"
+  default     = "t4g.nano"
 }
 
 variable "enable_eip" {
