@@ -5,13 +5,13 @@ variable "aws_region" {
 }
 
 variable "aws_profile" {
-  description = "AWS CLI profile"
+  description = "AWS CLI Profile"
   type        = string
   default     = "terraform"
 }
 
 variable "project_name" {
-  description = "Project name for SSM paths"
+  description = "Project name"
   type        = string
   default     = "agevegacom"
 }
@@ -22,8 +22,8 @@ variable "common_tags" {
   default = {
     Project     = "agevegacom"
     Owner       = "Alejandro Vega"
-    Environment = "dev"
     ManagedBy   = "terraform"
+    Environment = "dev"
     Module      = "04-bastion-host/04-cloudfront"
   }
 }
