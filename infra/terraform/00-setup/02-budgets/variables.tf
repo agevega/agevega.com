@@ -5,7 +5,7 @@ variable "aws_region" {
 }
 
 variable "aws_profile" {
-  description = "AWS CLI profile to use for credentials"
+  description = "AWS CLI Profile"
   type        = string
   default     = "terraform"
 }
@@ -17,13 +17,13 @@ variable "project_name" {
 }
 
 variable "common_tags" {
-  description = "Common tags to apply to all resources"
+  description = "Common tags"
   type        = map(string)
   default = {
     Project     = "agevegacom"
     Owner       = "Alejandro Vega"
-    Environment = "global"
     ManagedBy   = "terraform"
+    Environment = "global"
     Module      = "00-setup/02-budgets"
   }
 }
