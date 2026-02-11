@@ -4,7 +4,7 @@ resource "aws_eip" "nat_eip" {
   tags = merge(
     var.common_tags,
     {
-      Name   = "${var.project_name}-nat-eip"
+      Name = "${var.project_name}-nat-eip"
     },
   )
 }
@@ -16,7 +16,7 @@ resource "aws_nat_gateway" "nat_gw" {
   tags = merge(
     var.common_tags,
     {
-      Name   = "${var.project_name}-nat-gw"
+      Name = "${var.project_name}-nat-gw"
     },
   )
 }
