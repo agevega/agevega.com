@@ -2,6 +2,10 @@ data "aws_ec2_managed_prefix_list" "cloudfront" {
   name = "com.amazonaws.global.cloudfront.origin-facing"
 }
 
+# ------------------------------------------------------------------------------
+# Bastion Security Group
+# ------------------------------------------------------------------------------
+
 resource "aws_security_group" "bastion_sg" {
   name        = "bastion-sg"
   description = "Security group for Bastion Host"
@@ -22,9 +26,9 @@ resource "aws_security_group_rule" "ingress_ssh" {
   security_group_id = aws_security_group.bastion_sg.id
 }
 
-resource "aws_security_group_rule" "egress_ssh_to_vpc" {
+resource "aws_security_group_rule" "egress_ssh_vpc" {
   type              = "egress"
-  description       = "SSH to instances in VPC"
+  description       = "SSH to other instances in VPC"
   from_port         = 22
   to_port           = 22
   protocol          = "tcp"
@@ -32,7 +36,7 @@ resource "aws_security_group_rule" "egress_ssh_to_vpc" {
   security_group_id = aws_security_group.bastion_sg.id
 }
 
-resource "aws_security_group_rule" "ingress_cloudfront_https" {
+resource "aws_security_group_rule" "ingress_https_cloudfront" {
   type              = "ingress"
   description       = "Allow CloudFront Origin Traffic (HTTPS)"
   from_port         = 443

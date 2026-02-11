@@ -2,6 +2,10 @@ data "aws_ec2_managed_prefix_list" "cloudfront" {
   name = "com.amazonaws.global.cloudfront.origin-facing"
 }
 
+# ------------------------------------------------------------------------------
+# ALB Security Group
+# ------------------------------------------------------------------------------
+
 resource "aws_security_group" "alb_sg" {
   name        = "ha-cluster-alb-sg"
   description = "Security group for Application Load Balancer"
@@ -12,7 +16,7 @@ resource "aws_security_group" "alb_sg" {
   })
 }
 
-resource "aws_security_group_rule" "alb_ingress_https_cloudfront" {
+resource "aws_security_group_rule" "ingress_https_cloudfront" {
   type              = "ingress"
   description       = "HTTPS from CloudFront"
   from_port         = 443
@@ -22,7 +26,7 @@ resource "aws_security_group_rule" "alb_ingress_https_cloudfront" {
   security_group_id = aws_security_group.alb_sg.id
 }
 
-resource "aws_security_group_rule" "alb_egress_https_to_instances" {
+resource "aws_security_group_rule" "egress_https_alb" {
   type                     = "egress"
   description              = "HTTPS to instances (health checks and traffic)"
   from_port                = 443
@@ -31,6 +35,10 @@ resource "aws_security_group_rule" "alb_egress_https_to_instances" {
   security_group_id        = aws_security_group.alb_sg.id
   source_security_group_id = aws_security_group.instances_sg.id
 }
+
+# ------------------------------------------------------------------------------
+# Instances Security Group
+# ------------------------------------------------------------------------------
 
 resource "aws_security_group" "instances_sg" {
   name        = "ha-cluster-instance-sg"
@@ -42,7 +50,7 @@ resource "aws_security_group" "instances_sg" {
   })
 }
 
-resource "aws_security_group_rule" "instance_ingress_ssh_from_bastion" {
+resource "aws_security_group_rule" "ingress_ssh_bastion" {
   type                     = "ingress"
   description              = "SSH from Bastion"
   from_port                = 22
@@ -52,7 +60,7 @@ resource "aws_security_group_rule" "instance_ingress_ssh_from_bastion" {
   source_security_group_id = data.terraform_remote_state.bastion.outputs.security_group_id
 }
 
-resource "aws_security_group_rule" "instance_ingress_https_from_alb" {
+resource "aws_security_group_rule" "ingress_https_alb" {
   type                     = "ingress"
   description              = "HTTPS from ALB"
   from_port                = 443
@@ -62,7 +70,7 @@ resource "aws_security_group_rule" "instance_ingress_https_from_alb" {
   source_security_group_id = aws_security_group.alb_sg.id
 }
 
-resource "aws_security_group_rule" "instance_egress_https" {
+resource "aws_security_group_rule" "egress_https" {
   type              = "egress"
   description       = "HTTPS for AWS services (ECR, SSM, CloudWatch)"
   from_port         = 443
