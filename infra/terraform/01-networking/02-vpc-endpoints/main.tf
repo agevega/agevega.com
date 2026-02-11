@@ -13,7 +13,7 @@ resource "aws_vpc_endpoint" "vpce_s3" {
   tags = merge(
     var.common_tags,
     {
-      Name   = "${var.resource_prefix}-vpce-s3"
+      Name   = "${var.project_name}-vpce-s3"
     },
   )
 }

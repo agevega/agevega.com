@@ -10,6 +10,12 @@ variable "aws_profile" {
   default     = "terraform"
 }
 
+variable "project_name" {
+  description = "Project name"
+  type        = string
+  default     = "agevegacom"
+}
+
 variable "common_tags" {
   description = "Common tags to apply to all resources"
   type        = map(string)
@@ -20,10 +26,4 @@ variable "common_tags" {
     ManagedBy   = "terraform"
     Module      = "04-bastion-host/01-eip"
   }
-}
-
-variable "project_name" {
-  description = "Project name for SSM paths"
-  type        = string
-  default     = "agevegacom"
 }
