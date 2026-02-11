@@ -1,11 +1,11 @@
 output "vpc_cidr" {
   description = "CIDR block of the VPC"
-  value       = aws_vpc.agevegacom_vpc.cidr_block
+  value       = aws_vpc.this.cidr_block
 }
 
 output "vpc_id" {
   description = "ID of the deployed VPC"
-  value       = aws_vpc.agevegacom_vpc.id
+  value       = aws_vpc.this.id
 }
 
 output "subnet_public_1_id" {
@@ -63,15 +63,6 @@ output "public_route_table_id" {
   value       = aws_route_table.public_route_table.id
 }
 
-output "private_route_table_ids" {
-  description = "Map of private route table IDs by AZ"
-  value = {
-    az0 = aws_route_table.private_route_table_1.id
-    az1 = aws_route_table.private_route_table_2.id
-    az2 = aws_route_table.private_route_table_3.id
-  }
-}
-
 output "private_route_table_1_id" {
   description = "ID of the first private route table"
   value       = aws_route_table.private_route_table_1.id
@@ -100,4 +91,22 @@ output "db_route_table_2_id" {
 output "db_route_table_3_id" {
   description = "ID of the third database route table"
   value       = aws_route_table.db_route_table_3.id
+}
+
+output "private_route_table_ids" {
+  description = "Map of private route table IDs by AZ"
+  value = {
+    az0 = aws_route_table.private_route_table_1.id
+    az1 = aws_route_table.private_route_table_2.id
+    az2 = aws_route_table.private_route_table_3.id
+  }
+}
+
+output "db_route_table_ids" {
+  description = "Map of database route table IDs by AZ"
+  value = {
+    az0 = aws_route_table.db_route_table_1.id
+    az1 = aws_route_table.db_route_table_2.id
+    az2 = aws_route_table.db_route_table_3.id
+  }
 }

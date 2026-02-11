@@ -4,7 +4,7 @@ output "assets_bucket_regional_domain_name" {
 }
 
 output "assets_bucket_id" {
-  description = "The name of the assets bucket"
+  description = "The ID of the assets bucket"
   value       = aws_s3_bucket.assets.id
 }
 
