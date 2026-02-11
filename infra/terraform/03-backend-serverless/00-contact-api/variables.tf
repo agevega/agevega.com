@@ -4,28 +4,10 @@ variable "aws_region" {
   default     = "eu-south-2"
 }
 
-variable "ses_region" {
-  description = "AWS region for SES (must support SES)"
-  type        = string
-  default     = "eu-west-1"
-}
-
 variable "aws_profile" {
   description = "AWS profile"
   type        = string
   default     = "terraform"
-}
-
-variable "sender_email" {
-  description = "Email address to send from (must be verified in SES)"
-  type        = string
-  default     = "agevega@gmail.com"
-}
-
-variable "recipient_email" {
-  description = "Email address to send to (must also be verified if in SES Sandbox)"
-  type        = string
-  default     = "agevega@gmail.com"
 }
 
 variable "project_name" {
@@ -44,4 +26,22 @@ variable "common_tags" {
     ManagedBy   = "terraform"
     Module      = "03-backend-serverless/00-contact-api"
   }
+}
+
+variable "ses_region" {
+  description = "AWS region for SES (must support SES)"
+  type        = string
+  default     = "eu-west-1"
+}
+
+variable "sender_email" {
+  description = "Email address to send from (must be verified in SES)"
+  type        = string
+  default     = "agevega@gmail.com"
+}
+
+variable "recipient_email" {
+  description = "Email address to send to (must also be verified if in SES Sandbox)"
+  type        = string
+  default     = "agevega@gmail.com"
 }
