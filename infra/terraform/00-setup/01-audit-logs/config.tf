@@ -7,8 +7,7 @@ resource "aws_s3_bucket" "config_logs" {
   }
 
   tags = merge(var.common_tags, {
-    Name   = var.config_bucket_name
-    Role   = "config-logs"
+    Name = var.config_bucket_name
   })
 }
 
