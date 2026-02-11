@@ -1,11 +1,11 @@
 variable "aws_region" {
-  description = "AWS region where the network resources are deployed"
+  description = "AWS Region"
   type        = string
   default     = "eu-south-2"
 }
 
 variable "aws_profile" {
-  description = "AWS CLI profile to use for credentials"
+  description = "AWS CLI Profile"
   type        = string
   default     = "terraform"
 }
@@ -17,13 +17,13 @@ variable "project_name" {
 }
 
 variable "common_tags" {
-  description = "Standard tags applied to every resource"
+  description = "Common tags"
   type        = map(string)
   default = {
     Project     = "agevegacom"
     Owner       = "Alejandro Vega"
-    Environment = "global"
     ManagedBy   = "terraform"
+    Environment = "global"
     Module      = "01-networking/00-vpc-core"
   }
 }
