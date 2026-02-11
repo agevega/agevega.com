@@ -10,16 +10,10 @@ variable "aws_profile" {
   default     = "terraform"
 }
 
-variable "domain_name" {
-  description = "Domain name"
+variable "project_name" {
+  description = "Project name for SSM paths"
   type        = string
-  default     = "agevega.com"
-}
-
-variable "enable_waf" {
-  description = "Enable WAF attachment to CloudFront"
-  type        = bool
-  default     = false
+  default     = "agevegacom"
 }
 
 variable "common_tags" {
@@ -34,8 +28,14 @@ variable "common_tags" {
   }
 }
 
-variable "project_name" {
-  description = "Project name for SSM paths"
+variable "domain_name" {
+  description = "Domain name"
   type        = string
-  default     = "agevegacom"
+  default     = "agevega.com"
+}
+
+variable "enable_waf" {
+  description = "Enable WAF attachment to CloudFront"
+  type        = bool
+  default     = false
 }
