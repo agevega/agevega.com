@@ -1,9 +1,3 @@
-variable "repository_name" {
-  description = "The name of the ECR repository"
-  type        = string
-  default     = "agevegacom-frontend"
-}
-
 variable "aws_region" {
   description = "AWS region"
   type        = string
@@ -14,6 +8,12 @@ variable "aws_profile" {
   description = "AWS profile"
   type        = string
   default     = "terraform"
+}
+
+variable "project_name" {
+  description = "Project name for SSM paths"
+  type        = string
+  default     = "agevegacom"
 }
 
 variable "common_tags" {
@@ -28,8 +28,8 @@ variable "common_tags" {
   }
 }
 
-variable "project_name" {
-  description = "Project name for SSM paths"
+variable "repository_name" {
+  description = "The name of the ECR repository"
   type        = string
-  default     = "agevegacom"
+  default     = "agevegacom-frontend"
 }
