@@ -10,28 +10,10 @@ variable "aws_profile" {
   default     = "terraform"
 }
 
-variable "resource_prefix" {
-  description = "Prefix for resource naming"
+variable "project_name" {
+  description = "Project name"
   type        = string
   default     = "agevegacom"
-}
-
-variable "cloudtrail_bucket_name" {
-  description = "Name of the existing S3 bucket for CloudTrail logs"
-  type        = string
-  default     = "agevegacom-cloudtrail-logs"
-}
-
-variable "cloudtrail_name" {
-  description = "Name of the CloudTrail trail"
-  type        = string
-  default     = "agevegacom-trail"
-}
-
-variable "config_bucket_name" {
-  description = "Name of the existing S3 bucket for AWS Config logs"
-  type        = string
-  default     = "agevegacom-aws-config-logs"
 }
 
 variable "common_tags" {
@@ -44,4 +26,22 @@ variable "common_tags" {
     ManagedBy   = "terraform"
     Module      = "00-setup/01-audit-logs"
   }
+}
+
+variable "cloudtrail_name" {
+  description = "Name of the CloudTrail trail"
+  type        = string
+  default     = "agevegacom-trail"
+}
+
+variable "cloudtrail_bucket_name" {
+  description = "Name of S3 bucket for CloudTrail logs"
+  type        = string
+  default     = "agevegacom-cloudtrail-logs"
+}
+
+variable "config_bucket_name" {
+  description = "Name of S3 bucket for AWS Config logs"
+  type        = string
+  default     = "agevegacom-aws-config-logs"
 }
