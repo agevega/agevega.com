@@ -10,12 +10,6 @@ variable "aws_profile" {
   default     = "terraform"
 }
 
-variable "assets_bucket_name" {
-  description = "Name of the S3 bucket for assets"
-  type        = string
-  default     = "agevegacom-assets-private"
-}
-
 variable "common_tags" {
   description = "Common tags for all resources"
   type        = map(string)
@@ -25,4 +19,10 @@ variable "common_tags" {
     ManagedBy   = "terraform"
     Module      = "02-shared-resources/02-s3-buckets"
   }
+}
+
+variable "assets_bucket_name" {
+  description = "Name of the S3 bucket for assets"
+  type        = string
+  default     = "agevegacom-assets-private"
 }
