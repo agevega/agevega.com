@@ -10,22 +10,10 @@ variable "aws_profile" {
   default     = "terraform"
 }
 
-variable "resource_prefix" {
-  description = "Prefix used in names/tags for backend resources"
+variable "project_name" {
+  description = "Project name"
   type        = string
   default     = "agevegacom"
-}
-
-variable "state_bucket_name" {
-  description = "Globally unique name of the S3 bucket for Terraform state"
-  type        = string
-  default     = "agevegacom-terraform-state"
-}
-
-variable "lock_table_name" {
-  description = "Name of the DynamoDB table for state locking"
-  type        = string
-  default     = "terraform-state-lock"
 }
 
 variable "common_tags" {
@@ -38,4 +26,16 @@ variable "common_tags" {
     ManagedBy   = "terraform"
     Module      = "00-setup/00-tf-backend"
   }
+}
+
+variable "state_bucket_name" {
+  description = "Name of the S3 bucket for Terraform state"
+  type        = string
+  default     = "agevegacom-terraform-state"
+}
+
+variable "lock_table_name" {
+  description = "Name of the DynamoDB table for state locking"
+  type        = string
+  default     = "terraform-state-lock"
 }

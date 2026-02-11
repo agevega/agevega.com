@@ -18,7 +18,6 @@ resource "aws_dynamodb_table" "tf_lock" {
   }
 
   tags = merge(var.common_tags, {
-    Name   = var.lock_table_name
-    Role   = "terraform-lock"
+    Name = var.lock_table_name
   })
 }

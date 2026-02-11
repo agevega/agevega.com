@@ -11,7 +11,7 @@ variable "aws_profile" {
 }
 
 variable "project_name" {
-  description = "Project name for resource naming"
+  description = "Project name"
   type        = string
   default     = "agevegacom"
 }
