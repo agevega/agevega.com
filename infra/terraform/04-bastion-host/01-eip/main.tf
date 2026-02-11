@@ -1,7 +1,8 @@
 resource "aws_eip" "bastion_eip" {
   domain = "vpc"
+
   tags = merge(var.common_tags, {
-    Name        = "bastion-eip"
+    Name = "bastion-eip"
   })
 }
 
