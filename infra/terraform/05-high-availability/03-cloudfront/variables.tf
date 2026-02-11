@@ -5,9 +5,27 @@ variable "aws_region" {
 }
 
 variable "aws_profile" {
-  description = "AWS CLI profile"
+  description = "AWS CLI Profile"
   type        = string
   default     = "terraform"
+}
+
+variable "project_name" {
+  description = "Project name"
+  type        = string
+  default     = "agevegacom"
+}
+
+variable "common_tags" {
+  description = "Common tags"
+  type        = map(string)
+  default = {
+    Project     = "agevegacom"
+    Owner       = "Alejandro Vega"
+    ManagedBy   = "terraform"
+    Environment = "prod"
+    Module      = "05-high-availability/03-cloudfront"
+  }
 }
 
 variable "domain_name" {
@@ -20,22 +38,4 @@ variable "enable_waf" {
   description = "Enable WAF attachment to CloudFront"
   type        = bool
   default     = true
-}
-
-variable "common_tags" {
-  description = "Common tags"
-  type        = map(string)
-  default = {
-    Project     = "agevegacom"
-    Owner       = "Alejandro Vega"
-    Environment = "prod"
-    ManagedBy   = "terraform"
-    Module      = "05-high-availability/03-cloudfront"
-  }
-}
-
-variable "project_name" {
-  description = "Project name for SSM paths"
-  type        = string
-  default     = "agevegacom"
 }

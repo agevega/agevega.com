@@ -5,24 +5,31 @@ variable "aws_region" {
 }
 
 variable "aws_profile" {
-  description = "AWS CLI profile"
+  description = "AWS CLI Profile"
   type        = string
   default     = "terraform"
+}
+
+variable "project_name" {
+  description = "Project name"
+  type        = string
+  default     = "agevegacom"
+}
+
+variable "common_tags" {
+  description = "Common tags"
+  type        = map(string)
+  default = {
+    Project     = "agevegacom"
+    Owner       = "Alejandro Vega"
+    ManagedBy   = "terraform"
+    Environment = "prod"
+    Module      = "05-high-availability/04-dns-record"
+  }
 }
 
 variable "domain_name" {
   description = "Primary domain name"
   type        = string
   default     = "agevega.com"
-}
-
-variable "common_tags" {
-  description = "Common tags"
-  type        = map(string)
-  default     = {
-    Project     = "agevegacom"
-    Environment = "prod"
-    ManagedBy   = "terraform"
-    Module      = "05-high-availability/04-dns-record"
-  }
 }

@@ -5,7 +5,7 @@ variable "aws_region" {
 }
 
 variable "aws_profile" {
-  description = "AWS CLI profile"
+  description = "AWS CLI Profile"
   type        = string
   default     = "terraform"
 }
@@ -22,8 +22,8 @@ variable "common_tags" {
   default = {
     Project     = "agevegacom"
     Owner       = "Alejandro Vega"
-    Environment = "prod"
     ManagedBy   = "terraform"
+    Environment = "prod"
     Module      = "05-high-availability/01-ec2-autoscaling"
   }
 }
