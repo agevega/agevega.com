@@ -10,8 +10,8 @@ variable "aws_profile" {
   default     = "terraform"
 }
 
-variable "resource_prefix" {
-  description = "Prefix used for tagging and naming AWS resources"
+variable "project_name" {
+  description = "Project name"
   type        = string
   default     = "agevegacom"
 }
