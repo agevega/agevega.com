@@ -4,12 +4,6 @@ variable "aws_profile" {
   default     = "terraform"
 }
 
-variable "domain_name" {
-  description = "Primary domain name for the certificate"
-  type        = string
-  default     = "agevega.com"
-}
-
 variable "common_tags" {
   description = "Common tags for all resources"
   type        = map(string)
@@ -19,4 +13,10 @@ variable "common_tags" {
     ManagedBy   = "terraform"
     Module      = "99-domain/01-acm-certificate"
   }
+}
+
+variable "domain_name" {
+  description = "Primary domain name for the certificate"
+  type        = string
+  default     = "agevega.com"
 }
