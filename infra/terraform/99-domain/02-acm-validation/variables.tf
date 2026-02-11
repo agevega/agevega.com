@@ -13,7 +13,7 @@ variable "aws_profile" {
 variable "common_tags" {
   description = "Common tags"
   type        = map(string)
-  default     = {
+  default = {
     Project     = "agevegacom"
     Environment = "global"
     ManagedBy   = "terraform"
