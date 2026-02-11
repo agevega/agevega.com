@@ -9,6 +9,6 @@ output "asg_name" {
 }
 
 output "ssm_image_tag_name" {
-  description = "Name of the SSM parameter storing the image tag"
+  description = "Name of the SSM parameter storing the image tag for Production"
   value       = aws_ssm_parameter.image_tag.name
 }

@@ -8,16 +8,6 @@ data "terraform_remote_state" "vpc" {
   }
 }
 
-data "terraform_remote_state" "ecr" {
-  backend = "s3"
-  config = {
-    bucket  = "agevegacom-terraform-state"
-    key     = "modules/02-shared-resources/01-ecr-repositories/terraform.tfstate"
-    region  = "eu-south-2"
-    profile = "terraform"
-  }
-}
-
 data "terraform_remote_state" "ssh_key" {
   backend = "s3"
   config = {
@@ -28,11 +18,11 @@ data "terraform_remote_state" "ssh_key" {
   }
 }
 
-data "terraform_remote_state" "security" {
+data "terraform_remote_state" "ecr" {
   backend = "s3"
   config = {
     bucket  = "agevegacom-terraform-state"
-    key     = "modules/05-high-availability/00-security/terraform.tfstate"
+    key     = "modules/02-shared-resources/01-ecr-repositories/terraform.tfstate"
     region  = "eu-south-2"
     profile = "terraform"
   }
@@ -43,6 +33,16 @@ data "terraform_remote_state" "acm" {
   config = {
     bucket  = "agevegacom-terraform-state"
     key     = "modules/02-shared-resources/03-acm-certificates/terraform.tfstate"
+    region  = "eu-south-2"
+    profile = "terraform"
+  }
+}
+
+data "terraform_remote_state" "security" {
+  backend = "s3"
+  config = {
+    bucket  = "agevegacom-terraform-state"
+    key     = "modules/05-high-availability/00-security/terraform.tfstate"
     region  = "eu-south-2"
     profile = "terraform"
   }
