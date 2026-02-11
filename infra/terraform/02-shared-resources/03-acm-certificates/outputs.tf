@@ -7,3 +7,8 @@ output "certificate_status" {
   description = "Status of the certificate"
   value       = aws_acm_certificate.cert.status
 }
+
+output "certificate_id" {
+  description = "ID of the certificate"
+  value       = aws_acm_certificate.cert.id
+}
