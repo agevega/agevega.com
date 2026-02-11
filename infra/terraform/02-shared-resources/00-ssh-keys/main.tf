@@ -3,6 +3,6 @@ resource "aws_key_pair" "bastion_key" {
   public_key = file(var.public_key_path)
 
   tags = merge(var.common_tags, {
-    Environment = var.environment
+    Name = "bastion-key"
   })
 }

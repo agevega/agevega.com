@@ -10,17 +10,6 @@ variable "aws_profile" {
   default     = "terraform"
 }
 
-variable "public_key_path" {
-  description = "Path to the SSH Public Key file for the bastion host"
-  type        = string
-}
-
-variable "environment" {
-  description = "Environment name"
-  type        = string
-  default     = "lab"
-}
-
 variable "common_tags" {
   description = "Common tags to apply to all resources"
   type        = map(string)
@@ -31,4 +20,9 @@ variable "common_tags" {
     ManagedBy   = "terraform"
     Module      = "02-shared-resources/00-ssh-keys"
   }
+}
+
+variable "public_key_path" {
+  description = "Path to the SSH Public Key file for the bastion host"
+  type        = string
 }
