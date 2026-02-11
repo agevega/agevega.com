@@ -15,7 +15,7 @@ resource "aws_iam_role" "ec2_role" {
   })
 
   tags = merge(var.common_tags, {
-    Module = "05-high-availability/00-security"
+    Name = "ha_cluster_ec2_role"
   })
 }
 

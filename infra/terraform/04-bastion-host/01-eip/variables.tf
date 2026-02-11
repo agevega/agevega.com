@@ -10,12 +10,6 @@ variable "aws_profile" {
   default     = "terraform"
 }
 
-variable "environment" {
-  description = "Environment name"
-  type        = string
-  default     = "lab"
-}
-
 variable "common_tags" {
   description = "Common tags to apply to all resources"
   type        = map(string)

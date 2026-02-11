@@ -1,5 +1,5 @@
-output "security_group_id" {
-  description = "ID of the Bastion Security Group"
+output "bastion_sg_id" {
+  description = "Security Group ID for Bastion"
   value       = aws_security_group.bastion_sg.id
 }
 
