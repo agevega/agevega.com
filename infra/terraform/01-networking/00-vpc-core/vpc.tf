@@ -6,7 +6,7 @@ resource "aws_vpc" "agevegacom_vpc" {
   tags = merge(
     var.common_tags,
     {
-      Name   = "${var.resource_prefix}-vpc"
+      Name   = "${var.project_name}-vpc"
     },
   )
 }
@@ -21,7 +21,7 @@ resource "aws_subnet" "public_subnet_1" {
   tags = merge(
     var.common_tags,
     {
-      Name   = "${var.resource_prefix}-subnet-public1-${var.availability_zones[0]}"
+      Name   = "${var.project_name}-subnet-public1-${var.availability_zones[0]}"
     },
   )
 }
@@ -35,7 +35,7 @@ resource "aws_subnet" "public_subnet_2" {
   tags = merge(
     var.common_tags,
     {
-      Name   = "${var.resource_prefix}-subnet-public2-${var.availability_zones[1]}"
+      Name   = "${var.project_name}-subnet-public2-${var.availability_zones[1]}"
     },
   )
 }
@@ -49,7 +49,7 @@ resource "aws_subnet" "public_subnet_3" {
   tags = merge(
     var.common_tags,
     {
-      Name   = "${var.resource_prefix}-subnet-public3-${var.availability_zones[2]}"
+      Name   = "${var.project_name}-subnet-public3-${var.availability_zones[2]}"
     },
   )
 }
@@ -63,7 +63,7 @@ resource "aws_subnet" "private_subnet_1" {
   tags = merge(
     var.common_tags,
     {
-      Name   = "${var.resource_prefix}-subnet-private1-${var.availability_zones[0]}"
+      Name   = "${var.project_name}-subnet-private1-${var.availability_zones[0]}"
     },
   )
 }
@@ -76,7 +76,7 @@ resource "aws_subnet" "private_subnet_2" {
   tags = merge(
     var.common_tags,
     {
-      Name   = "${var.resource_prefix}-subnet-private2-${var.availability_zones[1]}"
+      Name   = "${var.project_name}-subnet-private2-${var.availability_zones[1]}"
     },
   )
 }
@@ -89,7 +89,7 @@ resource "aws_subnet" "private_subnet_3" {
   tags = merge(
     var.common_tags,
     {
-      Name   = "${var.resource_prefix}-subnet-private3-${var.availability_zones[2]}"
+      Name   = "${var.project_name}-subnet-private3-${var.availability_zones[2]}"
     },
   )
 }
@@ -103,7 +103,7 @@ resource "aws_subnet" "db_subnet_1" {
   tags = merge(
     var.common_tags,
     {
-      Name   = "${var.resource_prefix}-subnet-db1-${var.availability_zones[0]}"
+      Name   = "${var.project_name}-subnet-db1-${var.availability_zones[0]}"
     },
   )
 }
@@ -116,7 +116,7 @@ resource "aws_subnet" "db_subnet_2" {
   tags = merge(
     var.common_tags,
     {
-      Name   = "${var.resource_prefix}-subnet-db2-${var.availability_zones[1]}"
+      Name   = "${var.project_name}-subnet-db2-${var.availability_zones[1]}"
     },
   )
 }
@@ -129,7 +129,7 @@ resource "aws_subnet" "db_subnet_3" {
   tags = merge(
     var.common_tags,
     {
-      Name   = "${var.resource_prefix}-subnet-db3-${var.availability_zones[2]}"
+      Name   = "${var.project_name}-subnet-db3-${var.availability_zones[2]}"
     },
   )
 }
@@ -141,7 +141,7 @@ resource "aws_internet_gateway" "igw" {
   tags = merge(
     var.common_tags,
     {
-      Name   = "${var.resource_prefix}-igw"
+      Name   = "${var.project_name}-igw"
     },
   )
 }
@@ -158,7 +158,7 @@ resource "aws_route_table" "public_route_table" {
   tags = merge(
     var.common_tags,
     {
-      Name   = "${var.resource_prefix}-rtb-public"
+      Name   = "${var.project_name}-rtb-public"
     },
   )
 }
@@ -186,7 +186,7 @@ resource "aws_route_table" "private_route_table_1" {
   tags = merge(
     var.common_tags,
     {
-      Name   = "${var.resource_prefix}-rtb-private1-${var.availability_zones[0]}"
+      Name   = "${var.project_name}-rtb-private1-${var.availability_zones[0]}"
     },
   )
 }
@@ -197,7 +197,7 @@ resource "aws_route_table" "private_route_table_2" {
   tags = merge(
     var.common_tags,
     {
-      Name   = "${var.resource_prefix}-rtb-private2-${var.availability_zones[1]}"
+      Name   = "${var.project_name}-rtb-private2-${var.availability_zones[1]}"
     },
   )
 }
@@ -208,7 +208,7 @@ resource "aws_route_table" "private_route_table_3" {
   tags = merge(
     var.common_tags,
     {
-      Name   = "${var.resource_prefix}-rtb-private3-${var.availability_zones[2]}"
+      Name   = "${var.project_name}-rtb-private3-${var.availability_zones[2]}"
     },
   )
 }
@@ -220,7 +220,7 @@ resource "aws_route_table" "db_route_table_1" {
   tags = merge(
     var.common_tags,
     {
-      Name   = "${var.resource_prefix}-rtb-db1-${var.availability_zones[0]}"
+      Name   = "${var.project_name}-rtb-db1-${var.availability_zones[0]}"
     },
   )
 }
@@ -231,7 +231,7 @@ resource "aws_route_table" "db_route_table_2" {
   tags = merge(
     var.common_tags,
     {
-      Name   = "${var.resource_prefix}-rtb-db2-${var.availability_zones[1]}"
+      Name   = "${var.project_name}-rtb-db2-${var.availability_zones[1]}"
     },
   )
 }
@@ -242,7 +242,7 @@ resource "aws_route_table" "db_route_table_3" {
   tags = merge(
     var.common_tags,
     {
-      Name   = "${var.resource_prefix}-rtb-db3-${var.availability_zones[2]}"
+      Name   = "${var.project_name}-rtb-db3-${var.availability_zones[2]}"
     },
   )
 }
