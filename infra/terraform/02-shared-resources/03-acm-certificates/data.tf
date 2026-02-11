@@ -1,3 +1,8 @@
+data "aws_route53_zone" "selected" {
+  name         = data.terraform_remote_state.dns.outputs.domain_name
+  private_zone = false
+}
+
 data "terraform_remote_state" "dns" {
   backend = "s3"
   config = {
@@ -6,9 +11,4 @@ data "terraform_remote_state" "dns" {
     region  = "eu-south-2"
     profile = "terraform"
   }
-}
-
-data "aws_route53_zone" "selected" {
-  name         = data.terraform_remote_state.dns.outputs.domain_name
-  private_zone = false
 }

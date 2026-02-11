@@ -22,7 +22,7 @@ variable "common_tags" {
   default = {
     Project     = "agevegacom"
     Owner       = "Alejandro Vega"
-    Environment = "prod"
+    Environment = "dev"
     ManagedBy   = "terraform"
     Module      = "02-shared-resources/03-acm-certificates"
   }
