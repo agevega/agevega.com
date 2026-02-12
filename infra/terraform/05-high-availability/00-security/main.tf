@@ -57,7 +57,7 @@ resource "aws_security_group_rule" "ingress_ssh_bastion" {
   to_port                  = 22
   protocol                 = "tcp"
   security_group_id        = aws_security_group.instances_sg.id
-  source_security_group_id = data.terraform_remote_state.bastion.outputs.security_group_id
+  source_security_group_id = data.terraform_remote_state.bastion.outputs.bastion_sg_id
 }
 
 resource "aws_security_group_rule" "ingress_https_alb" {
