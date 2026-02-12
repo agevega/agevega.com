@@ -5,7 +5,7 @@ resource "aws_launch_template" "app_lt" {
   key_name      = data.terraform_remote_state.ssh_key.outputs.key_name
 
   iam_instance_profile {
-    name = data.terraform_remote_state.security.outputs.instance_profile_name
+    name = data.terraform_remote_state.security.outputs.iam_instance_profile_name
   }
 
   network_interfaces {
