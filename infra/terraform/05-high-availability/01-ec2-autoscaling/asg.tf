@@ -14,9 +14,9 @@ resource "aws_autoscaling_group" "app_asg" {
   health_check_type         = "ELB"
   health_check_grace_period = 300
 
-  min_size         = 1
-  max_size         = 3
-  desired_capacity = 2
+  min_size         = var.asg_min_size
+  max_size         = var.asg_max_size
+  desired_capacity = var.asg_desired_capacity
 
   ignore_failed_scaling_activities = true
   wait_for_capacity_timeout        = "0"
