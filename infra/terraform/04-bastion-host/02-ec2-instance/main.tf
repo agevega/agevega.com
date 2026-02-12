@@ -7,7 +7,7 @@ resource "aws_instance" "bastion" {
 
   iam_instance_profile = data.terraform_remote_state.security.outputs.iam_instance_profile_name
 
-  vpc_security_group_ids = [data.terraform_remote_state.security.outputs.security_group_id]
+  vpc_security_group_ids = [data.terraform_remote_state.security.outputs.bastion_sg_id]
 
   # Force IMDSv2 to prevent SSRF credential theft
   metadata_options {
