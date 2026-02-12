@@ -3,6 +3,7 @@
 Thumbs.db
 *.log
 *.zip
+tmp/*
 
 # Secrets & Environment
 .env
