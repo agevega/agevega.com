@@ -19,6 +19,7 @@ resource "aws_autoscaling_group" "app_asg" {
   desired_capacity = 2
 
   ignore_failed_scaling_activities = true
+  wait_for_capacity_timeout        = "0"
 
   launch_template {
     id      = aws_launch_template.app_lt.id
