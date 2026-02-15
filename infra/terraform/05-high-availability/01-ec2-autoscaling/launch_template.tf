@@ -9,7 +9,7 @@ resource "aws_launch_template" "app_lt" {
   }
 
   network_interfaces {
-    associate_public_ip_address = var.deploy_in_public_subnets
+    associate_public_ip_address = false
     security_groups             = [data.terraform_remote_state.security.outputs.instance_sg_id]
   }
 
