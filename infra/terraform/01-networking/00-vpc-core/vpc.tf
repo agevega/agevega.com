@@ -16,7 +16,7 @@ resource "aws_subnet" "public_subnet_1" {
   vpc_id                  = aws_vpc.this.id
   cidr_block              = var.public_subnets[0]
   availability_zone       = var.availability_zones[0]
-  map_public_ip_on_launch = true
+  map_public_ip_on_launch = false
 
   tags = merge(
     var.common_tags,
@@ -30,7 +30,7 @@ resource "aws_subnet" "public_subnet_2" {
   vpc_id                  = aws_vpc.this.id
   cidr_block              = var.public_subnets[1]
   availability_zone       = var.availability_zones[1]
-  map_public_ip_on_launch = true
+  map_public_ip_on_launch = false
 
   tags = merge(
     var.common_tags,
@@ -44,7 +44,7 @@ resource "aws_subnet" "public_subnet_3" {
   vpc_id                  = aws_vpc.this.id
   cidr_block              = var.public_subnets[2]
   availability_zone       = var.availability_zones[2]
-  map_public_ip_on_launch = true
+  map_public_ip_on_launch = false
 
   tags = merge(
     var.common_tags,
