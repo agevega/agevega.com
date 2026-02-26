@@ -47,7 +47,7 @@
               name="name"
               required
               maxlength="60"
-              class="w-full px-4 py-3 bg-slate-900/50 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-white placeholder-slate-500 transition-colors"
+              class="w-full px-4 py-3 bg-slate-900/50 border border-slate-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-white placeholder-slate-500 transition-colors"
               placeholder="Tu nombre"
             />
           </div>
@@ -62,7 +62,7 @@
               name="email"
               required
               maxlength="100"
-              class="w-full px-4 py-3 bg-slate-900/50 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-white placeholder-slate-500 transition-colors"
+              class="w-full px-4 py-3 bg-slate-900/50 border border-slate-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-white placeholder-slate-500 transition-colors"
               placeholder="tu@email.com"
             />
           </div>
@@ -79,7 +79,7 @@
             name="subject"
             required
             maxlength="100"
-            class="w-full px-4 py-3 bg-slate-900/50 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-white placeholder-slate-500 transition-colors"
+            class="w-full px-4 py-3 bg-slate-900/50 border border-slate-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-white placeholder-slate-500 transition-colors"
             placeholder="Resumen de tu consulta"
           />
         </div>
@@ -95,7 +95,7 @@
             rows="4"
             required
             maxlength="2000"
-            class="w-full px-4 py-3 bg-slate-900/50 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-white placeholder-slate-500 transition-colors resize-none"
+            class="w-full px-4 py-3 bg-slate-900/50 border border-slate-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-white placeholder-slate-500 transition-colors resize-none"
             placeholder="Describe tu caso o duda..."></textarea>
         </div>
 
@@ -105,7 +105,7 @@
         <button
           type="submit"
           id="submit-btn"
-          class="w-full bg-indigo-600 text-white font-semibold py-4 px-8 rounded-lg hover:bg-indigo-700 transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-indigo-500/25 disabled:opacity-50 disabled:cursor-not-allowed"
+          class="w-full bg-emerald-600 text-white font-semibold py-4 px-8 rounded-lg hover:bg-emerald-500 transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-emerald-500/25 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Abrir Ticket de Consulta
         </button>
@@ -134,7 +134,7 @@
 </section>
 
 <script>
-  import { PUBLIC_API_URL } from 'astro:env/client';
+  import { PUBLIC_API_URL } from "astro:env/client";
   const API_URL = `${PUBLIC_API_URL}/send`;
 
   const form = document.getElementById("contact-form") as HTMLFormElement;
@@ -161,14 +161,14 @@
       feedback.classList.remove(
         "text-red-400",
         "text-green-400",
-        "text-indigo-400"
+        "text-emerald-400",
       );
 
       // Loading state
       submitBtn.disabled = true;
       submitBtn.innerHTML = "Abriendo ticket...";
       feedback.textContent = "Abriendo ticket...";
-      feedback.classList.add("text-indigo-400");
+      feedback.classList.add("text-emerald-400");
       feedback.classList.remove("hidden");
 
       const formData = new FormData(form);
@@ -186,7 +186,7 @@
 
         if (response.ok) {
           feedback.textContent = "¡Ticket abierto con éxito! Hablamos pronto.";
-          feedback.classList.replace("text-indigo-400", "text-green-400");
+          feedback.classList.replace("text-emerald-400", "text-green-400");
           form.reset();
         } else {
           throw new Error("Server returned " + response.status);
@@ -195,7 +195,7 @@
         console.error("Submission error:", error);
         feedback.textContent =
           "Vaya, algo falló al abrir el ticket. Por favor, inténtalo de nuevo.";
-        feedback.classList.replace("text-indigo-400", "text-red-400");
+        feedback.classList.replace("text-emerald-400", "text-red-400");
       } finally {
         submitBtn.disabled = false;
         submitBtn.innerHTML = "Abrir Ticket de Consulta";

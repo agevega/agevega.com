@@ -3,6 +3,10 @@ export default {
 	content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
 	theme: {
 		extend: {
+            colors: {
+                'brand-dark': '#0B1426',
+                'brand-surface': '#0F172A',
+            },
             animation: {
                 'fade-in': 'fadeIn 0.5s ease-out forwards',
                 'fade-in-up': 'fadeInUp 0.8s ease-out forwards',

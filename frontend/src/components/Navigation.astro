@@ -4,7 +4,7 @@
 
 <nav class="fixed top-0 w-full z-50 transition-all duration-300" id="navbar">
   <div
-    class="absolute inset-0 bg-slate-950/80 backdrop-blur-md border-b border-white/10 shadow-lg"
+    class="absolute inset-0 bg-brand-dark/80 backdrop-blur-md border-b border-white/10 shadow-lg"
   >
   </div>
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
@@ -15,7 +15,7 @@
         onclick="window.location.href='/'"
       >
         <span
-          class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400"
+          class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-emerald-400"
         >
           AV
         </span>
@@ -52,7 +52,7 @@
           >
           <a
             href="/contact"
-            class="nav-link px-3 py-2 rounded-md text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-500 shadow-lg shadow-indigo-500/20 transition-all"
+            class="nav-link px-3 py-2 rounded-md text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-500 shadow-lg shadow-emerald-500/20 transition-all"
             >Contacto</a
           >
         </div>
@@ -63,7 +63,7 @@
         <button
           type="button"
           id="mobile-menu-btn"
-          class="inline-flex items-center justify-center p-2 rounded-md text-slate-400 hover:text-white hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
+          class="inline-flex items-center justify-center p-2 rounded-md text-slate-400 hover:text-white hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-emerald-500"
           aria-controls="mobile-menu"
           aria-expanded="false"
         >
@@ -105,7 +105,7 @@
 
   <!-- Mobile Menu -->
   <div
-    class="md:hidden hidden bg-slate-950/95 backdrop-blur-xl border-b border-white/10"
+    class="md:hidden hidden bg-brand-dark/95 backdrop-blur-xl border-b border-white/10"
     id="mobile-menu"
   >
     <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
@@ -137,7 +137,7 @@
       >
       <a
         href="/contact"
-        class="mobile-nav-link block px-3 py-2 rounded-md text-base font-medium text-white bg-indigo-600 hover:bg-indigo-500"
+        class="mobile-nav-link block px-3 py-2 rounded-md text-base font-medium text-white bg-emerald-600 hover:bg-emerald-500"
         >Contacto</a
       >
     </div>
@@ -190,12 +190,12 @@
       links.forEach((link) => {
         const href = link.getAttribute("href");
         if (href && normalize(href) === current) {
-          if (!link.classList.contains("bg-indigo-600")) {
+          if (!link.classList.contains("bg-emerald-600")) {
             link.classList.remove("text-slate-300");
             link.classList.add("text-white", "bg-white/5");
           }
         } else {
-          if (!link.classList.contains("bg-indigo-600")) {
+          if (!link.classList.contains("bg-emerald-600")) {
             link.classList.remove("text-white", "bg-white/5");
             link.classList.add("text-slate-300");
           }

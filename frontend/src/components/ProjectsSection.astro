@@ -49,7 +49,7 @@ const publications: Publication[] = [
       <div class="space-y-6">
         {
           publications.map((pub) => (
-            <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-6 hover:border-indigo-500/30 transition-colors">
+            <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-6 hover:border-emerald-500/30 transition-colors">
               <div class="flex flex-col md:flex-row gap-4 justify-between items-start">
                 <div class="flex-grow">
                   <h3 class="text-xl font-bold text-white mb-2 leading-tight">
@@ -57,7 +57,7 @@ const publications: Publication[] = [
                       href={pub.link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      class="hover:text-indigo-400 transition-colors"
+                      class="hover:text-emerald-400 transition-colors"
                     >
                       {pub.title}
                     </a>
@@ -69,7 +69,7 @@ const publications: Publication[] = [
                         <>
                           {part}
                           {i < arr.length - 1 && (
-                            <strong class="text-indigo-300">
+                            <strong class="text-emerald-300">
                               Vega-Vaquero, A.
                             </strong>
                           )}
@@ -78,7 +78,7 @@ const publications: Publication[] = [
                     ({pub.year})
                   </div>
                   <div class="flex flex-wrap gap-4 text-sm">
-                    <span class="text-indigo-300 font-medium">
+                    <span class="text-emerald-300 font-medium">
                       {pub.journal}
                     </span>
                     <span class="text-slate-500">|</span>
