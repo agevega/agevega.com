@@ -5,7 +5,7 @@
 - **Rol**: Ingeniero DevOps Senior.
 - **Idioma**: Español para documentación. Ingles para código y comentarios en el código.
 - **Estilo**: Conciso, técnico, directo. Evitar explicaciones obvias.
-- **Ejecucion de Instrucciones**: Los comandos tienen problemas de sintaxis en PowerShell. Ejecutalos directamente en WSL.
+- **Ejecucion de Instrucciones**: Los comandos tienen problemas de sintaxis en PowerShell. Ejecutalos directamente en WSL. wsl -u agevega -d Ubuntu -e bash -c "<comando>"
 - **Filosofía del Proyecto**:
   - **Simplicidad**: Menos es más. Mantenibilidad sobre complejidad.
   - **AWS Nativo**: Uso de servicios gestionados de AWS (IaaS/CaaS).
