@@ -66,7 +66,6 @@ Máxima seguridad. Requiere NAT Gateway para salir a internet.
 cd 01-ec2-autoscaling
 terraform init
 terraform apply
-# Variable deploy_in_public_subnets es false por defecto
 ```
 
 **Opción B: Despliegue en Subred Pública**
@@ -96,10 +95,21 @@ terraform apply
 
 ### 5. DNS Record
 
+**Opción A: Apuntar a Producción (Default)**
+
 ```bash
 cd 04-dns-record
 terraform init
 terraform apply
+```
+
+**Opción B: Apuntar a Desarrollo**
+Redirige el dominio al CloudFront del entorno de desarrollo (04-bastion-host).
+
+```bash
+cd 04-dns-record
+terraform init
+terraform apply -var="dev_cloudfront=true"
 ```
 
 ---
@@ -125,6 +135,7 @@ ssh -i ~/.ssh/id_rsa -J ec2-user@$(aws ec2 describe-instances --filters "Name=ta
 | `01`      | `deploy_in_public_subnets` | Despliegue en subredes públicas | `false`           |
 | `03`      | `enable_waf`               | Activa asociación de Web ACL    | `true`            |
 | `04`      | `domain_name`              | Dominio raíz                    | `agevega.com`     |
+| `04`      | `dev_cloudfront`           | Point DNS to dev CloudFront     | `false`           |
 
 ---
 

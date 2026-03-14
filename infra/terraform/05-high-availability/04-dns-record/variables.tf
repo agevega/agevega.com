@@ -33,3 +33,9 @@ variable "domain_name" {
   type        = string
   default     = "agevega.com"
 }
+
+variable "dev_cloudfront" {
+  description = "Point DNS to the development CloudFront (04-bastion-host) instead of production"
+  type        = bool
+  default     = false
+}
