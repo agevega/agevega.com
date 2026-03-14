@@ -63,7 +63,6 @@ terraform init -migrate-state
 cd 01-audit-logs
 terraform init
 terraform apply
-# Variables enable_config=true y config_recording_frequency="CONTINUOUS" por defecto
 ```
 
 **Opción B: Grabación Diaria (Ahorro de Costes)**
@@ -94,15 +93,15 @@ terraform apply
 
 ## 🔧 Variables Clave
 
-| Submódulo | Variable                       | Descripción                        | Valor por Defecto            |
-| :-------- | :----------------------------- | :--------------------------------- | :--------------------------- |
-| `00`      | `bucket_name`                  | Nombre del bucket de estado        | `agevegacom-terraform-state` |
-| `00`      | `dynamodb_table_name`          | Tabla para State Locking           | `terraform-state-lock`       |
-| `01`      | `enable_config`                | Habilitar/deshabilitar AWS Config  | `true`                       |
-| `01`      | `config_recording_frequency`   | Frecuencia de grabación de Config  | `CONTINUOUS`                 |
-| `02`      | `monthly_budget_limit`         | Límite de gasto mensual ($)        | `10`                         |
-| `02`      | `daily_budget_limit`           | Límite de gasto diario ($)         | `1`                          |
-| Global    | `region`                       | Región principal de despliegue     | `eu-south-2` (Spain)         |
+| Submódulo | Variable                     | Descripción                       | Valor por Defecto            |
+| :-------- | :--------------------------- | :-------------------------------- | :--------------------------- |
+| `00`      | `bucket_name`                | Nombre del bucket de estado       | `agevegacom-terraform-state` |
+| `00`      | `dynamodb_table_name`        | Tabla para State Locking          | `terraform-state-lock`       |
+| `01`      | `enable_config`              | Habilitar/deshabilitar AWS Config | `true`                       |
+| `01`      | `config_recording_frequency` | Frecuencia de grabación de Config | `CONTINUOUS`                 |
+| `02`      | `monthly_budget_limit`       | Límite de gasto mensual ($)       | `10`                         |
+| `02`      | `daily_budget_limit`         | Límite de gasto diario ($)        | `1`                          |
+| Global    | `region`                     | Región principal de despliegue    | `eu-south-2` (Spain)         |
 
 ---
 
