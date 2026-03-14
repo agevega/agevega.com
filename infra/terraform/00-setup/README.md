@@ -57,10 +57,29 @@ terraform init -migrate-state
 
 ### 2. Auditoría (01-audit-logs)
 
+**Opción A: Grabación Continua (Recomendado/Default)**
+
 ```bash
 cd 01-audit-logs
 terraform init
 terraform apply
+# Variables enable_config=true y config_recording_frequency="CONTINUOUS" por defecto
+```
+
+**Opción B: Grabación Diaria (Ahorro de Costes)**
+
+```bash
+cd 01-audit-logs
+terraform init
+terraform apply -var="config_recording_frequency=DAILY"
+```
+
+**Opción C: Desactivar AWS Config**
+
+```bash
+cd 01-audit-logs
+terraform init
+terraform apply -var="enable_config=false"
 ```
 
 ### 3. Presupuestos (02-budgets)
@@ -75,13 +94,15 @@ terraform apply
 
 ## 🔧 Variables Clave
 
-| Submódulo | Variable               | Descripción                    | Valor por Defecto            |
-| :-------- | :--------------------- | :----------------------------- | :--------------------------- |
-| `00`      | `bucket_name`          | Nombre del bucket de estado    | `agevegacom-terraform-state` |
-| `00`      | `dynamodb_table_name`  | Tabla para State Locking       | `terraform-state-lock`       |
-| `02`      | `monthly_budget_limit` | Límite de gasto mensual ($)    | `10`                         |
-| `02`      | `daily_budget_limit`   | Límite de gasto diario ($)     | `1`                          |
-| Global    | `region`               | Región principal de despliegue | `eu-south-2` (Spain)         |
+| Submódulo | Variable                       | Descripción                        | Valor por Defecto            |
+| :-------- | :----------------------------- | :--------------------------------- | :--------------------------- |
+| `00`      | `bucket_name`                  | Nombre del bucket de estado        | `agevegacom-terraform-state` |
+| `00`      | `dynamodb_table_name`          | Tabla para State Locking           | `terraform-state-lock`       |
+| `01`      | `enable_config`                | Habilitar/deshabilitar AWS Config  | `true`                       |
+| `01`      | `config_recording_frequency`   | Frecuencia de grabación de Config  | `CONTINUOUS`                 |
+| `02`      | `monthly_budget_limit`         | Límite de gasto mensual ($)        | `10`                         |
+| `02`      | `daily_budget_limit`           | Límite de gasto diario ($)         | `1`                          |
+| Global    | `region`                       | Región principal de despliegue     | `eu-south-2` (Spain)         |
 
 ---
 

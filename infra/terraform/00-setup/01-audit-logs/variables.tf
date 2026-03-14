@@ -45,3 +45,15 @@ variable "config_bucket_name" {
   type        = string
   default     = "agevegacom-aws-config-logs"
 }
+
+variable "enable_config" {
+  description = "Enable or disable AWS Config recorder"
+  type        = bool
+  default     = true
+}
+
+variable "config_recording_frequency" {
+  description = "Recording frequency for AWS Config (CONTINUOUS or DAILY)"
+  type        = string
+  default     = "CONTINUOUS"
+}

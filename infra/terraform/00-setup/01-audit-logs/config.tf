@@ -136,7 +136,7 @@ resource "aws_config_configuration_recorder" "main" {
   }
 
   recording_mode {
-    recording_frequency = "CONTINUOUS"
+    recording_frequency = var.config_recording_frequency
   }
 }
 
@@ -160,6 +160,6 @@ resource "aws_config_retention_configuration" "main" {
 
 resource "aws_config_configuration_recorder_status" "main" {
   name       = aws_config_configuration_recorder.main.name
-  is_enabled = true
+  is_enabled = var.enable_config
   depends_on = [aws_config_delivery_channel.main]
 }
