@@ -18,7 +18,7 @@ resource "aws_cloudfront_distribution" "bastion_distribution" {
 
   web_acl_id = var.enable_waf ? data.terraform_remote_state.waf[0].outputs.web_acl_arn : null
 
-  aliases = ["dev.${var.domain_name}"]
+  aliases = var.assume_prod ? ["dev.${var.domain_name}", "${var.domain_name}", "www.${var.domain_name}"] : ["dev.${var.domain_name}"]
 
   origin {
     domain_name = data.terraform_remote_state.bastion_instance.outputs.bastion_public_dns

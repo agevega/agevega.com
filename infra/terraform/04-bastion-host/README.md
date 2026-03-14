@@ -66,8 +66,8 @@ terraform apply
 
 ### 2. Instancia Bastion (con/sin EIP)
 
-**Opción A: Sin IP Elástica (Recomendado/Default)**
-Usa Public DNS dinámico. Más barato aunque el DNS cambia si reinicias la instancia.
+**Opción A: Sin IP Elástica (Default)**
+Usa Public DNS dinámico.
 
 ```bash
 cd 02-ec2-instance
@@ -116,6 +116,15 @@ terraform apply
 cd 04-cloudfront
 terraform init
 terraform apply -var="enable_waf=true"
+```
+
+**Opción C: Asumir tráfico de Producción**
+Añade los aliases `agevega.com` y `www.agevega.com` a la distribución dev. Requiere quitar los aliases de prod.
+
+```bash
+cd 04-cloudfront
+terraform init
+terraform apply -var="assume_prod=true"
 ```
 
 ### 4. DNS Record
@@ -182,6 +191,7 @@ sudo tail -f /var/log/cloud-init-output.log
 | `02`      | `instance_type`           | Tipo de instancia EC2           | `t4g.nano` (ARM64) |
 | `02`      | `enable_eip`              | Activa asociación de Elastic IP | `false`            |
 | `04`      | `enable_waf`              | Activa asociación de Web ACL    | `false`            |
+| `04`      | `assume_prod`             | Asume aliases de producción     | `false`            |
 | `05`      | `domain_name`             | Dominio raíz                    | `agevega.com`      |
 
 ---
