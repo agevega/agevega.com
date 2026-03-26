@@ -10,6 +10,8 @@ Personal portfolio website for Alejandro Vega (Senior DevSecOps Engineer & Cloud
 
 **Stack:** Astro (SSG) + TailwindCSS frontend, Docker/Nginx runtime, Lambda/API Gateway serverless backend, AWS infrastructure via Terraform, GitHub Actions CI/CD.
 
+**Preferred AWS Region:** `eu-south-2` (Madrid).
+
 ## Frontend Commands
 
 ```bash
