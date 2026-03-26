@@ -1,6 +1,6 @@
-# CLAUDE.md
-
 @~/.claude/CLAUDE.md
+
+# CLAUDE.md
 
 This file provides project-specific guidance to Claude Code when working with code in this repository.
 
