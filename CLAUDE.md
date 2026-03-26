@@ -1,6 +1,8 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+@~/.claude/CLAUDE.md
+
+This file provides project-specific guidance to Claude Code when working with code in this repository.
 
 ## Project Overview
 
@@ -30,6 +32,7 @@ terraform apply
 ```
 
 **Module order:**
+
 1. `00-setup/` — S3/DynamoDB remote state backend, CloudTrail, AWS Budgets
 2. `01-networking/` — VPC 3-tier networking, NAT Gateway, VPC endpoints
 3. `02-shared-resources/` — SSH keys, ECR repository
@@ -56,9 +59,8 @@ Config values (ECR repo URL, API URL, CloudFront IDs) are fetched from **AWS SSM
 **Zero Trust security layers:** WAF → CloudFront → ALB → EC2 (each layer validates the previous).
 
 **Two environments:**
+
 - **Bastion/Dev** (`04-bastion-host/`): Single EC2 instance, direct CloudFront in front
 - **Production** (`05-high-availability/`): ASG across multiple AZs with ALB, WAF, CloudFront
 
 **Frontend env vars:** The `frontend/.env.example` documents `API_URL` (Lambda endpoint) and `APP_VERSION`. The Docker entrypoint injects these at container startup via `docker-entrypoint.sh`.
-
-**Cost optimization:** Spot Instances + ARM64 (Graviton). Budgets tracked in `00-setup/budgets/`.
