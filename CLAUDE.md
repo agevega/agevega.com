@@ -34,7 +34,7 @@ terraform apply
 **Module order:**
 
 1. `00-setup/` — S3/DynamoDB remote state backend, CloudTrail, AWS Budgets
-2. `01-networking/` — VPC 3-tier networking, NAT Gateway, VPC endpoints
+2. `01-networking/` — VPC 3-tier networking (Public, Private, Data), NAT Gateway, VPC endpoints
 3. `02-shared-resources/` — SSH keys, ECR repository
 4. `03-backend-serverless/` — Lambda + API Gateway contact form, SES
 5. `04-bastion-host/` — Dev EC2 instance behind CloudFront
