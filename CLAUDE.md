@@ -1,4 +1,4 @@
-@~/.claude/CLAUDE.md
+> **CRITICAL INSTRUCTION FOR ALL AI AGENTS**: Before proceeding with any task, you MUST read, understand, and apply all the global rules defined in `~/.claude/CLAUDE.md` (or `\\wsl.localhost\Ubuntu\home\agevega\.claude\CLAUDE.md`). Failure to do so is a strict violation of the core project rules.
 
 # CLAUDE.md
 
