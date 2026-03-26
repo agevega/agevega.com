@@ -10,8 +10,6 @@ Personal portfolio website for Alejandro Vega (Senior DevSecOps Engineer & Cloud
 
 **Stack:** Astro (SSG) + TailwindCSS frontend, Docker/Nginx runtime, Lambda/API Gateway serverless backend, AWS infrastructure via Terraform, GitHub Actions CI/CD.
 
-**Preferred AWS Region:** `eu-south-2` (Madrid).
-
 ## Frontend Commands
 
 ```bash
@@ -42,6 +40,8 @@ terraform apply
 5. `04-bastion-host/` — Dev EC2 instance behind CloudFront
 6. `05-high-availability/` — Production ASG + ALB + WAF + CloudFront
 7. `99-domain/` — Route53 DNS zones, ACM certificates
+
+**Preferred AWS Region:** `eu-south-2` (Madrid).
 
 ## Deployment Flow
 
