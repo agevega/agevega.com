@@ -17,7 +17,6 @@ cd frontend
 npm install        # Install dependencies
 npm run dev        # Dev server at http://localhost:4321
 npm run build      # Build static site to dist/
-npm run preview    # Preview built site
 ```
 
 ## Infrastructure (Terraform)
