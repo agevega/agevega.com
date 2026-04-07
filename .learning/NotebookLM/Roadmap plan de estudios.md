@@ -60,7 +60,7 @@ Semana 5: headless + CI (requiere todo lo anterior funcionando)
 
 ### Lo que FALTA (en orden)
 
-- [ ] **1.3** Completar el `CLAUDE.md` con las secciones ausentes
+- [x] **1.3** Completar el `CLAUDE.md` con las secciones ausentes
   - **Dependencia:** 1.1 (ya cumplida)
   - **Qué hacer:** Añadir al `CLAUDE.md` existente:
     1. **Convenciones de código** — indentación 4 espacios, componentes Astro en PascalCase, clases Tailwind
