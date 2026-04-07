@@ -54,8 +54,15 @@ const opengraph = {
   <body
     class="bg-brand-dark text-slate-100 font-sans antialiased selection:bg-emerald-500/30 overflow-x-hidden relative flex flex-col min-h-screen"
   >
+    <!-- Skip to content -->
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-emerald-600 focus:text-white focus:rounded-lg focus:outline-none"
+    >
+      Saltar al contenido principal
+    </a>
     <!-- Background Gradient Effects -->
-    <div class="fixed inset-0 z-[-1] pointer-events-none">
+    <div class="fixed inset-0 z-[-1] pointer-events-none" aria-hidden="true">
       <div
         class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-blue-500/6 blur-[120px]"
       >
@@ -70,9 +77,9 @@ const opengraph = {
       </div>
     </div>
     <Navigation />
-    <div class="flex-grow">
+    <main id="main-content" class="flex-grow">
       <slot />
-    </div>
+    </main>
     <Footer />
   </body>
 </html>
@@ -99,5 +106,17 @@ const opengraph = {
   }
   ::-webkit-scrollbar-thumb:hover {
     background: #334155; /* slate-700 */
+  }
+
+  /* Respect reduced motion preferences */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 </style>

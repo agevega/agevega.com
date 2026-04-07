@@ -74,7 +74,7 @@ Semana 5: headless + CI (requiere todo lo anterior funcionando)
   - **Qué hacer:** Crear `.claude/commands/nuevo-componente.md` — genera el esqueleto de un componente Astro con la estructura y convenciones del proyecto.
   - **Verificación:** Ejecutar `/nuevo-componente TestimonialCard` y que genere un `.astro` correcto.
 
-- [ ] **1.5** Usar plan mode para una tarea real no trivial
+- [x] **1.5** Usar plan mode para una tarea real no trivial
   - **Dependencia:** 1.3
   - **Qué hacer:** Elegir una tarea real del portfolio:
     - Refactorizar un componente existente para mejorar accesibilidad
