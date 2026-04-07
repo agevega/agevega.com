@@ -1,0 +1,549 @@
+# Plan de Estudio Optimizado
+## Claude Code productivo en 5 semanas, con `agevega.com` como banco de pruebas
+
+> Versión condensada y accionable del *Plan Maestro Arquitectónico*.
+> Reduce el 60% de prosa, añade comandos reales, hitos verificables y ejercicios.
+> Escrito para alguien que ya completó *Claude 101* y *Claude Code in Action*,
+> con Claude Code instalado en Windows + WSL2 (Ubuntu, zsh).
+
+---
+
+## Filosofía rectora (lee esto una vez y vuelve cuando dudes)
+
+1. **Workflows vs agentes.** Si la tarea tiene una única ruta correcta, escribe un *workflow* determinista (script + llamadas puntuales al modelo). Solo escala a *agente autónomo* cuando el espacio de soluciones sea grande y el coste de explorarlo manualmente supere el coste de tokens.
+2. **Modulación de autonomía.** Tareas críticas (migraciones, despliegues, cambios en `main`) → puente estrecho: herramientas restringidas, *plan mode*, revisión humana. Tareas exploratorias (refactor, generación de docs, búsqueda de bugs) → campo abierto.
+3. **Hacer pesa más que leer.** Cada fase termina con un hito verificable sobre `agevega.com`. Si no hay commit, no hay aprendizaje.
+4. **El coste es una variable de diseño.** Cada semana revisas `/cost` y `ccusage`. Si una tarea cuesta más que tu tiempo ahorrado, está mal diseñada.
+5. **Lo nativo antes que lo exótico.** `CLAUDE.md`, slash commands y subagentes Markdown resuelven el 80% de los problemas. Equipos paralelos, buses de mensajes y orquestadores externos son la última opción, no la primera.
+
+---
+
+## Mapa de las 5 semanas
+
+| Semana | Tema | Hito de cierre | Tiempo estimado |
+|---|---|---|---|
+| 1 | Cimientos productivos: `CLAUDE.md`, plan mode, slash commands, coste | 5 tareas reales en agevega con coste registrado | 6–8 h |
+| 2 | Subagentes Markdown + hooks de seguridad | PR generado por subagentes y revisado por ti | 6–8 h |
+| 3 | MCP útil + git worktrees + observabilidad visual | Regresión visual detectada y corregida semi-automáticamente | 8–10 h |
+| 4 | Evals propios + primera Skill empaquetada | Skill que funciona en sesión limpia sin contexto previo | 8–10 h |
+| 5 | Headless mode + CI ligero (opcional) | GitHub Action que abre un PR escrito por Claude | 6–8 h |
+
+Total: 34–44 horas repartidas en cinco semanas. Si vas más despacio, mejor: el plan es tuyo.
+
+---
+
+## Semana 1 — Cimientos productivos
+
+### Objetivo
+Hacer que Claude Code sea tu interfaz por defecto para tocar `agevega.com`, y que cada acción tenga un coste conocido.
+
+### Conceptos clave (15 min de lectura)
+- **`CLAUDE.md`**: archivo en la raíz del repo que Claude Code carga automáticamente como memoria de proyecto. Es el equivalente nativo y gratuito a un "núcleo cognitivo".
+- **Memoria jerárquica**: hay tres niveles — proyecto (`./CLAUDE.md`), usuario (`~/.claude/CLAUDE.md`) y subdirectorio. El más cercano gana.
+- **Plan mode**: modo de exploración silenciosa donde Claude lee, busca y razona sin tocar archivos. Se activa con `Shift+Tab` (tóggle de modos) o pidiéndolo explícitamente: *"Entra en plan mode antes de proponer cambios"*.
+- **Slash commands nativos** (verifica los exactos con `/help`): `/cost`, `/compact`, `/clear`, `/resume`, `/agents`, `/mcp`, `/memory`.
+- **Routing de modelos**: Haiku para tareas mecánicas y baratas; Sonnet 4.6 como caballo de batalla; Opus 4.6 para planning duro y refactors complejos.
+
+### Tareas concretas
+
+**1. Escribe el `CLAUDE.md` de agevega.com.**
+
+Plantilla mínima viable (copia, adapta y commitéala):
+
+```markdown
+# agevega.com — Memoria de proyecto para Claude Code
+
+## Qué es esto
+Sitio web personal de Álvaro Vega. [Stack: indicar — p. ej. Astro/Hugo/Next.js, Tailwind, etc.]
+Repo: https://github.com/agevega/agevega.com
+
+## Comandos que importan
+- Dev local: `npm run dev` (puerto 4321)
+- Build: `npm run build`
+- Lint: `npm run lint`
+- Tests: `npm test`
+
+## Convenciones
+- Idioma del contenido: español (es-ES)
+- Commits en convencional commits, en inglés
+- Ramas: `feature/*`, `fix/*`, `chore/*`
+- Nunca tocar `main` directamente. Siempre PR.
+- Imágenes: WebP, máximo 200 KB. Optimizar antes de commit.
+
+## Estructura
+- `src/content/` — posts en MDX
+- `src/components/` — componentes
+- `public/` — estáticos
+- `astro.config.mjs` — config principal
+
+## Cosas que NO hacer
+- No instalar dependencias sin pedirlo.
+- No reformatear archivos no relacionados con la tarea actual.
+- No cambiar la config de build a la ligera.
+- No tocar `package-lock.json` a mano.
+
+## Cómo me gusta trabajar
+- Antes de cambios > 20 líneas, plan mode primero.
+- Refactor + feature en PRs separados.
+- Si encuentras un bug colateral, abre un issue, no lo arregles en silencio.
+```
+
+**2. Crea tu primer slash command custom.**
+
+Archivo: `.claude/commands/nuevo-post.md`
+
+```markdown
+---
+description: Crea un nuevo post de blog con el frontmatter correcto
+---
+
+Crea un nuevo post en `src/content/blog/` con el slug `$ARGUMENTS`.
+Usa la fecha de hoy. Frontmatter: title, description, pubDate, tags.
+Déjalo como borrador (`draft: true`).
+No escribas el cuerpo, solo el esqueleto.
+```
+
+Lo invocas con `/nuevo-post mi-titulo-aqui`.
+
+**3. Usa plan mode para tu primera tarea no trivial.**
+
+Elige algo real: añadir un componente, optimizar imágenes, refactorizar la página de inicio. Pide a Claude que entre en plan mode, presente el plan, y solo entonces lo apruebas.
+
+**4. Registra el coste.**
+
+Después de cada sesión, anota en un `costes.md` (gitignored): tarea, modelo usado, coste según `/cost`, tiempo humano ahorrado. Esta tabla es tu brújula en la Semana 5.
+
+### Hito de cierre
+Cinco tareas reales mergeadas en `agevega.com`, cada una con su entrada en `costes.md`. El `CLAUDE.md` está commiteado.
+
+### Criterio de éxito
+Si al empezar la sesión escribes la tarea y Claude responde con un plan razonable sin que tengas que reexplicar la estructura del proyecto, tu `CLAUDE.md` funciona.
+
+---
+
+## Semana 2 — Subagentes Markdown + hooks de seguridad
+
+### Objetivo
+Delegar tareas repetitivas a subagentes especializados con herramientas restringidas, y bloquear con hooks lo que nunca debe pasar.
+
+### Conceptos clave
+- **Subagente**: archivo Markdown con frontmatter YAML en `.claude/agents/`. Tiene su propia ventana de contexto, su propio system prompt y una lista *blanca* de herramientas. Claude principal le delega tareas.
+- **Restricción por diseño**: un revisor de código solo necesita `Read`, `Grep`, `Glob`. Si no le das `Edit` ni `Write`, no puede romper nada por accidente.
+- **Hooks**: comandos que Claude Code ejecuta en hitos del ciclo de vida (`PreToolUse`, `PostToolUse`, etc.). Si el hook devuelve código de salida `0`, sigue. Si devuelve `2`, paraliza la operación y devuelve el stderr al modelo para que reaccione.
+
+### Tareas concretas
+
+**1. Crea tres subagentes.**
+
+Archivo: `.claude/agents/code-reviewer.md`
+
+```markdown
+---
+name: code-reviewer
+description: Revisor estricto de código. Solo lectura. Úsalo antes de cada PR.
+tools: Read, Grep, Glob
+model: sonnet
+---
+
+Eres un revisor de código estricto pero constructivo para agevega.com.
+
+Revisa los cambios buscando:
+1. Bugs reales (no estilísticos).
+2. Problemas de accesibilidad en componentes Astro/JSX.
+3. Imágenes sin optimizar o sin alt.
+4. Imports muertos o duplicados.
+5. Strings hardcodeadas que deberían estar en i18n.
+
+NUNCA modifiques archivos. Tu output es un informe en Markdown
+con secciones: Bloqueantes / Sugerencias / Nitpicks.
+Si no hay nada que decir, dilo en una línea.
+```
+
+Archivo: `.claude/agents/post-writer.md`
+
+```markdown
+---
+name: post-writer
+description: Esqueleto y borrador de posts en MDX siguiendo el estilo del blog.
+tools: Read, Glob, Write, Edit
+model: sonnet
+---
+
+Eres un redactor que sigue el estilo de los posts existentes en
+`src/content/blog/`. Antes de escribir, lee 2-3 posts recientes
+para calibrar tono, longitud y estructura.
+
+Reglas:
+- Idioma: español de España, voz directa.
+- Frontmatter completo (title, description, pubDate, tags, draft: true).
+- Nunca publiques sin draft: true.
+- Cero emojis salvo que el usuario los pida.
+```
+
+Archivo: `.claude/agents/test-writer.md`
+
+```markdown
+---
+name: test-writer
+description: Escribe tests para componentes y utilidades. No toca código de producción.
+tools: Read, Grep, Glob, Write
+model: sonnet
+---
+
+Eres un autor de tests. Escribes tests nuevos en el directorio
+de tests del proyecto. NUNCA modificas el código bajo prueba;
+si necesitas un cambio, lo describes en el output y paras.
+
+Cobertura prioritaria: utilidades puras, parsers, helpers de routing.
+Framework: el que ya use el repo (deduce de package.json).
+```
+
+Verifica con `/agents` que aparecen los tres.
+
+**2. Configura un hook de seguridad mínimo.**
+
+Edita `.claude/settings.json` (o el archivo que tu versión use — verifica con `claude config`):
+
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'if [[ \"$CLAUDE_FILE_PATH\" == *\"package-lock.json\"* ]]; then echo \"Bloqueado: no editar package-lock.json a mano\" >&2; exit 2; fi'"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+> Nota: la sintaxis exacta de hooks y las variables disponibles han cambiado entre versiones de Claude Code. Verifica los nombres exactos en tu instalación con `claude --help` o `/help` antes de copiar a ciegas. La idea — bloquear escrituras en archivos sensibles devolviendo `exit 2` — es lo que importa.
+
+**3. Pruébalo de verdad.**
+
+Pide a Claude principal: *"Revisa los cambios sin commit y luego usa el subagente `code-reviewer` para auditarlos"*. Observa cómo delega.
+
+### Hito de cierre
+Un PR en `agevega.com` cuyo flujo haya sido:
+1. `post-writer` genera el esqueleto.
+2. Tú escribes el cuerpo (o pides a Claude principal que lo redacte con tu guía).
+3. `test-writer` añade tests si aplica.
+4. `code-reviewer` audita.
+5. Tú apruebas y mergeas.
+
+### Criterio de éxito
+Has visto al hook bloquear al menos una operación que no debía pasar. Has visto a un subagente delegar bien y a otro decir *"esto está fuera de mi alcance"*.
+
+---
+
+## Semana 3 — MCP útil + git worktrees + observabilidad visual
+
+### Objetivo
+Conectar Claude Code a herramientas externas reales, trabajar en varias ramas a la vez sin pisarte, y montar un evaluador visual de verdad (no metafórico).
+
+### Conceptos clave
+- **MCP (Model Context Protocol)**: estándar abierto para que un LLM hable con servidores externos (filesystem, GitHub, navegador, base de datos…). Cada servidor expone herramientas que Claude Code puede invocar como si fueran nativas.
+- **Servidor MCP local vs remoto**: local (stdio) corre como subproceso en tu máquina, sin red. Remoto (HTTP/SSE) vive en otro sitio. Para trabajo personal en agevega.com, locales casi siempre.
+- **`git worktree`**: comando nativo de git que te deja tener varias ramas del mismo repo *checked out* en directorios distintos al mismo tiempo. Permite correr dos sesiones de Claude Code en paralelo (una en `feature/x`, otra en `fix/y`) sin que se pisen.
+
+### Tareas concretas
+
+**1. Decide qué MCPs necesitas de verdad.**
+
+No instales 10. Instala 3 con propósito:
+
+- **Filesystem** (acceso explícito a directorios fuera del repo si lo necesitas; opcional).
+- **GitHub** (issues, PRs, comentarios) — servidor oficial.
+- **Playwright** (tu evaluador visual real).
+
+**2. Configura `.mcp.json` a nivel de proyecto.**
+
+Archivo: `.mcp.json` en la raíz del repo (formato exacto: confirma con `/mcp` o la doc actual):
+
+```json
+{
+  "mcpServers": {
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}"
+      }
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp@latest"]
+    }
+  }
+}
+```
+
+> El token de GitHub vívelo desde una variable de entorno de tu shell (`~/.zshrc`), nunca commiteado. Permisos mínimos: `repo` y `read:org` si lo necesitas.
+
+Reinicia Claude Code y verifica con `/mcp` que ambos están conectados.
+
+**3. Usa Playwright como evaluador visual.**
+
+Pide algo así: *"Arranca el dev server con `npm run dev`, abre `http://localhost:4321` con Playwright, captura la home, y dime si hay algún elemento desbordado o sin contraste suficiente."*
+
+Esto sustituye al "evaluador GAN" del plan original con algo que existe y funciona.
+
+**4. Adopta `git worktree` como flujo.**
+
+```bash
+cd ~/repositorios/agevega.com
+git worktree add ../agevega-feature-hero feature/hero-redesign
+git worktree add ../agevega-fix-rss fix/rss-encoding
+```
+
+Ahora abres dos sesiones de Claude Code en paralelo, una en cada worktree. Cuando termines:
+
+```bash
+git worktree remove ../agevega-feature-hero
+```
+
+**5. Coste y observabilidad.**
+
+Instala `ccusage` (o el equivalente que uses) para ver consumo agregado:
+
+```bash
+npm install -g ccusage
+ccusage
+```
+
+Compáralo con tus notas de la Semana 1.
+
+### Hito de cierre
+Detectas una regresión visual real (o la introduces a propósito en una rama de prueba), Playwright la encuentra, generas el parche en un worktree dedicado, lo verificas, mergeas.
+
+### Criterio de éxito
+Tienes dos worktrees activos sin confundirte de ventana. `/mcp` muestra los servidores en verde. `ccusage` te dice cuánto llevas gastado este mes.
+
+---
+
+## Semana 4 — Evals propios + primera Skill empaquetada
+
+### Objetivo
+Dejar de evaluar a Claude "por sensación" y empezar a medirlo. Empaquetar lo que ya sabes en una Skill reutilizable.
+
+### Conceptos clave
+- **Eval**: conjunto de inputs con outputs esperados (o criterios de aceptación) que ejecutas repetidamente para medir si un cambio en prompt, modelo o subagente mejora o empeora el sistema. Sin evals, optimizas a ciegas.
+- **Skill**: carpeta con un `SKILL.md` (instrucciones + metadatos) y opcionalmente scripts y plantillas. Claude Code la carga cuando la tarea coincide con su descripción. Es la unidad portable de "cómo hacemos las cosas aquí".
+
+### Tareas concretas
+
+**1. Escribe 10–20 evals para tus tareas más frecuentes en agevega.**
+
+Empieza simple: un archivo `evals/posts.jsonl` con casos como:
+
+```json
+{"input": "Crea esqueleto de post sobre 'rendimiento en Astro'", "must_contain": ["draft: true", "pubDate", "title:"], "must_not_contain": ["lorem ipsum"]}
+{"input": "Refactoriza este componente para extraer la lógica de fetch", "must_contain": ["useEffect", "loading"], "must_not_modify": ["package.json"]}
+```
+
+Puedes ejecutarlos con un script tuyo en Python/Node que llame a la API, o con herramientas como **Promptfoo** si quieres algo más serio. Lo importante es que sean *tus* casos, no los del cookbook.
+
+**2. Empaqueta tu primera Skill.**
+
+Estructura propuesta:
+
+```
+~/.claude/skills/agevega-blogging/
+├── SKILL.md
+├── scripts/
+│   └── optimize-image.sh
+└── templates/
+    └── post-frontmatter.md
+```
+
+`SKILL.md` ejemplo:
+
+```markdown
+---
+name: agevega-blogging
+description: Use cuando el usuario quiera crear, editar o publicar posts en agevega.com. Cubre estructura MDX, optimización de imágenes y convenciones de tono.
+---
+
+# Cómo escribir y publicar en agevega.com
+
+## Cuándo activarte
+Cualquier petición que mencione: post, artículo, blog, publicación, MDX, agevega.
+
+## Pasos
+1. Lee 2 posts recientes en `src/content/blog/` para calibrar tono.
+2. Usa la plantilla en `templates/post-frontmatter.md`.
+3. Si hay imágenes, pásalas por `scripts/optimize-image.sh` antes de commit.
+4. Frontmatter siempre con `draft: true` hasta aprobación humana.
+5. Tono: español de España, directo, sin emojis salvo petición.
+6. Longitud habitual: 800–1500 palabras.
+
+## Anti-patrones
+- No uses listas con bullets para ideas que se pueden expresar en prosa.
+- No traduzcas literalmente del inglés.
+- No metas frases tipo "en este artículo veremos…".
+```
+
+Pruébala en una sesión limpia (`/clear`) y pide *"Crea un post sobre X para agevega"* sin más contexto. Si la Skill se activa sola y produce algo coherente, has ganado.
+
+**3. Mide.**
+
+Corre tus evals contra dos versiones del sistema: con Skill activa y sin ella. Anota la diferencia. Si no mejora, la Skill está mal escrita; itera.
+
+### Hito de cierre
+La Skill `agevega-blogging` vive en tu `~/.claude/skills/`, tus evals se ejecutan con un comando, y tienes una tabla simple comparando antes/después.
+
+### Criterio de éxito
+En una sesión nueva sin contexto, *"crea un post sobre rendimiento en Astro"* produce un esqueleto que pasarías a publicación con cambios menores.
+
+---
+
+## Semana 5 — Headless mode y CI ligero (opcional pero rentable)
+
+### Objetivo
+Sacar a Claude Code de tu terminal interactiva y meterlo en automatizaciones que corren sin ti delante.
+
+### Conceptos clave
+- **Headless mode**: ejecutar Claude Code sin TUI, recibiendo input por argumento o stdin y devolviendo output a stdout. Pensado para scripts y CI.
+
+  ```bash
+  claude -p "Resume los cambios de los últimos 5 commits en formato changelog"
+  ```
+
+- **GitHub Actions + Claude**: un workflow que dispara Claude en respuesta a un evento (issue creado, PR abierto, push a `main`). Hay action oficial de Anthropic para esto; verifica el nombre exacto.
+
+### Tareas concretas
+
+**1. Un script local primero.**
+
+Archivo: `scripts/changelog.sh`
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+DESDE=${1:-"HEAD~10"}
+git log --oneline "${DESDE}..HEAD" | \
+  claude -p "Convierte estos commits en un changelog en español, agrupado por tipo (feat/fix/docs/chore). Sé conciso."
+```
+
+**2. Un GitHub Action sencillo.**
+
+Empieza con algo de bajo riesgo: un workflow que, cuando abres un issue con la etiqueta `triage`, deja un comentario con el análisis de Claude. Sin permisos de escritura sobre código. Cuando funcione un mes sin sustos, escalas.
+
+Pseudo-workflow (adapta a la action real que uses):
+
+```yaml
+name: Triage de issues con Claude
+on:
+  issues:
+    types: [labeled]
+jobs:
+  triage:
+    if: github.event.label.name == 'triage'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: anthropics/claude-code-action@v1  # verifica nombre real
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: |
+            Analiza el siguiente issue y comenta:
+            1. ¿Es bug, feature o pregunta?
+            2. ¿Qué archivos del repo probablemente afecte?
+            3. ¿Está bien escrito o falta info?
+            Issue: ${{ github.event.issue.body }}
+```
+
+**3. Cierra el círculo de coste.**
+
+Compara tu `costes.md` de la Semana 1 con `ccusage` de hoy. ¿Cuánto te ha costado el aprendizaje? ¿Cuánto tiempo has ahorrado? Si la cuenta sale, sigue. Si no, ajusta routing (más Haiku, menos Opus) y repite.
+
+### Hito de cierre
+Un PR en `agevega.com` abierto por una GitHub Action escrita por ti, con cambios redactados por Claude en headless mode, revisado por tu subagente `code-reviewer` localmente antes de mergear.
+
+### Criterio de éxito
+Cierras el portátil y al día siguiente hay un comentario útil de Claude en un issue que abriste sin hacer nada manual.
+
+---
+
+## Apéndice A — Equipos de agentes paralelos (lectura, no implementación)
+
+El plan original dedicaba la Fase 4 a enjambres de agentes con líder coordinador y bus de mensajes asíncrono. Es un paradigma real y existe (Claude Code experimenta con ello), pero para una web personal mantenida por una persona el ROI es negativo: gastas más en orquestación que lo que ahorras en paralelismo.
+
+Lee la documentación oficial cuando salga estable. Implementa solo si:
+- Tienes un proyecto con varios módulos independientes que de verdad se pueden trabajar en paralelo.
+- El cuello de botella es la latencia del modelo, no tu capacidad de revisión humana.
+- Puedes pagar la curva de depuración (los bugs en sistemas concurrentes son bestiales).
+
+Mientras tanto, **`git worktree` + dos sesiones Claude Code en paralelo es el 90% del beneficio sin el 90% del coste.**
+
+---
+
+## Apéndice B — NotebookLM como biblioteca personal (no como cerebro del sistema)
+
+NotebookLM es una herramienta excelente *para ti como humano*, no para tus agentes. Úsala así:
+
+- **Podcasts de audio** sobre la documentación de Claude Code y MCP cuando paseas o conduces.
+- **Flashcards generadas** de los conceptos densos (autonomía, hooks, evals).
+- **"Pregúntale al notebook"** cuando estés escribiendo un post sobre lo que aprendes y necesites verificar un detalle.
+
+Lo que **no** hace NotebookLM:
+- No expone una API que tus subagentes puedan consultar.
+- No reemplaza a `CLAUDE.md` ni a un servidor MCP de RAG.
+- No persiste contexto operativo del repo en tiempo de ejecución.
+
+Manténlo en su sitio: estudio personal, no infraestructura.
+
+---
+
+## Apéndice C — Trampas conocidas de Windows + WSL2
+
+- **Rutas cruzadas**: editar archivos del filesystem WSL desde herramientas Windows (`\\wsl.localhost\Ubuntu\...`) funciona pero es lento y confunde a algunos hooks. Prefiere correr Claude Code dentro de WSL (zsh) para proyectos que viven en `~/repositorios/`.
+- **Permisos de archivos**: si un hook escribe un archivo desde Windows y luego un subagente lo lee desde WSL, puedes ver permisos raros. Mantén el ciclo de vida de cada proyecto en un único lado.
+- **Variables de entorno**: las de `.zshrc` no se ven desde Antigravity si lo arrancaste en contexto Windows. Si un MCP server falla por falta de `GITHUB_TOKEN`, sospecha de esto primero.
+- **Antivirus de Windows**: puede ralentizar enormemente las operaciones de filesystem en `\\wsl.localhost`. Excluye la ruta de Defender si trabajas mucho cross-OS.
+
+---
+
+## Apéndice D — Routing de modelos y coste
+
+Regla mental rápida:
+
+| Tarea | Modelo sugerido | Por qué |
+|---|---|---|
+| Renombrar variables, ediciones mecánicas, lint fixes | Haiku 4.5 | Barato y rápido |
+| Escribir/refactorizar componentes, redactar posts, code review | Sonnet 4.6 | Caballo de batalla |
+| Plan mode sobre arquitectura, refactor multi-archivo, debugging difícil | Opus 4.6 | Vale lo que cuesta cuando importa |
+
+Trucos:
+- Empieza una sesión pidiendo *"usa Sonnet salvo que te indique lo contrario"*.
+- Para tareas largas, pide a Claude que *resuma* periódicamente y use `/compact` cuando el contexto crezca.
+- Activa prompt caching donde puedas (sistema y `CLAUDE.md` largos se benefician mucho).
+- Revisa `/cost` al final de cada sesión, no al final del mes.
+
+---
+
+## Cierre
+
+Si terminas las cinco semanas, tendrás:
+
+- Un repo `agevega.com` con `CLAUDE.md`, `.claude/agents/`, `.claude/commands/`, `.mcp.json` y al menos un workflow de CI propio.
+- Una Skill personal reutilizable.
+- Un set de evals que mide tu propio sistema.
+- Una idea clara de cuánto cuesta cada tipo de tarea y cuándo merece la pena.
+- Y lo más importante: el hábito de hacer antes de leer.
+
+Lo que **no** tendrás (y está bien):
+- Enjambres de agentes paralelos coordinados por bus de mensajes.
+- NotebookLM como cerebro del sistema.
+- Una arquitectura empresarial sobre un sitio personal.
+
+Cuando un proyecto justifique esas piezas, las añades. Hasta entonces, son ruido.
+
+---
+
+*Última nota: los nombres exactos de slash commands, formato de hooks, nombres de actions oficiales y APIs concretas de MCP evolucionan rápido. Antes de copiar cualquier snippet a producción, valida con `claude --help`, `/help` y la documentación oficial vigente. La estructura del plan no caduca; los detalles sintácticos sí.*

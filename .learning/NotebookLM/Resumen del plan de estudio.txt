@@ -1,0 +1,19 @@
+Este texto es un documento técnico y estratégico (una hoja de ruta o "Master Plan") que detalla cómo diseñar, construir e implementar un ecosistema avanzado de ingeniería de software impulsado por Inteligencia Artificial.
+
+En lugar de usar la IA simplemente como un "chat" que escribe fragmentos de código, el documento propone crear un sistema completo donde múltiples agentes de IA autónomos trabajan en equipo para mantener y mejorar proyectos de software.
+
+Aquí tienes un desglose de los puntos clave de este plan:
+
+El Objetivo Final: Todo el conocimiento teórico y la arquitectura técnica están orientados a un caso de uso práctico: automatizar el desarrollo, la refactorización y la optimización continua de un repositorio web específico (github.com/agevega/agevega.com.git).
+
+El "Cerebro" (NotebookLM): La Fase 1 propone usar Google NotebookLM como un núcleo cognitivo. En lugar de que la IA lea toda la documentación desde cero cada vez, NotebookLM almacena la arquitectura del proyecto y proporciona a los agentes solo el contexto exacto que necesitan (optimizando la memoria y reduciendo las alucinaciones).
+
+Jerarquía y Control de Agentes: La Fase 2 y 3 explican cómo limitar o dar libertad a la IA. Para tareas críticas (como bases de datos), la IA se mantiene en un "pasillo estrecho" sin libertad creativa. Para otras tareas, se le da un campo abierto. Además, define la creación de "subagentes" altamente especializados (ej. un revisor de código que solo puede leer, no borrar archivos).
+
+Equipos Paralelos (Enjambres): La Fase 4 marca el salto de agentes trabajando uno por uno a "equipos de agentes" asíncronos. Habla de tener un agente "líder" coordinando a otros especialistas (ej. frontend, base de datos) que se comunican entre sí en tiempo real, de manera similar a un equipo humano de ingeniería.
+
+Conexión con el Entorno (MCP): La Fase 5 describe el uso del Protocolo de Contexto de Modelos (MCP) para conectar la IA (específicamente Claude) con bases de datos, sistemas de archivos locales y nubes, permitiéndole ejecutar acciones reales en tu ordenador de forma segura y supervisada.
+
+Aseguramiento de Calidad: Las Fases 6 y 7 se centran en evitar que la IA rompa el código o pierda el hilo lógico ("degeneración lógica"). Propone agentes que evalúen visualmente la web, hagan pruebas exhaustivas y obliguen a la IA a planificar antes de escribir una sola línea de código en producción.
+
+En resumen, es un manual de arquitectura de software para construir un equipo de desarrollo digital automatizado, diseñado específicamente para mantener y escalar la web agevega.com utilizando las tecnologías más recientes de Anthropic (Claude) y Google (NotebookLM).
