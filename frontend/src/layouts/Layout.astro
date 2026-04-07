@@ -63,15 +63,15 @@ const opengraph = {
     <!-- Background Gradient Effects -->
     <div class="fixed inset-0 z-[-1] pointer-events-none" aria-hidden="true">
       <div
-        class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-blue-500/6 blur-[120px]"
+        class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-blue-500/6 blur-[120px] will-change-transform"
       >
       </div>
       <div
-        class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-emerald-500/8 blur-[120px]"
+        class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-emerald-500/8 blur-[120px] will-change-transform"
       >
       </div>
       <div
-        class="absolute top-[20%] right-[20%] w-[30%] h-[30%] rounded-full bg-blue-500/10 blur-[100px]"
+        class="absolute top-[20%] right-[20%] w-[30%] h-[30%] rounded-full bg-blue-500/10 blur-[100px] will-change-transform"
       >
       </div>
     </div>
@@ -105,6 +105,12 @@ const opengraph = {
   }
   ::-webkit-scrollbar-thumb:hover {
     background: #334155; /* slate-700 */
+  }
+
+  /* Defer rendering of below-fold sections */
+  #about, #experience, #skills, #projects, #contact, #lab {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 500px;
   }
 
   /* Respect reduced motion preferences */
