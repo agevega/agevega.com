@@ -1,6 +1,8 @@
 ---
 interface Props {
   title: string;
+  description?: string;
+  ogImage?: string;
 }
 
 import Navigation from "../components/Navigation.astro";
@@ -11,11 +13,10 @@ import "@fontsource/inter/500.css";
 import "@fontsource/inter/600.css";
 import "@fontsource/inter/700.css";
 
-const { title } = Astro.props;
-const description =
-  "Alejandro Vega - Senior DevSecOps Engineer & Cloud Architect";
+const DEFAULT_DESCRIPTION = "Alejandro Vega - Senior DevSecOps Engineer & Cloud Architect. Especialista en AWS, Terraform, Kubernetes y automatización.";
+const { title, description = DEFAULT_DESCRIPTION, ogImage } = Astro.props;
 const baseOrigin = Astro.site ? Astro.site.origin : Astro.url.origin;
-const ogImageUrl = `${baseOrigin}/og-image.jpg`;
+const ogImageUrl = ogImage ? `${baseOrigin}${ogImage}` : `${baseOrigin}/og-image.jpg`;
 
 const opengraph = {
   image: ogImageUrl,
@@ -27,10 +28,7 @@ const opengraph = {
 <html lang="es" class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="description"
-      content="Alejandro Vega - Senior DevSecOps Engineer & Cloud Architect"
-    />
+    <meta name="description" content={description} />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <meta name="generator" content={Astro.generator} />
@@ -50,6 +48,7 @@ const opengraph = {
     <meta property="twitter:title" content={title} />
     <meta property="twitter:description" content={description} />
     <meta property="twitter:image" content={opengraph.image} />
+    <slot name="head" />
   </head>
   <body
     class="bg-brand-dark text-slate-100 font-sans antialiased selection:bg-emerald-500/30 overflow-x-hidden relative flex flex-col min-h-screen"

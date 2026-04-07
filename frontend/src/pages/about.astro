@@ -4,9 +4,27 @@ import AboutSection from "../components/AboutSection.astro";
 import ExperienceSection from "../components/ExperienceSection.astro";
 import TechStackSection from "../components/TechStackSection.astro";
 import ProjectsSection from "../components/ProjectsSection.astro";
+
+const personJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Alejandro Vega",
+  "jobTitle": "Senior DevSecOps Engineer & Cloud Architect",
+  "url": "https://agevega.com",
+  "sameAs": [
+    "https://github.com/agevega",
+    "https://www.linkedin.com/in/alejandro-vega94/"
+  ]
+};
 ---
 
-<Layout title="Sobre Mí | Alejandro Vega">
+<Layout
+  title="Sobre Mí | Alejandro Vega"
+  description="Perfil profesional de Alejandro Vega: formación, experiencia en Santander, Ericsson y Coches.com, certificaciones AWS y publicaciones científicas."
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(personJsonLd)} />
+  </Fragment>
   <main class="pt-16">
     <AboutSection />
     <ExperienceSection />
