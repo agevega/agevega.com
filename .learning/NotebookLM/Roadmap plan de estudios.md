@@ -91,7 +91,7 @@ Semana 5: headless + CI (requiere todo lo anterior funcionando)
     3. Registrar el coste de las tareas 1.3, 1.4 y 1.5
   - **Verificación:** `git check-ignore costes.md` devuelve exit code 0. El archivo tiene al menos 3 entradas.
 
-- [ ] **1.7** Completar 5 tareas reales fusionadas
+- [x] **1.7** Completar 5 tareas reales fusionadas
   - **Dependencia:** 1.3 + 1.5
   - **Qué hacer:** Las tareas 1.3, 1.4 y 1.5 suman tres. Necesitas dos más:
     - Mejorar la página `/contact` con validación del formulario
