@@ -1,0 +1,42 @@
+Buen análisis. Aquí van las mejores candidatas para la tarea 1.5, ordenadas por valor real + idoneidad para plan mode (no triviales, multi-archivo, resultado medible):
+
+Top 3 candidatas para tarea 1.5
+1. Accesibilidad global del sitio (la más completa)
+Archivos afectados: ~8 | Complejidad: Media-Alta
+
+Skip-to-content link en Layout.astro
+Logo del Navigation.astro: cambiar div con onclick → <a href="/">
+aria-hidden="true" en SVGs decorativos (múltiples componentes)
+aria-label en SVGs interactivos (HeroSection, ProjectsSection, LaboratorioSection)
+Form accessibility: aria-required, aria-describedby en ContactSection.astro
+Focus trap en mobile menu
+prefers-reduced-motion en animaciones
+Por qué es buena para 1.5: Toca muchos archivos, requiere planificación, resultado verificable con Lighthouse.
+
+2. SEO dinámico + meta descriptions por página
+Archivos afectados: 6 | Complejidad: Media
+
+Añadir prop description al Layout.astro (junto a title)
+Definir descriptions únicas en cada una de las 5 páginas
+Añadir prop opcional ogImage para OG contextual por página
+JSON-LD de tipo Person en la página /about
+Por qué es buena para 1.5: Cambia la interfaz del Layout (breaking change controlado), toca todas las páginas, mejora medible en herramientas SEO.
+
+3. Performance + Core Web Vitals del Layout
+Archivos afectados: 4-5 | Complejidad: Media
+
+Dimensiones explícitas en imágenes (AboutSection foto + badges) para evitar CLS
+loading="lazy" en imágenes below-the-fold
+will-change: transform en los blur orbs del Layout
+font-display: swap en las fuentes Inter
+content-visibility: auto en secciones below-fold
+Por qué es buena para 1.5: Resultado medible con Lighthouse, cambios quirúrgicos pero distribuidos.
+
+Mi recomendación
+Opción 1 (Accesibilidad) es la mejor para 1.5 porque:
+
+Es la más "no trivial" — requiere plan mode de verdad
+Toca el mayor número de archivos con criterio
+Demuestra que CLAUDE.md funciona (el plan debería generarse sin preguntas de contexto)
+Es verificable: npm run build + Lighthouse Accessibility score antes/después
+Las opciones 2 y 3 pueden servir como las 2 tareas adicionales que necesitas para completar la tarea 1.7 (llegar a 5 commits totales).
