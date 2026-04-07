@@ -83,7 +83,7 @@ Semana 5: headless + CI (requiere todo lo anterior funcionando)
   - Activar plan mode (`Shift+Tab`), revisar el plan, aprobar.
   - **Verificación:** El plan se genera sin preguntas de contexto. El resultado pasa `npm run build`.
 
-- [ ] **1.6** Crear `costes.md` y añadirlo a `.gitignore`
+- [x] **1.6** Crear `costes.md` y añadirlo a `.gitignore`
   - **Dependencia:** ninguna
   - **Qué hacer:**
     1. Añadir `costes.md` a `.gitignore`
