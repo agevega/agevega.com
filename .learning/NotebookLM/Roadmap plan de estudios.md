@@ -69,7 +69,7 @@ Semana 5: headless + CI (requiere todo lo anterior funcionando)
     4. **Cosas que NO hacer** — no instalar deps sin pedir, no reformatear archivos no relacionados, no tocar package-lock.json a mano
   - **Verificación:** Sesión limpia (`/clear`), pedir "analiza la estructura del frontend de agevega.com". Debe responder coherentemente sin que reexpliques nada.
 
-- [ ] **1.4** Crear un segundo slash command útil para el portfolio
+- [x] **1.4** Crear un segundo slash command útil para el portfolio
   - **Dependencia:** 1.3
   - **Qué hacer:** Crear `.claude/commands/nuevo-componente.md` — genera el esqueleto de un componente Astro con la estructura y convenciones del proyecto.
   - **Verificación:** Ejecutar `/nuevo-componente TestimonialCard` y que genere un `.astro` correcto.
