@@ -61,8 +61,8 @@ Mod 0: Baseline + costes.md
   - **Verificación:** `git check-ignore tmp/costes.md` retorna exit code 0. ✓
 
 - [x] **0.2** Crear `tmp/costes.md` con estructura de seguimiento
-  - **Qué se hizo:** 4 columnas: Fecha (con hora), Tarea, Modelo, Duración. Sin backfill (datos irrecuperables).
-  - **Decisión:** `/cost` no funciona en suscripción Max/Pro (no muestra tokens ni coste). Se trackea duración como proxy.
+  - **Qué se hizo:** 4 columnas: Fecha (con hora), Tarea, Modelo, Coste (Tokens). Sin backfill (datos irrecuperables).
+  - **Decisión:** `/cost` no funciona en suscripción Max/Pro (no muestra tokens ni coste).
   - **Bonus:** Creado `/costs` slash command (`.claude/commands/costs.md`) para estandarizar el registro.
   - **Verificación:** Archivo con estructura limpia y 1+ entrada real.
 
