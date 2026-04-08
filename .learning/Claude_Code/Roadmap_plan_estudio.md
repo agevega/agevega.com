@@ -86,17 +86,18 @@ Mod 0: Baseline + costes.md
 
 ### Tareas
 
-- [ ] **1.1** Crear hook de bloqueo de `package-lock.json`
-  - **Qué hacer:** `.claude/settings.json` con hook `PreToolUse` en `Write|Edit` que bloquee escrituras a `package-lock.json`. Exit code 2 con mensaje descriptivo.
-  - **Verificación:** Pedir editar `package-lock.json` → el hook lo bloquea con mensaje claro.
+- [x] **1.1** Crear hook de bloqueo de `package-lock.json`
+  - **Qué se hizo:** `.claude/settings.json` con hook `PreToolUse` en `Write|Edit`. Comando inline con `jq` + `grep`. Exit code 2 bloquea con mensaje.
+  - **Verificación:** Edit a `package-lock.json` bloqueado con mensaje `BLOCKED: package-lock.json is a protected file.` ✓
 
-- [ ] **1.2** Verificar cascada de permisos
-  - **Qué hacer:** Confirmar que `.claude/settings.json` (project) coexiste con `.claude/settings.local.json` (local) sin conflictos. Documentar el orden de resolución.
-  - **Verificación:** Ambos ficheros activos, hooks funcionan, permisos de Playwright se mantienen.
+- [x] **1.2** Verificar cascada de permisos
+  - **Resultado:** `settings.json` (hooks) y `settings.local.json` (permissions) se mergen sin conflicto.
+  - **Orden:** settings.json (proyecto) + settings.local.json (local) → se combinan hooks + permissions.
+  - **Verificación:** Hook bloquea package-lock.json ✓ | `npm audit` ejecuta sin pedir permiso ✓
 
 ### Criterio de cierre
-- [ ] 1 hook activo en `.claude/settings.json` que demuestra bloqueo (exit 2)
-- [ ] Cascada de permisos project + local verificada sin conflictos
+- [x] 1 hook activo en `.claude/settings.json` que demuestra bloqueo (exit 2)
+- [x] Cascada de permisos project + local verificada sin conflictos
 
 ---
 
