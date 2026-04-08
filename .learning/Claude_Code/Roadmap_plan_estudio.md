@@ -113,17 +113,16 @@ Mod 0: Baseline + costes.md
 
 ### Tareas
 
-- [ ] **2.1** Crear `.mcp.json` con Playwright
-  - **Qué hacer:** `.mcp.json` en raíz con Playwright via stdio/npx.
-  - **Verificación:** `/mcp` muestra el servidor conectado.
+- [x] **2.1** Crear `.mcp.json` con Playwright
+  - **Qué se hizo:** `.mcp.json` en raíz con Playwright via stdio/npx. Eliminada redundancia `mcp__playwright` de `settings.local.json`.
+  - **Verificación:** `/mcp` muestra servidor conectado ✓
 
-- [ ] **2.2** Test Playwright MCP
-  - **Dependencia:** 2.1
-  - **Qué hacer:** Con `npm run dev` corriendo, pedir snapshot de `localhost:4321` y reporte de problemas visuales.
-  - **Verificación:** Playwright navega y captura. Si falla en WSL2, documentar workaround.
+- [x] **2.2** Test Playwright MCP
+  - **Resultado:** Snapshot de `localhost:4321` capturado correctamente en WSL2. Sin workarounds necesarios.
+  - **Verificación:** Playwright navega y captura estructura accesible completa ✓
 
 ### Criterio de cierre
-- [ ] `.mcp.json` con Playwright configurado y verificado
+- [x] `.mcp.json` con Playwright configurado y verificado
 
 ---
 
