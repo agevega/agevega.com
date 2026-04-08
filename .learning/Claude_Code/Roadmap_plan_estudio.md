@@ -86,23 +86,17 @@ Mod 0: Baseline + costes.md
 
 ### Tareas
 
-- [ ] **1.1** Crear hook de bloqueo de archivos protegidos
-  - **Qué hacer:** `.claude/settings.json` con hook `PreToolUse` en `Write|Edit` que bloquee escrituras a `package-lock.json`, `*.tfstate`, `*.lock`. Exit code 2 con mensaje descriptivo.
+- [ ] **1.1** Crear hook de bloqueo de `package-lock.json`
+  - **Qué hacer:** `.claude/settings.json` con hook `PreToolUse` en `Write|Edit` que bloquee escrituras a `package-lock.json`. Exit code 2 con mensaje descriptivo.
   - **Verificación:** Pedir editar `package-lock.json` → el hook lo bloquea con mensaje claro.
 
-- [ ] **1.2** Crear hook advisory para Terraform
-  - **Qué hacer:** Hook `PreToolUse` en `Read|Grep|Glob` que emita advertencia (exit 0 + stdout) al acceder a `infra/terraform/`.
-  - **Verificación:** Explorar `infra/terraform/` → mensaje advisory aparece en contexto sin bloquear.
-
-- [ ] **1.3** Verificar cascada de permisos
+- [ ] **1.2** Verificar cascada de permisos
   - **Qué hacer:** Confirmar que `.claude/settings.json` (project) coexiste con `.claude/settings.local.json` (local) sin conflictos. Documentar el orden de resolución.
   - **Verificación:** Ambos ficheros activos, hooks funcionan, permisos de Playwright se mantienen.
 
 ### Criterio de cierre
-- [ ] 2+ hooks activos en `.claude/settings.json`
-- [ ] Al menos uno demuestra bloqueo (exit 2)
-- [ ] Al menos uno demuestra advisory (exit 0 con mensaje)
-- [ ] Entrada en `costes.md`
+- [ ] 1 hook activo en `.claude/settings.json` que demuestra bloqueo (exit 2)
+- [ ] Cascada de permisos project + local verificada sin conflictos
 
 ---
 
