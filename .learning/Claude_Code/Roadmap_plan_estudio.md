@@ -103,9 +103,9 @@ Mod 0: Baseline + costes.md
 
 ## Módulo 2 — MCP formal
 
-**Objetivo:** Formalizar Playwright MCP en un `.mcp.json` committeable y añadir GitHub MCP para workflows con issues/PRs.
+**Objetivo:** Formalizar Playwright MCP en un `.mcp.json` committeable.
 
-**Por qué este orden:** Ya tienes Playwright implícito. Este módulo lo formaliza y añade GitHub. Ambos son necesarios para el Módulo 3: subagentes que interactúan con GitHub y verifican visualmente son mucho más útiles que revisores read-only.
+**Por qué este orden:** Ya tienes Playwright implícito vía `settings.local.json`. Este módulo lo formaliza en un fichero compartible.
 
 **Refs claudepedia:**
 - [MCP Integration](https://claudepedia.dev/patterns/mcp) — Patrón Bridge: descubrimiento → construcción → namespacing (`mcp__server__tool`) → anotaciones. 5 transportes (stdio para local). 5 estados de conexión.
@@ -113,23 +113,17 @@ Mod 0: Baseline + costes.md
 
 ### Tareas
 
-- [ ] **2.1** Crear `.mcp.json` con Playwright + GitHub
-  - **Qué hacer:** `.mcp.json` en raíz con ambos servidores via stdio/npx. `GITHUB_TOKEN` desde variable de entorno.
-  - **Verificación:** `/mcp` muestra ambos servidores conectados.
+- [ ] **2.1** Crear `.mcp.json` con Playwright
+  - **Qué hacer:** `.mcp.json` en raíz con Playwright via stdio/npx.
+  - **Verificación:** `/mcp` muestra el servidor conectado.
 
-- [ ] **2.2** Test GitHub MCP
-  - **Dependencia:** 2.1
-  - **Qué hacer:** Pedir a Claude que liste issues abiertos del repo.
-  - **Verificación:** Retorna datos reales de GitHub.
-
-- [ ] **2.3** Test Playwright MCP
+- [ ] **2.2** Test Playwright MCP
   - **Dependencia:** 2.1
   - **Qué hacer:** Con `npm run dev` corriendo, pedir snapshot de `localhost:4321` y reporte de problemas visuales.
   - **Verificación:** Playwright navega y captura. Si falla en WSL2, documentar workaround.
 
 ### Criterio de cierre
-- [ ] `.mcp.json` con 2 servidores configurados y verificados
-- [ ] Entrada en `costes.md`
+- [ ] `.mcp.json` con Playwright configurado y verificado
 
 ---
 
