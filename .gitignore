@@ -128,6 +128,7 @@ celerybeat.pid
 .pypirc
 cython_debug/
 
-# Gemini AI
+# AI
 .gemini/*
 !.gemini/GEMINI.md
+.claude/settings.local.json
