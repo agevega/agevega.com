@@ -130,7 +130,7 @@ Mod 0: Baseline + costes.md
 
 **Objetivo:** Crear subagentes especializados siguiendo el patrón de claudepedia: el coordinador decide QUÉ, los workers deciden CÓMO.
 
-**Por qué después de hooks + MCP:** Los hooks (Mod 1) protegen contra operaciones peligrosas — los subagentes heredan esa red de seguridad. MCP (Mod 2) les da capacidades reales (GitHub, Playwright).
+**Por qué después de hooks + MCP:** Los hooks (Mod 1) protegen contra operaciones peligrosas — los subagentes heredan esa red de seguridad. MCP (Mod 2) les da capacidades reales (Playwright).
 
 **Refs claudepedia:**
 - [Multi-Agent Coordination](https://claudepedia.dev/patterns/multi-agent) — Delegación, no distribución. 4 fases: planificar → delegar → recopilar → sintetizar. Aislamiento de contexto. Particionamiento de herramientas.
@@ -158,12 +158,11 @@ Mod 0: Baseline + costes.md
     2. Claude delega a `component-builder` → crea componente
     3. Pides revisión → Claude delega a `code-reviewer` → produce informe
     4. Revisas, apruebas, commiteas
-  - **Verificación:** Un commit generado con este flujo. Entrada comparativa en `costes.md` (delegado vs. directo).
+  - **Verificación:** Un commit generado con este flujo.
 
 ### Criterio de cierre
 - [ ] 3 subagentes en `.claude/agents/`
 - [ ] Un ciclo completo (crear + revisar) documentado
-- [ ] Entrada en `costes.md` con comparativa de coste
 
 ---
 
