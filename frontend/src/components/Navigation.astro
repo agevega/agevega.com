@@ -179,11 +179,11 @@
         if (href && normalize(href) === current) {
           if (!link.classList.contains("bg-emerald-600")) {
             link.classList.remove("text-slate-300");
-            link.classList.add("text-white", "bg-white/5");
+            link.classList.add("text-white", "bg-white/10", "underline", "decoration-emerald-500", "underline-offset-4");
           }
         } else {
           if (!link.classList.contains("bg-emerald-600")) {
-            link.classList.remove("text-white", "bg-white/5");
+            link.classList.remove("text-white", "bg-white/10", "underline", "decoration-emerald-500", "underline-offset-4");
             link.classList.add("text-slate-300");
           }
         }
