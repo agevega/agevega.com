@@ -111,7 +111,7 @@
           id="submit-btn"
           class="w-full bg-emerald-600 text-white font-semibold py-4 px-8 rounded-lg hover:bg-emerald-500 transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-emerald-500/25 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Abrir Ticket de Consulta
+          Enviar mensaje
         </button>
       </form>
 
@@ -170,7 +170,7 @@
 
       // Loading state
       submitBtn.disabled = true;
-      submitBtn.innerHTML = "Abriendo ticket...";
+      submitBtn.innerHTML = "Enviando...";
       feedback.textContent = "Abriendo ticket...";
       feedback.classList.add("text-emerald-400");
       feedback.classList.remove("hidden");
@@ -202,7 +202,7 @@
         feedback.classList.replace("text-emerald-400", "text-red-400");
       } finally {
         submitBtn.disabled = false;
-        submitBtn.innerHTML = "Abrir Ticket de Consulta";
+        submitBtn.innerHTML = "Enviar mensaje";
       }
     });
   }
