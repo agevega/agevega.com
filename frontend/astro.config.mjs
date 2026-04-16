@@ -5,6 +5,13 @@ import tailwind from '@astrojs/tailwind';
 export default defineConfig({
   site: 'https://agevega.com',
   integrations: [tailwind()],
+  i18n: {
+    defaultLocale: 'es',
+    locales: ['es', 'en'],
+    routing: {
+      prefixDefaultLocale: false,
+    },
+  },
   env: {
     schema: {
       PUBLIC_APP_VERSION: envField.string({ context: 'client', access: 'public', optional: true, default: 'dev' }),

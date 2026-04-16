@@ -1,5 +1,19 @@
 ---
+import type { Lang } from "../i18n/translations";
+import { useTranslations } from "../i18n/utils";
 
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'es' } = Astro.props;
+const t = useTranslations(lang);
+
+const currentPath = Astro.url.pathname;
+const esPath = currentPath.startsWith('/en/') ? currentPath.slice(3) || '/' : currentPath;
+const enPath = currentPath.startsWith('/en/') ? currentPath : `/en${currentPath}`;
+const toggleHref = lang === 'es' ? enPath : esPath;
+const toggleLabel = t.nav.toggleLabel;
 ---
 
 <nav class="fixed top-0 w-full z-50 transition-all duration-300" id="navbar" aria-label="Navegación principal">
@@ -24,29 +38,35 @@
       <div class="hidden md:block">
         <div class="ml-10 flex items-baseline space-x-4">
           <a
-            href="/"
+            href={lang === 'es' ? '/' : '/en/'}
             class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
-            >Inicio</a
+            >{t.nav.home}</a
           >
           <a
-            href="/about-this-web"
+            href={lang === 'es' ? '/about-this-web' : '/en/about-this-web'}
             class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
-            >Sobre esta Web</a
+            >{t.nav.aboutThisWeb}</a
           >
           <a
-            href="/about"
+            href={lang === 'es' ? '/about' : '/en/about'}
             class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
-            >Sobre Mí</a
+            >{t.nav.about}</a
           >
           <a
-            href="/laboratory"
+            href={lang === 'es' ? '/laboratory' : '/en/laboratory'}
             class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
-            >Laboratorio</a
+            >{t.nav.laboratory}</a
           >
           <a
-            href="/contact"
+            href={lang === 'es' ? '/contact' : '/en/contact'}
             class="nav-link px-3 py-2 rounded-md text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-500 shadow-lg shadow-emerald-500/20 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-dark"
-            >Contacto</a
+            >{t.nav.contact}</a
+          >
+          <a
+            href={toggleHref}
+            class="px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 border border-slate-700 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+            aria-label={lang === 'es' ? 'Switch to English' : 'Cambiar a Español'}
+            >{toggleLabel}</a
           >
         </div>
       </div>
@@ -60,7 +80,7 @@
           aria-controls="mobile-menu"
           aria-expanded="false"
         >
-          <span class="sr-only">Abrir menú</span>
+          <span class="sr-only">{t.nav.openMenu}</span>
           <!-- Icon: Menu -->
           <svg
             class="block h-6 w-6"
@@ -103,29 +123,35 @@
   >
     <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
       <a
-        href="/"
+        href={lang === 'es' ? '/' : '/en/'}
         class="mobile-nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-white/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
-        >Inicio</a
+        >{t.nav.home}</a
       >
       <a
-        href="/about-this-web"
+        href={lang === 'es' ? '/about-this-web' : '/en/about-this-web'}
         class="mobile-nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-white/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
-        >Sobre esta Web</a
+        >{t.nav.aboutThisWeb}</a
       >
       <a
-        href="/about"
+        href={lang === 'es' ? '/about' : '/en/about'}
         class="mobile-nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-white/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
-        >Sobre Mí</a
+        >{t.nav.about}</a
       >
       <a
-        href="/laboratory"
+        href={lang === 'es' ? '/laboratory' : '/en/laboratory'}
         class="mobile-nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-white/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
-        >Laboratorio</a
+        >{t.nav.laboratory}</a
       >
       <a
-        href="/contact"
+        href={lang === 'es' ? '/contact' : '/en/contact'}
         class="mobile-nav-link block px-3 py-2 rounded-md text-base font-medium text-white bg-emerald-600 hover:bg-emerald-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
-        >Contacto</a
+        >{t.nav.contact}</a
+      >
+      <a
+        href={toggleHref}
+        class="mobile-nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-white/5 border border-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+        aria-label={lang === 'es' ? 'Switch to English' : 'Cambiar a Español'}
+        >{toggleLabel}</a
       >
     </div>
   </div>

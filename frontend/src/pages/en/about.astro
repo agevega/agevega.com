@@ -1,9 +1,9 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import AboutSection from "../components/AboutSection.astro";
-import ExperienceSection from "../components/ExperienceSection.astro";
-import TechStackSection from "../components/TechStackSection.astro";
-import ProjectsSection from "../components/ProjectsSection.astro";
+import Layout from "../../layouts/Layout.astro";
+import AboutSection from "../../components/AboutSection.astro";
+import ExperienceSection from "../../components/ExperienceSection.astro";
+import TechStackSection from "../../components/TechStackSection.astro";
+import ProjectsSection from "../../components/ProjectsSection.astro";
 
 const personJsonLd = {
   "@context": "https://schema.org",
@@ -19,9 +19,9 @@ const personJsonLd = {
 ---
 
 <Layout
-  title="Sobre Mí | Alejandro Vega"
-  description="Perfil profesional de Alejandro Vega: formación, experiencia en Santander, Ericsson y Coches.com, certificaciones AWS y publicaciones científicas."
-  lang="es"
+  title="About Me | Alejandro Vega"
+  description="Professional profile of Alejandro Vega: education, experience at Santander, Ericsson and Coches.com, AWS certifications and scientific publications."
+  lang="en"
 >
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify(personJsonLd)} />
