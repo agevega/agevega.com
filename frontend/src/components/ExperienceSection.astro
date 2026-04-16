@@ -43,9 +43,9 @@ const projects: Project[] = [
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {
           projects.map((project) => (
-            <div class="bg-slate-900 rounded-xl overflow-hidden border border-slate-800 h-full flex flex-col">
+            <div class="group bg-slate-900 rounded-xl overflow-hidden border border-slate-800 hover:border-emerald-500/50 transition-colors h-full flex flex-col">
               <div class="p-8 flex flex-col flex-grow">
-                <h3 class="text-xl font-bold text-white mb-3">
+                <h3 class="text-xl font-bold text-white mb-3 group-hover:text-emerald-400 transition-colors">
                   {project.title}
                 </h3>
                 <p class="text-slate-400 mb-6 leading-relaxed flex-grow text-sm">
