@@ -132,3 +132,4 @@ cython_debug/
 .gemini/*
 !.gemini/GEMINI.md
 .claude/settings.local.json
+.gstack/
