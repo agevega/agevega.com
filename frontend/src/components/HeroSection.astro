@@ -1,6 +1,14 @@
 ---
 import { PUBLIC_APP_VERSION } from "astro:env/client";
+import type { Lang } from "../i18n/translations";
+import { useTranslations } from "../i18n/utils";
 
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'es' } = Astro.props;
+const t = useTranslations(lang);
 const version = PUBLIC_APP_VERSION;
 ---
 
@@ -37,14 +45,14 @@ const version = PUBLIC_APP_VERSION;
           </span>
           <span
             class="text-xs font-medium text-slate-300 tracking-wide uppercase"
-            >Available for projects</span
+            >{t.hero.badge}</span
           >
         </div>
 
         <h1
           class="text-5xl md:text-7xl font-bold tracking-tight mb-6 text-white leading-tight"
         >
-          Alejandro Vega
+          {t.hero.name}
           <span
             class="block text-4xl md:text-5xl mt-2 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-emerald-400"
           >
@@ -55,13 +63,12 @@ const version = PUBLIC_APP_VERSION;
         <p class="text-xl text-slate-400 mb-10 leading-relaxed max-w-xl">
           <span class="text-slate-100 font-medium"
             >Senior DevSecOps Engineer & Cloud Architect</span
-          >. Transformo requisitos complejos en infraestructuras AWS eficientes
-          y seguras. Especialista en Terraform, Kubernetes y automatización.
+          >. {t.hero.description}
         </p>
 
         <div class="flex flex-wrap gap-4">
           <a
-            href="/about-this-web"
+            href={lang === 'es' ? '/contact' : '/en/contact'}
             class="px-8 py-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-medium transition-all shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:-translate-y-1 flex items-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-dark"
           >
             <svg
@@ -78,20 +85,19 @@ const version = PUBLIC_APP_VERSION;
                 stroke-width="2"
                 d="M13 10V3L4 14h7v7l9-11h-7z"></path>
             </svg>
-            Sobre esta web
+            {t.hero.ctaContact}
           </a>
           <a
-            href="/contact"
+            href={lang === 'es' ? '/about' : '/en/about'}
             class="px-8 py-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-medium border border-slate-700 transition-all hover:-translate-y-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-dark"
           >
-            Contactar
+            {t.hero.ctaAbout}
           </a>
         </div>
       </div>
 
       <!-- Hero Visual (Right Side) -->
       <div class="hidden lg:block relative">
-        <!-- Abstract Code/Infra Visual Representation could go here -->
         <div
           class="relative bg-slate-900/50 border border-white/10 rounded-2xl p-6 backdrop-blur-xl"
         >
@@ -112,11 +118,11 @@ const version = PUBLIC_APP_VERSION;
 
   <span class="text-blue-400">environment</span> = <span class="text-green-400">"production"</span>
   <span class="text-blue-400">region</span>      = <span class="text-green-400">"eu-south-2"</span>
-  
+
   <span class="text-slate-500"># High Availability & Scalability</span>
   <span class="text-blue-400">min_size</span>    = <span class="text-orange-400">2</span>
   <span class="text-blue-400">max_size</span>    = <span class="text-orange-400">10</span>
-  
+
   <span class="text-blue-400">security_level</span> = <span class="text-green-400">"strict"</span>
 &#125;</code>
             </pre>

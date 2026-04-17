@@ -1,5 +1,13 @@
 ---
+import type { Lang } from "../i18n/translations";
+import { useTranslations } from "../i18n/utils";
 
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'es' } = Astro.props;
+const t = useTranslations(lang);
 ---
 
 <section id="lab" class="py-24 relative overflow-hidden">
@@ -8,12 +16,12 @@
       <h2
         class="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-emerald-400 inline-block"
       >
-        Laboratorio
+        {t.laboratory.title}
       </h2>
       <p
         class="mt-4 text-slate-400 max-w-3xl mx-auto text-lg"
       >
-        Espacio de experimentación donde probar tecnologías.
+        {t.laboratory.subtitle}
       </p>
     </div>
 
@@ -61,14 +69,15 @@
           <p
             class="text-slate-400 leading-relaxed group-hover:text-slate-300 transition-colors"
           >
-            Simulador interactivo de cubo de Rubik en 3D. Renderizado con WebGL
-            y lógica en Vanilla JS.
+            {lang === 'es'
+              ? 'Simulador interactivo de cubo de Rubik en 3D. Renderizado con WebGL y lógica en Vanilla JS.'
+              : 'Interactive 3D Rubik\'s cube simulator. Rendered with WebGL and logic in Vanilla JS.'}
           </p>
 
           <div
             class="mt-6 flex items-center text-sm font-medium text-emerald-400 group-hover:text-emerald-300"
           >
-            <span>Lanzar simulador</span>
+            <span>{lang === 'es' ? 'Lanzar simulador' : 'Launch simulator'}</span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform"
@@ -125,19 +134,20 @@
           <h3
             class="text-xl font-bold text-white mb-3 group-hover:text-emerald-300 transition-colors"
           >
-            Observabilidad de Despliegue
+            {lang === 'es' ? 'Observabilidad de Despliegue' : 'Deployment Observability'}
           </h3>
           <p
             class="text-slate-400 leading-relaxed group-hover:text-slate-300 transition-colors"
           >
-            Dashboard de telemetría. Inspección de metadatos de infraestructura
-            y diagnóstico de red.
+            {lang === 'es'
+              ? 'Dashboard de telemetría. Inspección de metadatos de infraestructura y diagnóstico de red.'
+              : 'Telemetry dashboard. Infrastructure metadata inspection and network diagnostics.'}
           </p>
 
           <div
             class="mt-6 flex items-center text-sm font-medium text-emerald-400 group-hover:text-emerald-300"
           >
-            <span>Ver métricas</span>
+            <span>{lang === 'es' ? 'Ver métricas' : 'View metrics'}</span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform"
@@ -181,7 +191,7 @@
         <p
           class="text-slate-500 font-medium group-hover:text-emerald-300 transition-colors"
         >
-          Próximamente
+          {lang === 'es' ? 'Próximamente' : 'Coming soon'}
         </p>
       </div>
     </div>
