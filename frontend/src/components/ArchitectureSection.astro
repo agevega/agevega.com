@@ -1,5 +1,12 @@
 ---
+import type { Lang } from "../i18n/translations";
 
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'es' } = Astro.props;
+const isEn = lang === 'en';
 ---
 
 <section id="architecture" class="py-20 relative overflow-hidden">
@@ -25,15 +32,14 @@
           <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">
             <span
               class="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-emerald-400"
-              >Arquitectura & Ingeniería</span
+              >{isEn ? 'Architecture & Engineering' : 'Arquitectura & Ingeniería'}</span
             >
           </h2>
           <p class="text-slate-400 text-lg leading-relaxed max-w-3xl mb-12">
-            Diseñada desde cero siguiendo principios <strong
-              >Cloud Native</strong
-            >, <strong>Zero-Trust Security</strong> y eficiencia de costes <strong
-              >FinOps</strong
-            >.
+            {isEn
+              ? <>Built from scratch following <strong>Cloud Native</strong>, <strong>Zero-Trust Security</strong> and <strong>FinOps</strong> cost efficiency principles.</>
+              : <>Diseñada desde cero siguiendo principios <strong>Cloud Native</strong>, <strong>Zero-Trust Security</strong> y eficiencia de costes <strong>FinOps</strong>.</>
+            }
           </p>
         </div>
         <div class="flex-shrink-0">
@@ -53,7 +59,7 @@
                 d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
               ></path>
             </svg>
-            <span class="font-medium">Ver Repositorio</span>
+            <span class="font-medium">{isEn ? 'View Repository' : 'Ver Repositorio'}</span>
           </a>
         </div>
       </div>
@@ -83,7 +89,7 @@
                 ></path>
               </svg>
             </div>
-            <h3 class="text-xl font-bold text-white">1. Infraestructura</h3>
+            <h3 class="text-xl font-bold text-white">{isEn ? '1. Infrastructure' : '1. Infraestructura'}</h3>
           </div>
           <ul class="space-y-4">
             <li class="flex items-start gap-3">
@@ -92,9 +98,8 @@
               ></span>
               <p class="text-slate-400 text-sm leading-relaxed">
                 <strong class="text-slate-200"
-                  >Infraestructura Modular (IaC):</strong
-                > Aprovisionamiento en AWS completamente automatizado con Terraform.
-                Estado remoto en S3 con bloqueo DynamoDB.
+                  >{isEn ? 'Modular Infrastructure (IaC):' : 'Infraestructura Modular (IaC):'}</strong
+                > {isEn ? 'Fully automated AWS provisioning with Terraform. Remote state in S3 with DynamoDB locking.' : 'Aprovisionamiento en AWS completamente automatizado con Terraform. Estado remoto en S3 con bloqueo DynamoDB.'}
               </p>
             </li>
             <li class="flex items-start gap-3">
@@ -102,8 +107,7 @@
                 class="mt-1.5 w-1.5 h-1.5 rounded-full bg-blue-400 flex-shrink-0"
               ></span>
               <p class="text-slate-400 text-sm leading-relaxed">
-                <strong class="text-slate-200">Networking 3-Tier:</strong> VPC en
-                Madrid (eu-south-2). Segmentación estricta (Public/Private/Data).
+                <strong class="text-slate-200">Networking 3-Tier:</strong> {isEn ? 'VPC in Madrid (eu-south-2). Strict segmentation (Public/Private/Data).' : 'VPC en Madrid (eu-south-2). Segmentación estricta (Public/Private/Data).'}
               </p>
             </li>
             <li class="flex items-start gap-3">
@@ -111,8 +115,7 @@
                 class="mt-1.5 w-1.5 h-1.5 rounded-full bg-blue-400 flex-shrink-0"
               ></span>
               <p class="text-slate-400 text-sm leading-relaxed">
-                <strong class="text-slate-200">Seguridad Perimetral:</strong> CloudFront
-                (CDN) + OAC para assets privados en S3.
+                <strong class="text-slate-200">{isEn ? 'Perimeter Security:' : 'Seguridad Perimetral:'}</strong> {isEn ? 'CloudFront (CDN) + OAC for private assets in S3.' : 'CloudFront (CDN) + OAC para assets privados en S3.'}
               </p>
             </li>
             <li class="flex items-start gap-3">
@@ -120,8 +123,7 @@
                 class="mt-1.5 w-1.5 h-1.5 rounded-full bg-blue-400 flex-shrink-0"
               ></span>
               <p class="text-slate-400 text-sm leading-relaxed">
-                <strong class="text-slate-200">Cómputo Aislado:</strong> EC2 en subred
-                privada. Acceso solo vía CloudFront.
+                <strong class="text-slate-200">{isEn ? 'Isolated Compute:' : 'Cómputo Aislado:'}</strong> {isEn ? 'EC2 in private subnet. Access only via CloudFront.' : 'EC2 en subred privada. Acceso solo vía CloudFront.'}
               </p>
             </li>
             <li class="flex items-start gap-3">
@@ -129,8 +131,7 @@
                 class="mt-1.5 w-1.5 h-1.5 rounded-full bg-blue-400 flex-shrink-0"
               ></span>
               <p class="text-slate-400 text-sm leading-relaxed">
-                <strong class="text-slate-200">Backend Serverless:</strong> Lambda
-                (Python) + API Gateway.
+                <strong class="text-slate-200">Backend Serverless:</strong> Lambda (Python) + API Gateway.
               </p>
             </li>
           </ul>
@@ -167,8 +168,7 @@
                 class="mt-1.5 w-1.5 h-1.5 rounded-full bg-violet-400 flex-shrink-0"
               ></span>
               <p class="text-slate-400 text-sm leading-relaxed">
-                <strong class="text-slate-200">GitHub Actions:</strong> Pipeline completo
-                de Build, Test y Deploy sin intervención manual.
+                <strong class="text-slate-200">GitHub Actions:</strong> {isEn ? 'Complete Build, Test and Deploy pipeline without manual intervention.' : 'Pipeline completo de Build, Test y Deploy sin intervención manual.'}
               </p>
             </li>
             <li class="flex items-start gap-3">
@@ -176,8 +176,7 @@
                 class="mt-1.5 w-1.5 h-1.5 rounded-full bg-violet-400 flex-shrink-0"
               ></span>
               <p class="text-slate-400 text-sm leading-relaxed">
-                <strong class="text-slate-200">Container Registry:</strong> AWS ECR
-                con escaneo de vulnerabilidades y políticas de limpieza.
+                <strong class="text-slate-200">Container Registry:</strong> {isEn ? 'AWS ECR with vulnerability scanning and cleanup policies.' : 'AWS ECR con escaneo de vulnerabilidades y políticas de limpieza.'}
               </p>
             </li>
             <li class="flex items-start gap-3">
@@ -185,8 +184,7 @@
                 class="mt-1.5 w-1.5 h-1.5 rounded-full bg-violet-400 flex-shrink-0"
               ></span>
               <p class="text-slate-400 text-sm leading-relaxed">
-                <strong class="text-slate-200">Build Multi-Arch:</strong> Imágenes
-                Docker optimizadas para arquitecturas ARM64 y AMD64.
+                <strong class="text-slate-200">Build Multi-Arch:</strong> {isEn ? 'Docker images optimized for ARM64 and AMD64 architectures.' : 'Imágenes Docker optimizadas para arquitecturas ARM64 y AMD64.'}
               </p>
             </li>
             <li class="flex items-start gap-3">
@@ -194,8 +192,7 @@
                 class="mt-1.5 w-1.5 h-1.5 rounded-full bg-violet-400 flex-shrink-0"
               ></span>
               <p class="text-slate-400 text-sm leading-relaxed">
-                <strong class="text-slate-200">Rolling Updates:</strong> Despliegue
-                de nuevas versiones en producción sin downtime.
+                <strong class="text-slate-200">Rolling Updates:</strong> {isEn ? 'Zero-downtime deployment of new versions to production.' : 'Despliegue de nuevas versiones en producción sin downtime.'}
               </p>
             </li>
           </ul>
@@ -231,9 +228,7 @@
                 class="mt-1.5 w-1.5 h-1.5 rounded-full bg-amber-400 flex-shrink-0"
               ></span>
               <p class="text-slate-400 text-sm leading-relaxed">
-                <strong class="text-slate-200">Desarrollo con IA:</strong> Frontend
-                generado mediante flujos y agentes de IA con Claude Opus, Gemini Pro
-                y Google Antigravity.
+                <strong class="text-slate-200">{isEn ? 'AI-Assisted Development:' : 'Desarrollo con IA:'}</strong> {isEn ? 'Frontend built using AI flows and agents with Claude Opus, Gemini Pro and Google Antigravity.' : 'Frontend generado mediante flujos y agentes de IA con Claude Opus, Gemini Pro y Google Antigravity.'}
               </p>
             </li>
             <li class="flex items-start gap-3">
@@ -241,8 +236,7 @@
                 class="mt-1.5 w-1.5 h-1.5 rounded-full bg-amber-400 flex-shrink-0"
               ></span>
               <p class="text-slate-400 text-sm leading-relaxed">
-                <strong class="text-slate-200">Arquitectura de Islas:</strong> Astro
-                v5 (SSG). Zero JS por defecto.
+                <strong class="text-slate-200">{isEn ? 'Islands Architecture:' : 'Arquitectura de Islas:'}</strong> {isEn ? 'Astro v5 (SSG). Zero JS by default.' : 'Astro v5 (SSG). Zero JS por defecto.'}
               </p>
             </li>
             <li class="flex items-start gap-3">
@@ -250,8 +244,7 @@
                 class="mt-1.5 w-1.5 h-1.5 rounded-full bg-amber-400 flex-shrink-0"
               ></span>
               <p class="text-slate-400 text-sm leading-relaxed">
-                <strong class="text-slate-200">Estilado Atómico:</strong> TailwindCSS.
-                Bundle CSS mínimo.
+                <strong class="text-slate-200">{isEn ? 'Atomic Styling:' : 'Estilado Atómico:'}</strong> {isEn ? 'TailwindCSS. Minimal CSS bundle.' : 'TailwindCSS. Bundle CSS mínimo.'}
               </p>
             </li>
             <li class="flex items-start gap-3">
@@ -259,8 +252,7 @@
                 class="mt-1.5 w-1.5 h-1.5 rounded-full bg-amber-400 flex-shrink-0"
               ></span>
               <p class="text-slate-400 text-sm leading-relaxed">
-                <strong class="text-slate-200">Nginx Server:</strong> Imagen Docker
-                customizada y optimizada.
+                <strong class="text-slate-200">Nginx Server:</strong> {isEn ? 'Custom and optimized Docker image.' : 'Imagen Docker customizada y optimizada.'}
               </p>
             </li>
           </ul>
@@ -297,8 +289,7 @@
                 class="mt-1.5 w-1.5 h-1.5 rounded-full bg-emerald-400 flex-shrink-0"
               ></span>
               <p class="text-slate-400 text-sm leading-relaxed">
-                <strong class="text-slate-200">Instancias Spot:</strong> Cluster de
-                alta disponibilidad con ASG sobre instancias Spot.
+                <strong class="text-slate-200">{isEn ? 'Spot Instances:' : 'Instancias Spot:'}</strong> {isEn ? 'High availability cluster with ASG on Spot instances.' : 'Cluster de alta disponibilidad con ASG sobre instancias Spot.'}
               </p>
             </li>
             <li class="flex items-start gap-3">
@@ -306,9 +297,7 @@
                 class="mt-1.5 w-1.5 h-1.5 rounded-full bg-emerald-400 flex-shrink-0"
               ></span>
               <p class="text-slate-400 text-sm leading-relaxed">
-                <strong class="text-slate-200">Eficiencia Graviton:</strong> Uso de
-                instancias ARM64. Mejor ratio precio/rendimiento frente a arquitecturas
-                x86 tradicionales.
+                <strong class="text-slate-200">{isEn ? 'Graviton Efficiency:' : 'Eficiencia Graviton:'}</strong> {isEn ? 'ARM64 instances. Better price/performance ratio vs traditional x86.' : 'Uso de instancias ARM64. Mejor ratio precio/rendimiento frente a arquitecturas x86 tradicionales.'}
               </p>
             </li>
             <li class="flex items-start gap-3">
@@ -316,8 +305,7 @@
                 class="mt-1.5 w-1.5 h-1.5 rounded-full bg-emerald-400 flex-shrink-0"
               ></span>
               <p class="text-slate-400 text-sm leading-relaxed">
-                <strong class="text-slate-200">Gestión de Assets:</strong> Lifecycle
-                Policies en S3 (Glacier), ECR y CloudWatch.
+                <strong class="text-slate-200">{isEn ? 'Asset Management:' : 'Gestión de Assets:'}</strong> {isEn ? 'Lifecycle Policies in S3 (Glacier), ECR and CloudWatch.' : 'Lifecycle Policies en S3 (Glacier), ECR y CloudWatch.'}
               </p>
             </li>
             <li class="flex items-start gap-3">
@@ -325,8 +313,7 @@
                 class="mt-1.5 w-1.5 h-1.5 rounded-full bg-emerald-400 flex-shrink-0"
               ></span>
               <p class="text-slate-400 text-sm leading-relaxed">
-                <strong class="text-slate-200">Control Presupuestario:</strong> AWS
-                Budgets con alertas granulares diarias y mensuales.
+                <strong class="text-slate-200">{isEn ? 'Budget Control:' : 'Control Presupuestario:'}</strong> {isEn ? 'AWS Budgets with granular daily and monthly alerts.' : 'AWS Budgets con alertas granulares diarias y mensuales.'}
               </p>
             </li>
           </ul>
@@ -353,20 +340,19 @@
       >
         <div class="flex-grow">
           <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
-            Ciclo de Vida <span
+            {isEn ? 'Web Application' : 'Ciclo de Vida'} <span
               class="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-emerald-400"
-              >de la Aplicación Web</span
+              >{isEn ? 'Lifecycle' : 'de la Aplicación Web'}</span
             >
           </h2>
           <p class="text-slate-400 text-lg leading-relaxed max-w-3xl mb-12">
-            Visión detallada de cada fase del ciclo de vida del desarrollo de
-            software implementada en este proyecto.
+            {isEn ? 'Detailed view of each phase of the software development lifecycle implemented in this project.' : 'Visión detallada de cada fase del ciclo de vida del desarrollo de software implementada en este proyecto.'}
           </p>
         </div>
         <div class="flex-shrink-0">
           <img
             src="/images/content/continuous-development-visual.png"
-            alt="Ciclo de Vida DevOps"
+            alt={isEn ? 'DevOps Lifecycle' : 'Ciclo de Vida DevOps'}
             class="w-96 h-auto"
             loading="lazy"
           />
@@ -388,8 +374,7 @@
             <h3 class="text-white font-bold">PLAN</h3>
           </div>
           <p class="text-sm text-slate-400 leading-relaxed">
-            Arquitectura como código (IaC). Definición completa de recursos en
-            AWS con Terraform modular y escalable.
+            {isEn ? 'Architecture as Code (IaC). Full AWS resource definition with modular and scalable Terraform.' : 'Arquitectura como código (IaC). Definición completa de recursos en AWS con Terraform modular y escalable.'}
           </p>
           <div class="mt-4 flex gap-2">
             <span
@@ -412,8 +397,7 @@
             <h3 class="text-white font-bold">CODE</h3>
           </div>
           <p class="text-sm text-slate-400 leading-relaxed">
-            Frontend optimizado con Astro v5 (Zero-JS). Estilizado con
-            TailwindCSS. Backend Serverless en Python.
+            {isEn ? 'Optimized frontend with Astro v5 (Zero-JS). Styled with TailwindCSS. Serverless backend in Python.' : 'Frontend optimizado con Astro v5 (Zero-JS). Estilizado con TailwindCSS. Backend Serverless en Python.'}
           </p>
           <div class="mt-4 flex gap-2">
             <span
@@ -440,8 +424,7 @@
             <h3 class="text-white font-bold">BUILD</h3>
           </div>
           <p class="text-sm text-slate-400 leading-relaxed">
-            Construcción de imágenes Docker Multi-stage. Optimización para
-            arquitectura ARM64 (AWS Graviton).
+            {isEn ? 'Multi-stage Docker image builds. Optimization for ARM64 architecture (AWS Graviton).' : 'Construcción de imágenes Docker Multi-stage. Optimización para arquitectura ARM64 (AWS Graviton).'}
           </p>
           <div class="mt-4 flex gap-2">
             <span
@@ -468,8 +451,7 @@
             <h3 class="text-white font-bold">TEST</h3>
           </div>
           <p class="text-sm text-slate-400 leading-relaxed">
-            Validación de tipos estáticos. Linting de código y seguridad
-            (Security Scans) en CI Pipeline.
+            {isEn ? 'Static type validation. Code and security linting (Security Scans) in CI Pipeline.' : 'Validación de tipos estáticos. Linting de código y seguridad (Security Scans) en CI Pipeline.'}
           </p>
           <div class="mt-4 flex gap-2">
             <span
@@ -492,8 +474,7 @@
             <h3 class="text-white font-bold">RELEASE</h3>
           </div>
           <p class="text-sm text-slate-400 leading-relaxed">
-            Versionado Semántico (Git Tags). Publicación de artefactos
-            inmutables en AWS ECR.
+            {isEn ? 'Semantic Versioning (Git Tags). Publishing immutable artifacts to AWS ECR.' : 'Versionado Semántico (Git Tags). Publicación de artefactos inmutables en AWS ECR.'}
           </p>
           <div class="mt-4 flex gap-2">
             <span
@@ -520,8 +501,7 @@
             <h3 class="text-white font-bold">DEPLOY</h3>
           </div>
           <p class="text-sm text-slate-400 leading-relaxed">
-            Despliegue automatizado en Amazon EC2 (Spot). Sincronización de
-            Assets estáticos en S3 + CloudFront.
+            {isEn ? 'Automated deployment on Amazon EC2 (Spot). Sync of static assets to S3 + CloudFront.' : 'Despliegue automatizado en Amazon EC2 (Spot). Sincronización de Assets estáticos en S3 + CloudFront.'}
           </p>
           <div class="mt-4 flex gap-2">
             <span
@@ -548,8 +528,7 @@
             <h3 class="text-white font-bold">OPERATE</h3>
           </div>
           <p class="text-sm text-slate-400 leading-relaxed">
-            Seguridad del entorno, disponibilidad y estabilidad. Gestión de
-            configuración, escalado y retroalimentación.
+            {isEn ? 'Environment security, availability and stability. Configuration management, scaling and feedback.' : 'Seguridad del entorno, disponibilidad y estabilidad. Gestión de configuración, escalado y retroalimentación.'}
           </p>
           <div class="mt-4 flex gap-2">
             <span
@@ -576,8 +555,7 @@
             <h3 class="text-white font-bold">MONITOR</h3>
           </div>
           <p class="text-sm text-slate-400 leading-relaxed">
-            Observabilidad con CloudWatch. Estrategias FinOps para optimización
-            continua de costes.
+            {isEn ? 'Observability with CloudWatch. FinOps strategies for continuous cost optimization.' : 'Observabilidad con CloudWatch. Estrategias FinOps para optimización continua de costes.'}
           </p>
           <div class="mt-4 flex gap-2">
             <span
