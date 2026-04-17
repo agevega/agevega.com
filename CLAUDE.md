@@ -10,7 +10,7 @@ Personal portfolio website for Alejandro Vega (Senior DevSecOps Engineer & Cloud
 │   ├── src/
 │   │   ├── components/    # 10 Astro components (PascalCase)
 │   │   ├── layouts/       # Single Layout.astro
-│   │   └── pages/         # 5 pages: index, about, about-this-web, contact, laboratory
+│   │   └── pages/         # Symmetric i18n: es/ (5 ES pages) + en/ (5 EN pages)
 │   ├── public/            # Static assets (favicon, og-image, etc.)
 │   ├── tailwind.config.mjs
 │   └── astro.config.mjs
@@ -33,7 +33,7 @@ npm run build      # Build static site to dist/
 ## Frontend Conventions
 
 - **Components:** One file per component in `src/components/`, always `PascalCase.astro`.
-- **Pages:** Lowercase kebab-case in `src/pages/` (e.g., `about-this-web.astro`).
+- **Pages:** Lowercase kebab-case in `src/pages/es/` and `src/pages/en/`. Both locale folders are mirrors.
 - **Layout:** Single `Layout.astro` wraps all pages. Receives `title` prop. Includes Navigation + Footer.
 - **Styling:** TailwindCSS utility classes. No custom CSS files except `<style is:global>` in Layout.
 - **Indentation:** Tabs in config files (tailwind, astro), 2 spaces in `.astro` component markup.

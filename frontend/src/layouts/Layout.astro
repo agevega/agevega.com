@@ -25,8 +25,8 @@ const baseOrigin = Astro.site ? Astro.site.origin : Astro.url.origin;
 const ogImageUrl = ogImage ? `${baseOrigin}${ogImage}` : `${baseOrigin}/og-image.jpg`;
 
 const currentPath = Astro.url.pathname;
-const esPath = currentPath.startsWith('/en/') ? currentPath.slice(3) || '/' : currentPath;
-const enPath = currentPath.startsWith('/en/') ? currentPath : `/en${currentPath}`;
+const esPath = currentPath.replace(/^\/en(?=\/|$)/, '/es');
+const enPath = currentPath.replace(/^\/es(?=\/|$)/, '/en');
 
 const opengraph = {
   image: ogImageUrl,

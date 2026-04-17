@@ -5,11 +5,14 @@ import tailwind from '@astrojs/tailwind';
 export default defineConfig({
   site: 'https://agevega.com',
   integrations: [tailwind()],
+  redirects: {
+    '/': '/es/',
+  },
   i18n: {
     defaultLocale: 'es',
     locales: ['es', 'en'],
     routing: {
-      prefixDefaultLocale: false,
+      prefixDefaultLocale: true,
     },
   },
   env: {

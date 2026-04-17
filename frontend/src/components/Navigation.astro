@@ -10,9 +10,9 @@ const { lang = 'es' } = Astro.props;
 const t = useTranslations(lang);
 
 const currentPath = Astro.url.pathname;
-const esPath = currentPath.startsWith('/en/') ? currentPath.slice(3) || '/' : currentPath;
-const enPath = currentPath.startsWith('/en/') ? currentPath : `/en${currentPath}`;
-const toggleHref = lang === 'es' ? enPath : esPath;
+const toggleHref = lang === 'es'
+  ? currentPath.replace(/^\/es(?=\/|$)/, '/en')
+  : currentPath.replace(/^\/en(?=\/|$)/, '/es');
 const toggleLabel = t.nav.toggleLabel;
 ---
 
@@ -24,7 +24,7 @@ const toggleLabel = t.nav.toggleLabel;
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
     <div class="flex items-center justify-between h-16">
       <!-- Logo -->
-      <a href="/" class="flex-shrink-0" aria-label="Inicio - Alejandro Vega">
+      <a href={lang === 'es' ? '/es/' : '/en/'} class="flex-shrink-0" aria-label={lang === 'es' ? 'Inicio - Alejandro Vega' : 'Home - Alejandro Vega'}>
         <img
           src="/images/logos/original.png"
           alt="AV Logo"
@@ -38,27 +38,27 @@ const toggleLabel = t.nav.toggleLabel;
       <div class="hidden md:block">
         <div class="ml-10 flex items-baseline space-x-4">
           <a
-            href={lang === 'es' ? '/' : '/en/'}
+            href={lang === 'es' ? '/es/' : '/en/'}
             class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
             >{t.nav.home}</a
           >
           <a
-            href={lang === 'es' ? '/about-this-web' : '/en/about-this-web'}
+            href={lang === 'es' ? '/es/about-this-web' : '/en/about-this-web'}
             class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
             >{t.nav.aboutThisWeb}</a
           >
           <a
-            href={lang === 'es' ? '/about' : '/en/about'}
+            href={lang === 'es' ? '/es/about' : '/en/about'}
             class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
             >{t.nav.about}</a
           >
           <a
-            href={lang === 'es' ? '/laboratory' : '/en/laboratory'}
+            href={lang === 'es' ? '/es/laboratory' : '/en/laboratory'}
             class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
             >{t.nav.laboratory}</a
           >
           <a
-            href={lang === 'es' ? '/contact' : '/en/contact'}
+            href={lang === 'es' ? '/es/contact' : '/en/contact'}
             class="nav-link px-3 py-2 rounded-md text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-500 shadow-lg shadow-emerald-500/20 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-dark"
             >{t.nav.contact}</a
           >
@@ -123,27 +123,27 @@ const toggleLabel = t.nav.toggleLabel;
   >
     <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
       <a
-        href={lang === 'es' ? '/' : '/en/'}
+        href={lang === 'es' ? '/es/' : '/en/'}
         class="mobile-nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-white/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
         >{t.nav.home}</a
       >
       <a
-        href={lang === 'es' ? '/about-this-web' : '/en/about-this-web'}
+        href={lang === 'es' ? '/es/about-this-web' : '/en/about-this-web'}
         class="mobile-nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-white/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
         >{t.nav.aboutThisWeb}</a
       >
       <a
-        href={lang === 'es' ? '/about' : '/en/about'}
+        href={lang === 'es' ? '/es/about' : '/en/about'}
         class="mobile-nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-white/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
         >{t.nav.about}</a
       >
       <a
-        href={lang === 'es' ? '/laboratory' : '/en/laboratory'}
+        href={lang === 'es' ? '/es/laboratory' : '/en/laboratory'}
         class="mobile-nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-white/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
         >{t.nav.laboratory}</a
       >
       <a
-        href={lang === 'es' ? '/contact' : '/en/contact'}
+        href={lang === 'es' ? '/es/contact' : '/en/contact'}
         class="mobile-nav-link block px-3 py-2 rounded-md text-base font-medium text-white bg-emerald-600 hover:bg-emerald-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
         >{t.nav.contact}</a
       >
