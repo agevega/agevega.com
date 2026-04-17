@@ -1,8 +1,12 @@
 ---
+import type { Lang } from "../i18n/translations";
+import { useTranslations } from "../i18n/utils";
+
 interface Props {
   title: string;
   description?: string;
   ogImage?: string;
+  lang?: Lang;
 }
 
 import Navigation from "../components/Navigation.astro";
@@ -13,10 +17,16 @@ import "@fontsource/inter/500.css";
 import "@fontsource/inter/600.css";
 import "@fontsource/inter/700.css";
 
-const DEFAULT_DESCRIPTION = "Alejandro Vega - Senior DevSecOps Engineer & Cloud Architect. Especialista en AWS, Terraform, Kubernetes y automatización.";
-const { title, description = DEFAULT_DESCRIPTION, ogImage } = Astro.props;
+const { title, description, ogImage, lang = 'es' } = Astro.props;
+const t = useTranslations(lang);
+const DEFAULT_DESCRIPTION = t.layout.defaultDescription;
+const resolvedDescription = description ?? DEFAULT_DESCRIPTION;
 const baseOrigin = Astro.site ? Astro.site.origin : Astro.url.origin;
 const ogImageUrl = ogImage ? `${baseOrigin}${ogImage}` : `${baseOrigin}/og-image.jpg`;
+
+const currentPath = Astro.url.pathname;
+const esPath = currentPath.replace(/^\/en(?=\/|$)/, '/es');
+const enPath = currentPath.replace(/^\/es(?=\/|$)/, '/en');
 
 const opengraph = {
   image: ogImageUrl,
@@ -25,28 +35,31 @@ const opengraph = {
 ---
 
 <!doctype html>
-<html lang="es" class="scroll-smooth">
+<html lang={lang} class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content={description} />
+    <meta name="description" content={resolvedDescription} />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <meta name="generator" content={Astro.generator} />
     <link rel="canonical" href={`${baseOrigin}${Astro.url.pathname}`} />
+    <link rel="alternate" hreflang="es" href={`${baseOrigin}${esPath}`} />
+    <link rel="alternate" hreflang="en" href={`${baseOrigin}${enPath}`} />
+    <link rel="alternate" hreflang="x-default" href={`${baseOrigin}${esPath}`} />
     <title>{title}</title>
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content={opengraph.type} />
     <meta property="og:url" content={Astro.url} />
     <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
+    <meta property="og:description" content={resolvedDescription} />
     <meta property="og:image" content={opengraph.image} />
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content={Astro.url} />
     <meta property="twitter:title" content={title} />
-    <meta property="twitter:description" content={description} />
+    <meta property="twitter:description" content={resolvedDescription} />
     <meta property="twitter:image" content={opengraph.image} />
     <slot name="head" />
   </head>
@@ -58,7 +71,7 @@ const opengraph = {
       href="#main-content"
       class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-emerald-600 focus:text-white focus:rounded-lg focus:outline-none"
     >
-      Saltar al contenido principal
+      {t.layout.skipToContent}
     </a>
     <!-- Background Gradient Effects -->
     <div class="fixed inset-0 z-[-1] pointer-events-none" aria-hidden="true">
@@ -75,11 +88,11 @@ const opengraph = {
       >
       </div>
     </div>
-    <Navigation />
+    <Navigation lang={lang} />
     <main id="main-content" class="flex-grow">
       <slot />
     </main>
-    <Footer />
+    <Footer lang={lang} />
   </body>
 </html>
 

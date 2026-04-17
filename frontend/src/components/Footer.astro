@@ -1,9 +1,18 @@
 ---
+import type { Lang } from "../i18n/translations";
+import { useTranslations } from "../i18n/utils";
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'es' } = Astro.props;
+const t = useTranslations(lang);
 const today = new Date();
 ---
 
 <footer class="py-10 border-t border-slate-800 bg-brand-dark">
   <div class="container max-w-7xl mx-auto px-4 text-center text-slate-500">
-    <p>&copy; {today.getFullYear()} Alejandro Vega. Todos los derechos reservados.</p>
+    <p>&copy; {today.getFullYear()} Alejandro Vega. {t.footer.rights}.</p>
   </div>
 </footer>

@@ -1,5 +1,13 @@
 ---
+import type { Lang } from "../i18n/translations";
+import { useTranslations } from "../i18n/utils";
 
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'es' } = Astro.props;
+const t = useTranslations(lang);
 ---
 
 <section id="contact" class="py-20 relative">
@@ -7,17 +15,21 @@
     <div class="max-w-2xl mx-auto">
       <div class="text-center mb-10">
         <h2 class="text-3xl font-bold text-white mb-4">
-          ¿En qué podemos colaborar?
+          {t.contact.title}
         </h2>
         <p class="text-slate-400">
-          Déjame tus datos y cuéntame acerca de tu proyecto para que pueda
-          revisar tu caso personalmente.
+          {t.contact.subtitle}
         </p>
       </div>
 
       <form
         id="contact-form"
         class="space-y-6 bg-slate-800/50 p-8 rounded-2xl border border-slate-700/50 backdrop-blur-sm"
+        data-sending={t.contact.sending}
+        data-ticket-opening={t.contact.ticketOpening}
+        data-success={t.contact.success}
+        data-error={t.contact.error}
+        data-submit={t.contact.submit}
       >
         <!-- Honeypot field for anti-spam (visually hidden but technically present) -->
         <div
@@ -39,7 +51,7 @@
             <label
               for="name"
               class="block text-sm font-medium text-slate-300 mb-2"
-              >Nombre</label
+              >{t.contact.name}</label
             >
             <input
               type="text"
@@ -49,7 +61,7 @@
               aria-required="true"
               maxlength="60"
               class="w-full px-4 py-3 bg-slate-900/50 border border-slate-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-white placeholder-slate-500 transition-colors"
-              placeholder="Tu nombre"
+              placeholder={t.contact.namePlaceholder}
             />
           </div>
           <div>
@@ -65,7 +77,7 @@
               aria-required="true"
               maxlength="100"
               class="w-full px-4 py-3 bg-slate-900/50 border border-slate-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-white placeholder-slate-500 transition-colors"
-              placeholder="tu@email.com"
+              placeholder={t.contact.emailPlaceholder}
             />
           </div>
         </div>
@@ -73,7 +85,7 @@
         <div>
           <label
             for="subject"
-            class="block text-sm font-medium text-slate-300 mb-2">Asunto</label
+            class="block text-sm font-medium text-slate-300 mb-2">{t.contact.subject}</label
           >
           <input
             type="text"
@@ -83,14 +95,14 @@
             aria-required="true"
             maxlength="100"
             class="w-full px-4 py-3 bg-slate-900/50 border border-slate-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-white placeholder-slate-500 transition-colors"
-            placeholder="Resumen de tu consulta"
+            placeholder={t.contact.subjectPlaceholder}
           />
         </div>
 
         <div>
           <label
             for="message"
-            class="block text-sm font-medium text-slate-300 mb-2">Mensaje</label
+            class="block text-sm font-medium text-slate-300 mb-2">{t.contact.message}</label
           >
           <textarea
             id="message"
@@ -100,7 +112,7 @@
             aria-required="true"
             maxlength="2000"
             class="w-full px-4 py-3 bg-slate-900/50 border border-slate-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-white placeholder-slate-500 transition-colors resize-none"
-            placeholder="Describe tu caso o duda..."></textarea>
+            placeholder={t.contact.messagePlaceholder}></textarea>
         </div>
 
         <div id="form-feedback" class="text-center text-sm hidden font-medium" role="status" aria-live="polite">
@@ -111,7 +123,7 @@
           id="submit-btn"
           class="w-full bg-emerald-600 text-white font-semibold py-4 px-8 rounded-lg hover:bg-emerald-500 transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-emerald-500/25 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Enviar mensaje
+          {t.contact.submit}
         </button>
       </form>
 
@@ -145,6 +157,13 @@
   const submitBtn = document.getElementById("submit-btn") as HTMLButtonElement;
   const feedback = document.getElementById("form-feedback") as HTMLDivElement;
 
+  // Read translated strings from data attributes (bridge pattern for SSG i18n + client JS)
+  const msgSending = form?.dataset.sending ?? "Enviando...";
+  const msgTicketOpening = form?.dataset.ticketOpening ?? "Abriendo ticket...";
+  const msgSuccess = form?.dataset.success ?? "¡Ticket abierto con éxito! Hablamos pronto.";
+  const msgError = form?.dataset.error ?? "Vaya, algo falló al abrir el ticket. Por favor, inténtalo de nuevo.";
+  const msgSubmit = form?.dataset.submit ?? "Enviar mensaje";
+
   if (form) {
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -154,14 +173,13 @@
         document.getElementById("b_name_hp") as HTMLInputElement
       )?.value;
       if (honeypot) {
-        // Silently fail (or log spam attempt)
         console.warn("Spam detected via honeypot.");
         return;
       }
 
       // Reset feedback
       feedback.classList.add("hidden");
-      feedback.innerHTML = ""; // Clear content completely
+      feedback.innerHTML = "";
       feedback.classList.remove(
         "text-red-400",
         "text-green-400",
@@ -170,14 +188,14 @@
 
       // Loading state
       submitBtn.disabled = true;
-      submitBtn.innerHTML = "Enviando...";
-      feedback.textContent = "Abriendo ticket...";
+      submitBtn.innerHTML = msgSending;
+      feedback.textContent = msgTicketOpening;
       feedback.classList.add("text-emerald-400");
       feedback.classList.remove("hidden");
 
       const formData = new FormData(form);
       const data = Object.fromEntries(formData.entries());
-      delete data.b_name_hp; // Don't send honeypot field
+      delete data.b_name_hp;
 
       try {
         const response = await fetch(API_URL, {
@@ -189,7 +207,7 @@
         });
 
         if (response.ok) {
-          feedback.textContent = "¡Ticket abierto con éxito! Hablamos pronto.";
+          feedback.textContent = msgSuccess;
           feedback.classList.replace("text-emerald-400", "text-green-400");
           form.reset();
         } else {
@@ -197,12 +215,11 @@
         }
       } catch (error) {
         console.error("Submission error:", error);
-        feedback.textContent =
-          "Vaya, algo falló al abrir el ticket. Por favor, inténtalo de nuevo.";
+        feedback.textContent = msgError;
         feedback.classList.replace("text-emerald-400", "text-red-400");
       } finally {
         submitBtn.disabled = false;
-        submitBtn.innerHTML = "Enviar mensaje";
+        submitBtn.innerHTML = msgSubmit;
       }
     });
   }

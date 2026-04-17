@@ -1,32 +1,45 @@
 ---
+import type { Lang } from "../i18n/translations";
+import { useTranslations } from "../i18n/utils";
+
+interface Props {
+  lang?: Lang;
+}
+
 interface Project {
   title: string;
   description: string;
+  descriptionEn: string;
   tags: string[];
-  link: string;
 }
+
+const { lang = 'es' } = Astro.props;
+const t = useTranslations(lang);
 
 const projects: Project[] = [
   {
     title: "Santander Digital Services",
     description:
       "Ingeniero Cloud y DevSecOps Senior. Desarrollo de aplicaciones IA Cloud-Native, IaC con Terraform Enterprise y seguridad en serverless (Lambda/ECS). Implementación de clusters EKS y gestión de API Gateway.",
+    descriptionEn:
+      "Senior Cloud & DevSecOps Engineer. Development of Cloud-Native AI applications, IaC with Terraform Enterprise and serverless security (Lambda/ECS). EKS cluster implementation and API Gateway management.",
     tags: ["AWS", "Terraform Enterprise", "Lambda", "API Gateway", "EKS"],
-    link: "#",
   },
   {
     title: "Coches.com",
     description:
       "Ingeniero DevOps e Infraestructura. Administración de microservicios en Kubernetes (Helm/ArgoCD). Optimización de costes y observabilidad con Prometheus/Grafana. Gestión de bases de datos RDS/DocumentDB.",
+    descriptionEn:
+      "DevOps & Infrastructure Engineer. Microservices management on Kubernetes (Helm/ArgoCD). Cost optimization and observability with Prometheus/Grafana. RDS/DocumentDB database management.",
     tags: ["AWS", "Kubernetes", "ArgoCD", "Helm", "RDS", "DocumentDB"],
-    link: "#",
   },
   {
     title: "Ericsson",
     description:
       "Ingeniero DevOps. Coordinación de equipos internacionales para integración de productos 4G/5G. Gestión de flujos CI/CD en Jenkins y desarrollo de herramientas de automatización en Python y Groovy.",
+    descriptionEn:
+      "DevOps Engineer. Coordination of international teams for 4G/5G product integration. CI/CD pipeline management in Jenkins and development of automation tools in Python and Groovy.",
     tags: ["Jenkins", "Python", "Groovy", "Git"],
-    link: "#",
   },
 ];
 ---
@@ -34,11 +47,9 @@ const projects: Project[] = [
 <section id="experience" class="py-20">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div>
-      <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">Experiencia Profesional</h2>
+      <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">{t.experience.title}</h2>
       <p class="text-slate-400 mb-12 max-w-3xl text-lg">
-        Mi trayectoria se ha centrado en roles de alta responsabilidad técnica,
-        gestionando infraestructuras críticas y liderando equipos en la adopción
-        de metodologías Cloud Native y DevOps.
+        {t.experience.subtitle}
       </p>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {
@@ -49,7 +60,7 @@ const projects: Project[] = [
                   {project.title}
                 </h3>
                 <p class="text-slate-400 mb-6 leading-relaxed flex-grow text-sm">
-                  {project.description}
+                  {lang === 'en' ? project.descriptionEn : project.description}
                 </p>
                 <div class="flex flex-wrap gap-2 mt-auto">
                   {project.tags.map((tag) => (

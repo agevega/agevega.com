@@ -1,11 +1,19 @@
 ---
+import type { Lang } from "../i18n/translations";
+import { useTranslations } from "../i18n/utils";
 
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'es' } = Astro.props;
+const t = useTranslations(lang);
 ---
 
 <section id="about" class="py-20">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div>
-      <h2 class="text-3xl md:text-4xl font-bold text-white mb-12">Sobre Mí</h2>
+      <h2 class="text-3xl md:text-4xl font-bold text-white mb-12">{t.about.title}</h2>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 text-slate-400">
         <!-- Columna Izquierda: Intro & Foto -->
@@ -32,28 +40,17 @@
                 Senior DevSecOps & Cloud Architect
               </p>
               <p class="leading-relaxed mt-1">
-                Especialista en escalabilidad y resiliencia de infraestructuras
-                AWS con +5 años de experiencia.
+                {t.about.subtitle}
               </p>
             </div>
           </div>
 
           <div class="prose prose-invert mt-4">
             <p>
-              Cuento con doble nacionalidad <strong>(España/EE.UU.)</strong> y una
-              sólida trayectoria en grandes corporaciones como <strong
-                class="text-emerald-400">Santander Digital Services</strong
-              >, <strong class="text-emerald-400">Ericsson</strong> y <strong
-                class="text-emerald-400">Coches.com</strong
-              >.
+              {t.about.description1}
             </p>
             <p>
-              Diseño ecosistemas <strong>Cloud-Native</strong> en <strong
-                >AWS</strong
-              > mediante <strong>Terraform (IaC)</strong> y orquestación de microservicios
-              con <strong>Kubernetes</strong>. Mi enfoque prioriza la
-              automatización, la seguridad, la observabilidad y la optimización
-              de costes <strong>(FinOps)</strong> en sectores de alta criticidad.
+              {t.about.description2}
             </p>
           </div>
 
@@ -64,7 +61,7 @@
               rel="noopener noreferrer"
               class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-emerald-600 hover:bg-emerald-500 transition-colors"
             >
-              Ver CV Completo
+              {lang === 'es' ? 'Ver CV Completo' : 'View Full CV'}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-5 w-5 ml-2"
@@ -122,12 +119,12 @@
             <h3
               class="text-xl font-bold text-white mb-4 border-b border-white/10 pb-2"
             >
-              Educación
+              {t.about.educationTitle}
             </h3>
             <ul class="space-y-4">
               <li class="bg-white/5 p-4 rounded-lg">
                 <h4 class="text-white font-medium">
-                  Ingeniería Informática - Ingeniería de Computadores
+                  {lang === 'es' ? 'Ingeniería Informática - Ingeniería de Computadores' : 'Computer Science Engineering'}
                 </h4>
                 <p class="text-sm text-emerald-400">Universidad de Sevilla</p>
               </li>
@@ -139,7 +136,7 @@
               </li>
               <li class="bg-white/5 p-4 rounded-lg">
                 <h4 class="text-white font-medium">
-                  Experto Universitario en DevOps & Cloud Computing
+                  {lang === 'es' ? 'Experto Universitario en DevOps & Cloud Computing' : 'University Expert in DevOps & Cloud Computing'}
                 </h4>
                 <p class="text-sm text-emerald-400">
                   Universidad Internacional de La Rioja
@@ -152,7 +149,7 @@
             <h3
               class="text-xl font-bold text-white mb-4 border-b border-white/10 pb-2"
             >
-              Certificaciones
+              {t.about.certTitle}
             </h3>
             <ul class="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <li
@@ -161,7 +158,7 @@
                 <span class="block text-emerald-300 font-semibold mb-1"
                   >AWS Certified Cloud Practitioner (2023)</span
                 >
-                Conceptos y mejores prácticas de servicios en AWS.
+                {lang === 'es' ? 'Conceptos y mejores prácticas de servicios en AWS.' : 'AWS service concepts and best practices.'}
               </li>
               <li
                 class="border border-slate-700 rounded p-3 text-sm hover:border-emerald-500/50 transition-colors"
@@ -169,7 +166,7 @@
                 <span class="block text-emerald-300 font-semibold mb-1"
                   >Bitnami Bootcamp (2020)</span
                 >
-                Mejores prácticas con Docker, Kubernetes y Helm
+                {lang === 'es' ? 'Mejores prácticas con Docker, Kubernetes y Helm' : 'Best practices with Docker, Kubernetes and Helm'}
               </li>
             </ul>
           </div>
