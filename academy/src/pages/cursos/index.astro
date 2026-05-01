@@ -1,0 +1,35 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import CourseCard from '../../components/CourseCard.astro';
+import FilterBar from '../../components/FilterBar.astro';
+
+const courses = await getCollection('courses');
+const sorted = [...courses].sort(
+  (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime()
+);
+---
+
+<Layout
+  title="Cursos"
+  description="Catálogo completo de cursos de DevSecOps, Cloud y Automatización."
+>
+  <div class="max-w-6xl mx-auto px-4 md:px-8 py-12">
+    <h1 class="text-3xl font-bold mb-2">Cursos</h1>
+    <p class="text-slate-400 mb-10">Todos los cursos de DevSecOps, Cloud y Automatización.</p>
+
+    <FilterBar />
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {sorted.map((course) => (
+        <div data-category={course.data.category}>
+          <CourseCard course={course} />
+        </div>
+      ))}
+    </div>
+
+    <p id="empty-state" class="text-slate-400 text-sm py-12 text-center hidden">
+      No hay cursos en esta categoría aún.
+    </p>
+  </div>
+</Layout>

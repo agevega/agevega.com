@@ -1,0 +1,65 @@
+---
+const categories = [
+  { key: 'all',        label: 'Todos' },
+  { key: 'devops',     label: 'DevOps' },
+  { key: 'cloud',      label: 'Cloud' },
+  { key: 'security',   label: 'Security' },
+  { key: 'automation', label: 'Automation' },
+  { key: 'other',      label: 'Otro' },
+];
+---
+
+<div class="flex flex-wrap gap-2 mb-8" role="tablist" aria-label="Filtrar por categoría">
+  {categories.map((cat) => (
+    <button
+      role="tab"
+      data-filter={cat.key}
+      aria-selected="false"
+      class="filter-tab text-slate-400 hover:text-white transition-colors rounded-full px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+    >
+      {cat.label}
+    </button>
+  ))}
+</div>
+
+<script>
+  const ACTIVE = 'filter-tab bg-emerald-500 text-gray-900 font-semibold rounded-full px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400';
+  const IDLE   = 'filter-tab text-slate-400 hover:text-white transition-colors rounded-full px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400';
+
+  const tabs = document.querySelectorAll<HTMLButtonElement>('.filter-tab');
+  const cards = document.querySelectorAll<HTMLElement>('[data-category]');
+  const emptyState = document.getElementById('empty-state');
+
+  function setActive(cat: string) {
+    tabs.forEach((tab) => {
+      const isActive = tab.dataset.filter === cat;
+      tab.className = isActive ? ACTIVE : IDLE;
+      tab.setAttribute('aria-selected', String(isActive));
+    });
+
+    let visible = 0;
+    cards.forEach((card) => {
+      const match = cat === 'all' || card.dataset.category === cat;
+      card.style.display = match ? '' : 'none';
+      if (match) visible++;
+    });
+
+    if (emptyState) {
+      emptyState.classList.toggle('hidden', visible > 0);
+    }
+  }
+
+  // Restore from URL on load
+  const params = new URLSearchParams(window.location.search);
+  setActive(params.get('cat') ?? 'all');
+
+  tabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      const cat = tab.dataset.filter ?? 'all';
+      const url = new URL(window.location.href);
+      cat === 'all' ? url.searchParams.delete('cat') : url.searchParams.set('cat', cat);
+      history.replaceState(null, '', url);
+      setActive(cat);
+    });
+  });
+</script>

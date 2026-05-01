@@ -1,0 +1,80 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import VideoEmbed from '../../components/VideoEmbed.astro';
+import ResourceList from '../../components/ResourceList.astro';
+
+export async function getStaticPaths() {
+  const courses = await getCollection('courses');
+  return courses.map((entry) => ({
+    params: { slug: entry.id.replace(/\.mdx?$/, '') },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+
+const { title, description, youtubeId, category, difficulty, resources } = entry.data;
+const ogImage = `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`;
+
+const categoryConfig: Record<string, { label: string; classes: string }> = {
+  devops:     { label: 'DevOps',     classes: 'bg-blue-900/50 text-blue-300 border border-blue-700' },
+  cloud:      { label: 'Cloud',      classes: 'bg-cyan-900/50 text-cyan-300 border border-cyan-700' },
+  security:   { label: 'Security',   classes: 'bg-red-900/50 text-red-300 border border-red-700' },
+  automation: { label: 'Automation', classes: 'bg-purple-900/50 text-purple-300 border border-purple-700' },
+  other:      { label: 'Otro',       classes: 'bg-slate-800 text-slate-400 border border-slate-600' },
+};
+const cat = categoryConfig[category] ?? categoryConfig.other;
+
+const difficultyLabel: Record<string, string> = {
+  beginner: 'Principiante', intermediate: 'Intermedio', advanced: 'Avanzado',
+};
+---
+
+<Layout {title} {description} {ogImage}>
+  <article class="max-w-6xl mx-auto px-4 md:px-8 py-12">
+    <!-- Video -->
+    <VideoEmbed {youtubeId} {title} />
+
+    <!-- Title & badges -->
+    <div class="mt-8 mb-10">
+      <div class="flex flex-wrap items-center gap-3 mb-4">
+        <span class={`text-xs font-medium px-2.5 py-1 rounded-full ${cat.classes}`}>
+          {cat.label}
+        </span>
+        <span class="text-xs font-medium uppercase tracking-wide text-slate-400">
+          {difficultyLabel[difficulty] ?? difficulty}
+        </span>
+      </div>
+      <h1 class="text-3xl font-bold mb-3">{title}</h1>
+      <p class="text-slate-300 leading-relaxed max-w-3xl">{description}</p>
+    </div>
+
+    <!-- Recursos + Contenido -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+      {resources && resources.length > 0 && (
+        <div>
+          <h2 class="text-xl font-semibold mb-4">Recursos</h2>
+          <ResourceList resources={resources} />
+        </div>
+      )}
+      <div class={!resources || resources.length === 0 ? 'md:col-span-2' : ''}>
+        <h2 class="text-xl font-semibold mb-4">Contenido</h2>
+        <div class="content-body">
+          <Content />
+        </div>
+      </div>
+    </div>
+
+    <!-- Back -->
+    <div class="mt-16 pt-8 border-t border-slate-800">
+      <a
+        href="/cursos"
+        class="text-slate-400 hover:text-white transition-colors text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 rounded"
+      >
+        ← Volver al catálogo
+      </a>
+    </div>
+  </article>
+</Layout>

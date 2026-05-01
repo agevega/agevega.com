@@ -1,0 +1,58 @@
+---
+import '@fontsource/inter/300.css';
+import '@fontsource/inter/400.css';
+import '@fontsource/inter/500.css';
+import '@fontsource/inter/600.css';
+import '@fontsource/inter/700.css';
+import '../styles/global.css';
+import Navigation from '../components/Navigation.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  ogImage?: string;
+}
+
+const {
+  title,
+  description = 'Aprende DevSecOps y Cloud de forma práctica con recursos, código y guías de los vídeos de AgeVega Master.',
+  ogImage,
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const fullTitle = `${title} | AgeVega Academy`;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    <link rel="alternate" type="application/rss+xml" title="AgeVega Academy" href="/rss.xml" />
+  </head>
+  <body class="bg-brand-dark text-white antialiased min-h-screen flex flex-col" style="font-family: 'Inter', sans-serif;">
+    <!-- Ambient glow (fixed, behind all content) -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none" style="z-index:-1;" aria-hidden="true">
+      <div class="absolute rounded-full" style="top:-10%;left:20%;width:500px;height:500px;background:rgba(37,99,235,0.08);filter:blur(120px);"></div>
+      <div class="absolute rounded-full" style="top:40%;right:10%;width:400px;height:400px;background:rgba(16,185,129,0.08);filter:blur(100px);"></div>
+      <div class="absolute rounded-full" style="bottom:10%;left:30%;width:300px;height:300px;background:rgba(59,130,246,0.08);filter:blur(100px);"></div>
+    </div>
+    <Navigation />
+    <main class="flex-1">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

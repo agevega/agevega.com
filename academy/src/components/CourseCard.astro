@@ -1,0 +1,56 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  course: CollectionEntry<'courses'>;
+}
+
+const { course } = Astro.props;
+const { title, description, youtubeId, category, difficulty } = course.data;
+const thumbnail = `https://img.youtube.com/vi/${youtubeId}/mqdefault.jpg`;
+const slug = course.id.replace(/\.mdx?$/, '');
+
+const categoryConfig: Record<string, { label: string; classes: string }> = {
+  devops:     { label: 'DevOps',      classes: 'bg-blue-900/50 text-blue-300 border border-blue-700' },
+  cloud:      { label: 'Cloud',       classes: 'bg-cyan-900/50 text-cyan-300 border border-cyan-700' },
+  security:   { label: 'Security',    classes: 'bg-red-900/50 text-red-300 border border-red-700' },
+  automation: { label: 'Automation',  classes: 'bg-purple-900/50 text-purple-300 border border-purple-700' },
+  other:      { label: 'Otro',        classes: 'bg-slate-800 text-slate-400 border border-slate-600' },
+};
+
+const cat = categoryConfig[category] ?? categoryConfig.other;
+
+const difficultyLabel: Record<string, string> = {
+  beginner:     'Principiante',
+  intermediate: 'Intermedio',
+  advanced:     'Avanzado',
+};
+---
+
+<a
+  href={`/cursos/${slug}`}
+  class="group block bg-brand-surface border border-slate-700 hover:border-emerald-500 rounded-xl overflow-hidden cursor-pointer transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 h-full"
+>
+  <img
+    src={thumbnail}
+    alt={`${title} — miniatura`}
+    width="320"
+    height="180"
+    loading="lazy"
+    class="w-full object-cover"
+  />
+  <div class="p-4">
+    <div class="flex flex-wrap items-center gap-2 mb-3">
+      <span class={`text-xs font-medium px-2 py-0.5 rounded-full ${cat.classes}`}>
+        {cat.label}
+      </span>
+      <span class="text-xs font-medium uppercase tracking-wide text-slate-400">
+        {difficultyLabel[difficulty] ?? difficulty}
+      </span>
+    </div>
+    <h3 class="text-lg font-semibold leading-snug mb-2 group-hover:text-emerald-400 transition-colors">
+      {title}
+    </h3>
+    <p class="text-sm text-slate-400 line-clamp-2">{description}</p>
+  </div>
+</a>

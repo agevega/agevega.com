@@ -1,0 +1,18 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import HeroSection from '../components/HeroSection.astro';
+
+const allCourses = await getCollection('courses');
+
+const featuredCourses = allCourses
+  .filter((c) => c.data.order !== undefined)
+  .sort((a, b) => (a.data.order ?? Infinity) - (b.data.order ?? Infinity));
+---
+
+<Layout
+  title="Inicio"
+  description="Aprende DevSecOps y Cloud de forma práctica con recursos, código y guías de los vídeos de AgeVega Master."
+>
+  <HeroSection featuredCourses={featuredCourses} />
+</Layout>

@@ -1,0 +1,17 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Página no encontrada" description="La página que buscas no existe.">
+  <div class="max-w-6xl mx-auto px-4 md:px-8 py-32 text-center">
+    <p class="text-8xl font-bold text-slate-800 mb-6" aria-hidden="true">404</p>
+    <h1 class="text-2xl font-semibold mb-4">Página no encontrada</h1>
+    <p class="text-slate-400 mb-10">La página que buscas no existe o fue movida.</p>
+    <a
+      href="/cursos"
+      class="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-gray-900 font-semibold px-8 py-3.5 rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+    >
+      Ver cursos
+    </a>
+  </div>
+</Layout>
