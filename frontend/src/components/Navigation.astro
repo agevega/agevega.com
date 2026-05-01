@@ -8,8 +8,8 @@
   >
   </div>
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-    <div class="flex items-center justify-between h-16">
-      <!-- Logo -->
+    <div class="flex items-center h-16">
+      <!-- Logo (left) -->
       <a href="/" class="flex-shrink-0" aria-label="Inicio - Alejandro Vega">
         <img
           src="/images/logos/original.png"
@@ -20,9 +20,9 @@
         />
       </a>
 
-      <!-- Desktop Menu -->
-      <div class="hidden md:block">
-        <div class="ml-10 flex items-baseline space-x-4">
+      <!-- Desktop Menu (centered) -->
+      <div class="hidden md:flex flex-1 items-center justify-center">
+        <div class="flex items-baseline space-x-4">
           <a
             href="/"
             class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
@@ -43,16 +43,20 @@
             class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
             >Laboratorio</a
           >
-          <a
-            href="/contact"
-            class="nav-link px-3 py-2 rounded-md text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-500 shadow-lg shadow-emerald-500/20 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-dark"
-            >Contacto</a
-          >
         </div>
       </div>
 
+      <!-- Contacto button (right) -->
+      <div class="hidden md:block flex-shrink-0">
+        <a
+          href="/contact"
+          class="nav-link-contact px-3 py-2 rounded-md text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-500 shadow-lg shadow-emerald-500/20 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-dark"
+          >Contacto</a
+        >
+      </div>
+
       <!-- Mobile Menu Button -->
-      <div class="-mr-2 flex md:hidden">
+      <div class="ml-auto flex md:hidden">
         <button
           type="button"
           id="mobile-menu-btn"
@@ -177,13 +181,14 @@
       links.forEach((link) => {
         const href = link.getAttribute("href");
         if (href && normalize(href) === current) {
-          if (!link.classList.contains("bg-emerald-600")) {
+          // Only style nav-link items (not Contacto which has nav-link-contact)
+          if (!link.classList.contains("nav-link-contact")) {
             link.classList.remove("text-slate-300");
-            link.classList.add("text-white", "bg-white/10", "underline", "decoration-emerald-500", "underline-offset-4");
+            link.classList.add("text-emerald-400", "font-semibold");
           }
         } else {
-          if (!link.classList.contains("bg-emerald-600")) {
-            link.classList.remove("text-white", "bg-white/10", "underline", "decoration-emerald-500", "underline-offset-4");
+          if (!link.classList.contains("nav-link-contact")) {
+            link.classList.remove("text-emerald-400", "font-semibold");
             link.classList.add("text-slate-300");
           }
         }
