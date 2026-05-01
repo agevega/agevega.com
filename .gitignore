@@ -131,5 +131,5 @@ cython_debug/
 # AI
 .gemini/*
 !.gemini/GEMINI.md
-.claude/settings.local.json
+.claude/
 .gstack/
