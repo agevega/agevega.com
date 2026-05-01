@@ -45,7 +45,7 @@ Then add `SearchWidget.astro` to `cursos/index.astro` that loads the Pagefind UI
 ## TODO: Link from agevega.com navigation to Academy (P2)
 
 **Trigger:** Academy is deployed at `academy.agevega.com`  
-**What:** Add "Academy" link to `agevega.com/frontend/src/components/Navigation.astro`  
+**What:** Add "Academy" link to `agevega.com/sites/landing/src/components/Navigation.astro`  
 **Effort:** S (10 min)  
 
 ---

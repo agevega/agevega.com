@@ -5,18 +5,19 @@ AgeVega Academy: static course site for DevSecOps and Cloud content from the Age
 
 ## Monorepo context
 
-This app lives at `agevega.com/academy/`, sibling of `agevega.com/frontend/`. The monorepo at `agevega.com/` hosts multiple webapps, one per subdomain. Conventions:
+This app lives at `agevega.com/sites/academy/`, sibling of `agevega.com/sites/landing/`. The monorepo at `agevega.com/` hosts one self-contained static site per subdomain under `sites/`. Conventions:
 
-- **Sibling-app pattern.** Each subdomain gets its own top-level directory at the repo root (`agevega.com/academy/`, `agevega.com/frontend/`, future apps follow the same pattern).
-- **Self-contained.** Each app has its own `Dockerfile`, `nginx.conf`, package manager, and framework version. No shared `package.json`, no monorepo orchestration tool. The frontend uses npm + Astro 5; this app uses bun + Astro 6. They do not interact at build time.
+- **Sites pattern.** Every subdomain gets its own directory under `sites/<name>/`. The parent dir `sites/` is for grouping only — there is no shared `package.json`, no nx, no turborepo, no orchestration tool.
+- **Self-contained.** Each app has its own `Dockerfile`, `nginx.conf`, package manager, and framework version. No shared lockfile. Landing uses npm + Astro 5 + Tailwind 3; this app uses bun + Astro 6 + Tailwind v4. They do not interact at build time.
 - **No root-level package manifests.** Do NOT look for `package.json` at the monorepo root. Each app's manifest lives in its own directory.
 - **Shared by inheritance only:** the repo-level `.gitignore` (with wildcards `*/node_modules/`, `*/.astro/`) and the repo-level `LICENSE` cover this app. Do not introduce a per-app `LICENSE` unless licenses diverge.
-- **CI/CD scope.** The 3 workflows in `agevega.com/.github/workflows/` (00-generate-docker-image, 01-deploy-bastion, 02-deploy-production) belong to the `frontend` app. Academy's CI/CD is deferred to a follow-up iteration.
+- **CI/CD scope.** The 3 workflows in `agevega.com/.github/workflows/` (00-generate-docker-image, 01-deploy-bastion, 02-deploy-production) belong to the `landing` app exclusively (build context = `./sites/landing`, ECR = `agevegacom-landing`, container = `landing`). Academy's CI/CD is deferred to a follow-up iteration. Tags `v*` apply repo-wide and currently fire only the landing pipeline.
+- **Local dev port allocation.** Landing runs on `:4321` (Astro default), academy on `:4322` (set via `server.port` in `astro.config.mjs`). They can run in parallel without collision.
 
 ## Repository Structure
 
 ```
-frontend/
+sites/academy/
 ├── src/
 │   ├── components/        # Astro components (PascalCase)
 │   │   ├── CourseCard.astro
@@ -41,7 +42,7 @@ frontend/
 │   └── styles/
 │       └── global.css     # Tailwind v4 @import + .content-body markdown styles
 ├── public/                # Static assets (favicon, og-image)
-├── astro.config.mjs       # Tailwind vite plugin, sitemap, Shiki github-dark
+├── astro.config.mjs       # Tailwind vite plugin, sitemap, Shiki github-dark, server.port=4322
 ├── Dockerfile             # oven/bun:1.1 builder → nginx:alpine
 └── nginx.conf             # Plain HTTP/80, try_files for SSG, 1y asset cache
 ```
@@ -49,9 +50,9 @@ frontend/
 ## Commands
 
 ```bash
-cd frontend
+cd sites/academy
 bun install        # Install dependencies
-bun run dev        # Dev server at http://localhost:4321
+bun run dev        # Dev server at http://localhost:4322
 bun run build      # Build static site to dist/
 bun run preview    # Preview built site
 ```
@@ -112,8 +113,8 @@ bun run preview    # Preview built site
 Plain HTTP/80. SSL terminates at CloudFront (same pattern as agevega.com).
 
 ```bash
-docker build -t academy-frontend .
-docker run -p 80:80 academy-frontend
+docker build -t agevega-academy .
+docker run -p 80:80 agevega-academy
 ```
 
 ## Testing

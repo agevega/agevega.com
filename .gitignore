@@ -21,8 +21,7 @@ venv.bak/
 
 # Node.js / Astro
 node_modules/
-*/node_modules/
-*/.astro/
+.astro/
 /site
 .webassets-cache
 

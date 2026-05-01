@@ -21,7 +21,7 @@ graph TD;
 
 - **Trigger**: Push de un tag semántico (e.g., `v1.0.2`).
 - **Acción**:
-  1. Construye la imagen Docker del frontend (multi-arch).
+  1. Construye la imagen Docker de landing (multi-arch) desde `sites/landing/`.
   2. Publica la imagen en **AWS ECR** con el tag de versión y `latest`.
   3. **Dispara automáticamente** el siguiente workflow (`01-deploy-bastion`).
 
@@ -31,7 +31,7 @@ graph TD;
 - **Acción**:
   1. **Dynamic Discovery**: Busca la IP pública del "Bastion Host" mediante tags de AWS (`Name=bastion-host`).
   2. **Remote Execution**: Conecta por SSH usando la clave privada almacenada en secretos.
-  3. **Deploy**: Ejecuta el script `scripts/01_deploy_frontend.sh` en el servidor para rotar contenedores.
+  3. **Deploy**: Ejecuta el script `scripts/01_deploy_landing.sh` en el servidor para rotar contenedores.
   4. **Cache Purge**: Invalida la caché de CloudFront para el entorno de desarrollo (`dev.agevega.com`).
 
 ### 3. Deploy to Production (`02-deploy-production.yml`)
@@ -43,7 +43,7 @@ graph TD;
      - **Síncrono**: El pipeline espera y monitorea el estado del refresco.
      - Si falla o se cancela, el pipeline se detiene.
      - Solo continúa cuando el 100% de las instancias están saludables.
-  3. **Invalidate Cache**: Purga la caché de CloudFront (Producción) para asegurar que los usuarios reciban el nuevo frontend inmediatamente.
+  3. **Invalidate Cache**: Purga la caché de CloudFront (Producción) para asegurar que los usuarios reciban la nueva versión de landing inmediatamente.
 
 ## 🔐 Secretos Requeridos
 
@@ -55,7 +55,7 @@ Para que los pipelines funcionen, el repositorio debe tener configurados los sig
 | `AWS_SECRET_ACCESS_KEY` | Secret   | Credenciales de AWS IAM User (User: terraform).           |
 | `EC2_SSH_KEY`           | Secret   | Clave privada ssh para acceder al Bastion.                |
 | `AWS_REGION`            | Variable | Región de AWS (e.g., `eu-south-2`).                       |
-| `ECR_REPOSITORY`        | Variable | Nombre del repositorio ECR (e.g., `agevegacom-frontend`). |
+| `ECR_REPOSITORY`        | Variable | Nombre del repositorio ECR (e.g., `agevegacom-landing`). |
 
 ## 🛠 Ejecución Manual
 

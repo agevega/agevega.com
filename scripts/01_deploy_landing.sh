@@ -2,7 +2,7 @@
 
 DOMAIN="agevega.com"
 CERT_PATH="/etc/letsencrypt/live/$DOMAIN"
-IMAGE_NAME="${1:-frontend:latest}" # Use first argument as image name, default to frontend:latest
+IMAGE_NAME="${1:-landing:latest}" # Use first argument as image name, default to landing:latest
 
 # 1. Check for certificates
 if ! sudo test -d "$CERT_PATH"; then
@@ -39,8 +39,8 @@ sudo chown -R $USER:$USER "$STAGING_DIR"
 
 # 3. Re-deploy container
 echo "Stopping old container..."
-docker stop frontend || true
-docker rm frontend || true
+docker stop landing || true
+docker rm landing || true
 
 echo "Removing local image to force re-pull..."
 docker rmi -f "$IMAGE_NAME" || true
@@ -55,10 +55,10 @@ docker run -d \
   -p 443:443 \
   -v "$STAGING_DIR:/etc/nginx/certs:ro" \
   -e DEPLOYMENT_VERSION="$TAG" \
-  --name frontend \
+  --name landing \
   "$IMAGE_NAME"
 
-echo "Frontend deployed successfully."
+echo "Landing deployed successfully."
 
 # 4. Cleanup unused images
 echo "Pruning unused images..."

@@ -1,36 +1,55 @@
 # CLAUDE.md — agevega.com
 
-Personal portfolio website for Alejandro Vega (Senior DevSecOps Engineer & Cloud Architect).
-**Stack:** Astro 5 (SSG) + TailwindCSS 3 frontend, Docker/Nginx runtime, Lambda/API Gateway serverless backend, AWS infrastructure via Terraform, GitHub Actions CI/CD.
+Personal portfolio monorepo for Alejandro Vega (Senior DevSecOps Engineer & Cloud Architect).
+**Stack:** Two static sites under `sites/` (Astro 5 + Astro 6), Docker/Nginx runtime, Lambda/API Gateway serverless backend, AWS infrastructure via Terraform, GitHub Actions CI/CD.
 
-## Repository Structure
+## Monorepo Layout
+
+Each subdomain has its own self-contained app under `sites/`. Apps do not share `package.json`, lockfiles, or framework versions — only the repo-level `LICENSE` and `.gitignore`.
 
 ```
-├── frontend/              # Astro SSG site
-│   ├── src/
-│   │   ├── components/    # 10 Astro components (PascalCase)
-│   │   ├── layouts/       # Single Layout.astro
-│   │   └── pages/         # 5 pages: index, about, about-this-web, contact, laboratory
-│   ├── public/            # Static assets (favicon, og-image, etc.)
-│   ├── tailwind.config.mjs
-│   └── astro.config.mjs
+├── sites/
+│   ├── landing/           # agevega.com — Astro 5 SSG, npm, Tailwind 3
+│   │   ├── src/
+│   │   │   ├── components/    # 10 Astro components (PascalCase)
+│   │   │   ├── layouts/       # Single Layout.astro
+│   │   │   └── pages/         # 5 pages: index, about, about-this-web, contact, laboratory
+│   │   ├── public/            # Static assets (favicon, og-image, etc.)
+│   │   ├── tailwind.config.mjs
+│   │   ├── astro.config.mjs
+│   │   ├── Dockerfile
+│   │   └── nginx.conf
+│   └── academy/           # academy.agevega.com — Astro 6 SSG, bun, Tailwind v4
+│       ├── src/, public/, astro.config.mjs, Dockerfile, nginx.conf
+│       └── (own CLAUDE.md, README.md, vitest tests, deploy NOT yet wired)
 ├── infra/terraform/       # AWS infrastructure (numbered modules)
-├── scripts/               # Deployment & SSL scripts
+├── scripts/               # Deployment & SSL scripts (currently scoped to landing)
 ├── .claude/               # Claude Code config (commands, settings)
-├── .github/               # GitHub Actions workflows
-└── .learning/             # Study notes & roadmaps (not deployed)
+└── .github/               # GitHub Actions workflows (currently scoped to landing)
 ```
 
-## Frontend Commands
+**Naming divergence (intentional):** the directory is `sites/landing/`, the AWS ECR repo and EC2 container are also named `landing`. Tags `v*` apply repo-wide and currently trigger landing CI/CD only. Academy CI/CD and tag namespacing are deferred.
+
+## Landing Commands
 
 ```bash
-cd frontend
+cd sites/landing
 npm install        # Install dependencies
 npm run dev        # Dev server at http://localhost:4321
 npm run build      # Build static site to dist/
 ```
 
-## Frontend Conventions
+## Academy Commands
+
+```bash
+cd sites/academy
+bun install        # Install dependencies
+bun run dev        # Dev server at http://localhost:4322 (set in astro.config.mjs)
+bun run build      # Build static site to dist/
+bun run test       # Vitest schema tests
+```
+
+## Landing Conventions
 
 - **Components:** One file per component in `src/components/`, always `PascalCase.astro`.
 - **Pages:** Lowercase kebab-case in `src/pages/` (e.g., `about-this-web.astro`).
@@ -57,7 +76,7 @@ Defined in `astro.config.mjs` via `envField`:
 - `PUBLIC_API_URL` (required) — Lambda endpoint for contact form
 - `PUBLIC_APP_VERSION` (optional, default: `'dev'`) — Injected at Docker startup via `docker-entrypoint.sh`
 
-See `frontend/.env.example` for reference values.
+See `sites/landing/.env.example` for reference values.
 
 ## Infrastructure (Terraform)
 
@@ -93,13 +112,13 @@ Config values (ECR repo URL, API URL, CloudFront IDs) are fetched from **AWS SSM
 ## Deployment Flow
 
 ```
-git tag v*  →  GitHub Actions builds multi-arch Docker image (amd64 + arm64)
-            →  Pushes to ECR
-            →  SSH to EC2, run 01_deploy_frontend.sh (Docker + Nginx + SSL)
+git tag v*  →  GitHub Actions builds multi-arch Docker image (amd64 + arm64) from sites/landing/
+            →  Pushes to ECR (agevegacom-landing)
+            →  SSH to EC2, run 01_deploy_landing.sh (Docker + Nginx + SSL, container name: landing)
             →  CloudFront cache invalidation
 ```
 
-Key scripts: `scripts/00_generate_cert.sh` (Let's Encrypt SSL), `scripts/01_deploy_frontend.sh` (Docker deployment).
+Key scripts: `scripts/00_generate_cert.sh` (Let's Encrypt SSL), `scripts/01_deploy_landing.sh` (Docker deployment).
 
 ## Workflow Preferences
 

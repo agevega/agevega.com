@@ -11,7 +11,7 @@
 ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
 ![GitHub Actions](https://img.shields.io/badge/github%20actions-%232671E5.svg?style=for-the-badge&logo=githubactions&logoColor=white)
 
-**Este repositorio** orquesta el ciclo de vida completo de `agevega.com`, desde el código fuente del frontend hasta la infraestructura subyacente en **AWS**.
+**Este repositorio** orquesta el ciclo de vida completo de `agevega.com`, desde el código fuente de los sitios estáticos (`sites/landing/` y `sites/academy/`) hasta la infraestructura subyacente en **AWS**.
 
 Se ha construido una plataforma **AWS Cloud-Native** siguiendo los principios de **Seguridad, Automatización, Resiliencia, Escalabilidad, Granularidad, Observabilidad y Optimización de Costes (FinOps)**. Todo provisionado 100% como código **(IaC)**.
 
@@ -72,12 +72,17 @@ La red se despliega sobre una **VPC 3-Tier** personalizada, segmentando el tráf
 ```bash
 agevega.com/
 ├── .gemini/                       # Contexto y Memoria del Proyecto
-├── .github/                       # CI/CD Workflows
+├── .github/                       # CI/CD Workflows (actualmente scoped a landing)
 │   └── workflows/
-├── frontend/                      # Aplicación web (Astro + Tailwind)
-│   ├── src/                       # Código fuente
-│   ├── public/                    # Archivos estáticos
-│   └── Dockerfile                 # Definición de la imagen
+├── sites/                         # Sitios estáticos por subdominio (self-contained)
+│   ├── landing/                   # agevega.com — Astro 5 + npm + Tailwind 3
+│   │   ├── src/, public/
+│   │   ├── astro.config.mjs, tailwind.config.mjs
+│   │   └── Dockerfile, nginx.conf
+│   └── academy/                   # academy.agevega.com — Astro 6 + bun + Tailwind v4
+│       ├── src/, public/
+│       ├── astro.config.mjs (port 4322 en dev)
+│       └── Dockerfile, nginx.conf, vitest.config.ts
 ├── infra/                         # Definición de infraestructura
 │   ├── terraform/                 # Código HCL de Terraform
 │   │   ├── 00-setup/              # Bootstrap, Auditoría y Budgets
@@ -88,22 +93,27 @@ agevega.com/
 │   │   ├── 05-high-availability/  # Entorno Prod (ASG + ALB)
 │   │   └── 99-domain/             # DNS Zones & ACM Certificates
 │   └── changelog/                 # Registro de cambios
-└── scripts/                       # Scripts de utilidad
+└── scripts/                       # Scripts de utilidad (actualmente scoped a landing)
 ```
 
 ---
 
 ## 🚀 Uso y Despliegue
 
-### Desarrollo Localhost (Frontend)
+### Desarrollo Localhost
 
-Para trabajar en el diseño y contenido del sitio web:
+Cada sitio se levanta independiente. En paralelo (`landing` en 4321, `academy` en 4322):
 
 ```bash
-# Iniciar servidor de desarrollo en http://localhost:4321
-cd frontend
+# Landing — agevega.com
+cd sites/landing
 npm install
-npm run dev
+npm run dev          # http://localhost:4321
+
+# Academy — academy.agevega.com
+cd sites/academy
+bun install
+bun run dev          # http://localhost:4322
 ```
 
 ### Despliegue de Aplicación (CI/CD)
@@ -115,7 +125,7 @@ El proyecto cuenta con workflows de GitHub Actions para gestionar el ciclo de vi
 3.  **Manual (Opcional)**: Se puede forzar un despliegue manual si es necesario rollbackear o redesplegar una versión específica.
 
 > [!NOTE]
-> Los scripts subyacentes `scripts/01_deploy_frontend.sh` y `scripts/00_generate_cert.sh` se ejecutan automáticamente en el servidor durante el despliegue, pero pueden usarse manualmente en caso de debug.
+> Los scripts subyacentes `scripts/01_deploy_landing.sh` y `scripts/00_generate_cert.sh` se ejecutan automáticamente en el servidor durante el despliegue, pero pueden usarse manualmente en caso de debug.
 
 ### Despliegue de Infraestructura
 

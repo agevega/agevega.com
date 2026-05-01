@@ -69,7 +69,7 @@ terraform apply
 | Submódulo | Variable             | Descripción                       | Valor por Defecto           |
 | :-------- | :------------------- | :-------------------------------- | :-------------------------- |
 | `00`      | `public_key_path`    | Ruta a tu clave pública local     | `~/.ssh/id_rsa.pub`         |
-| `01`      | `repository_name`    | Nombre del repositorio ECR        | `agevegacom-frontend`       |
+| `01`      | `repository_name`    | Nombre del repositorio ECR        | `agevegacom-landing`        |
 | `02`      | `assets_bucket_name` | Nombre único del bucket de assets | `agevegacom-assets-private` |
 
 ---

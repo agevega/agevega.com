@@ -1,6 +1,6 @@
-# 💻 Frontend - Agevega.com
+# 💻 Landing - Agevega.com
 
-Aplicación estática (SSG) de alto rendimiento construida con **Astro** y optimizada para despliegue en contenedores **Docker**.
+Sitio principal de `agevega.com` (landing page del portfolio). Aplicación estática (SSG) de alto rendimiento construida con **Astro** y optimizada para despliegue en contenedores **Docker**. Vive en `sites/landing/` dentro del monorepo.
 
 ## 🛠 Tech Stack
 
@@ -11,7 +11,7 @@ Aplicación estática (SSG) de alto rendimiento construida con **Astro** y optim
 
 ## 🏗 Arquitectura de Runtime
 
-El frontend no es solo HTML estático; incluye una capa de "consciencia de infraestructura" que se ejecuta al iniciar el contenedor.
+El sitio no es solo HTML estático; incluye una capa de "consciencia de infraestructura" que se ejecuta al iniciar el contenedor.
 
 ### 1. Docker & Nginx
 
@@ -61,10 +61,10 @@ Para simular el entorno de producción exacto:
 
 ```bash
 # Construir la imagen
-docker build -t agevega-frontend .
+docker build -t agevega-landing .
 
 # Correr el contenedor
-docker run -p 8080:80 agevega-frontend
+docker run -p 8080:80 agevega-landing
 ```
 
 > **Nota:** En local, el script de entrypoint detectará que no está en AWS y rellenará `meta.json` con valores "Local", evitando bloqueos de timeout.

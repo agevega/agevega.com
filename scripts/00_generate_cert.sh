@@ -19,9 +19,9 @@ else
     echo "Certbot y plugin Route53 ya están listos en /opt/certbot."
 fi
 
-# 2. Stop existing frontend
-echo "Stopping any running frontend container..."
-sudo docker stop frontend || true
+# 2. Stop existing landing container
+echo "Stopping any running landing container..."
+sudo docker stop landing || true
 
 # 3. Request Certificate (Using Route53)
 echo "Requesting certificate for $DOMAIN and www.$DOMAIN using Route53..."
