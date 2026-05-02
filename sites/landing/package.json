@@ -1,23 +1,36 @@
 {
   "name": "landing",
-  "version": "1.0.0",
-  "description": "",
   "type": "module",
+  "version": "1.1.0",
+  "description": "agevega.com landing — Astro 6 SSG portfolio site",
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "scripts": {
     "dev": "astro dev",
-    "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "test": "vitest run",
+    "lint": "eslint .",
+    "format": "prettier --check .",
+    "format:fix": "prettier --write ."
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "@astrojs/tailwind": "^6.0.2",
-    "@fontsource/inter": "^5.0.0",
-    "astro": "^5.16.11",
-    "tailwindcss": "^3.4.18",
-    "typescript": "^5.9.3"
+    "astro": "6.1.10"
+  },
+  "devDependencies": {
+    "@fontsource/inter": "^5.2.8",
+    "@tailwindcss/vite": "^4.2.4",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "astro-eslint-parser": "^1.2.2",
+    "eslint": "^8.57.1",
+    "eslint-plugin-astro": "^1.3.1",
+    "prettier": "^3.4.2",
+    "prettier-plugin-astro": "^0.14.1",
+    "tailwindcss": "^4.2.4",
+    "vite": "7.3.2",
+    "vitest": "^4.1.5"
   }
 }

@@ -1,0 +1,56 @@
+name: 03 Test Sites
+
+on:
+  pull_request:
+    paths:
+      - 'sites/**'
+      - '.github/workflows/03-test-sites.yml'
+      - '.eslintrc.cjs'
+      - '.prettierrc'
+      - '.prettierignore'
+  push:
+    branches:
+      - master
+    paths:
+      - 'sites/**'
+      - '.github/workflows/03-test-sites.yml'
+      - '.eslintrc.cjs'
+      - '.prettierrc'
+      - '.prettierignore'
+
+jobs:
+  test:
+    name: Test ${{ matrix.site }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        site: [landing, academy]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: '1.1'
+
+      - name: Install dependencies (${{ matrix.site }})
+        working-directory: sites/${{ matrix.site }}
+        run: bun install --frozen-lockfile
+
+      - name: Build (${{ matrix.site }})
+        working-directory: sites/${{ matrix.site }}
+        env:
+          # Landing requires PUBLIC_API_URL via envField (optional: false).
+          # Academy has no required env vars today.
+          PUBLIC_API_URL: https://stub.example.com
+          PUBLIC_APP_VERSION: ci-test
+        run: bun run build
+
+      - name: Test (${{ matrix.site }})
+        working-directory: sites/${{ matrix.site }}
+        env:
+          PUBLIC_API_URL: https://stub.example.com
+          PUBLIC_APP_VERSION: ci-test
+        run: bun run test
