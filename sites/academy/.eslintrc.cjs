@@ -1,13 +1,13 @@
 /**
- * Academy ESLint config.
+ * Academy ESLint config — inlined (not extended from a shared config).
  *
- * Inlined (not extended from root) because ESLint v8 resolves parsers/plugins
- * from the location where they're declared, not where they're consumed. The
- * monorepo has no root package.json, so root-declared parsers can't resolve.
+ * Why inlined: ESLint v8 resolves parsers/plugins from the config file's
+ * location, not the cwd. The monorepo has no root package.json / no root
+ * node_modules, so a root-level shared config can't resolve
+ * @typescript-eslint/parser or astro-eslint-parser.
  *
- * To keep both sites in lockstep, edit `agevega.com/.eslintrc.cjs` (the
- * canonical reference) and copy the relevant changes here. CONVENTIONS.md
- * documents this caveat.
+ * To keep both sites in lockstep, edit one and mirror the change to the
+ * other. sites/CONVENTIONS.md documents this caveat.
  */
 module.exports = {
   root: true,

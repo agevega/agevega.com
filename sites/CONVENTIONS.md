@@ -116,7 +116,7 @@ Both apps can run in parallel: open two terminals, `bun run dev` in each. No por
 
 | Concern | Convention | Required? |
 |---|---|---|
-| Tag convention | `v*` (repo-wide, e.g. `v1.1.0`) | MUST (currently — may namespace as `landing-v*`/`academy-v*` when academy gets its own pipeline) |
+| Tag convention | `v*` (repo-wide, e.g. `v1.1.0`) — every tag deploys ALL sites | MUST |
 | Test workflow | `.github/workflows/03-test-sites.yml` runs `bun install --frozen-lockfile && bun run build && bun run test` per site | MUST (gates merges informationally; not blocking by default) |
 | Build workflow | Per site, e.g. `00-generate-docker-image.yml` for landing → push to ECR | MUST (per site that deploys to prod) |
 | ECR repo naming | `agevegacom-<site>` (e.g. `agevegacom-landing`) | SHOULD |
@@ -125,27 +125,49 @@ Both apps can run in parallel: open two terminals, `bun run dev` in each. No por
 | Deploy script SSH verification | After workflow reports success, MUST ssh to bastion + `docker ps` + `curl -k` to verify before tagging prod | MUST (workflow status is necessary but not sufficient) |
 | Production deploy trigger | Manual `workflow_dispatch` only (NOT auto on tag push) | MUST |
 
-### Tag namespacing future state
+### Deploy strategy: deploy all sites, every tag
 
-When the second site (academy) needs CI/CD, the `v*` glob becomes ambiguous: a tag for academy content would also re-fire the landing build. At that point, namespace tags as `landing-v*` and `academy-v*` and update each workflow's trigger filter. Today (one site deploys, one site doesn't) the global `v*` is acceptable.
+A `v*` tag re-deploys every site, regardless of whether that site changed. This is a deliberate choice for resilience — never namespace tags as `landing-v*` / `academy-v*`. The repo always uses a single `v*` convention.
+
+Why deploy-all-every-time:
+
+- **Every tag is a known-good cut of the entire repo.** No ambiguity about "what version is academy on right now" when production is debugging.
+- **Idempotent redeploys are cheap.** A site with no source changes builds the same Docker layers (cache hit), pushes the same ECR digest (no-op), and the deploy script's `docker pull` returns the same image. The runtime container restarts but serves the same bytes.
+- **One pipeline failing must not block the others.** Each site's build/deploy workflow runs independently. Academy CI flaking does not stop landing from shipping.
+- **Continuous-deployment hygiene.** Every tag exercises the full deploy path for every site, so the path stays warm and tested. A site that hasn't deployed in 3 months is a deploy that's about to break.
+
+The cost of a no-op redeploy (a few seconds of CI + an idempotent container restart) is much smaller than the cost of an infrequent-firing deploy path silently rotting until the day you actually need it.
+
+### Resilience requirements for per-site deploy workflows
+
+Each site's deploy workflow MUST satisfy:
+
+- **Build is independent.** Workflow file references only `sites/<name>/**` and the site's own assets. No coupling to the other site's source.
+- **No-source-change is not a failure.** If `git diff <prev-tag>..<this-tag> -- sites/<name>/` is empty, the workflow still builds and pushes the same image. It does NOT short-circuit with an error.
+- **Cross-site failure isolation.** Workflows do not share state, locks, or sequenced dependencies. Use `concurrency` per-site (e.g. `concurrency: deploy-landing-${{ github.ref }}`), not repo-wide.
+- **Tag glob is `v*`** in every workflow trigger. Identical across all sites.
 
 ---
 
 ## Code style
 
-| Tool | Config location | Per-app override allowed? |
+| Tool | Config location | Per-app override? |
 |---|---|---|
-| ESLint | `agevega.com/.eslintrc.cjs` (root, shared) | YES — drop a `.eslintrc.cjs` inside a site dir to override |
-| Prettier | `agevega.com/.prettierrc` (root, shared) | YES — drop a `.prettierrc` inside a site dir to override |
-| Prettier ignore | `agevega.com/.prettierignore` (root) | YES — additional `.prettierignore` per site applies cumulatively |
+| ESLint | Per-site `.eslintrc.cjs` (inlined — see note below) | N/A — already per-site |
+| Prettier | `sites/.prettierrc` (shared, picked up by walking up the tree) | YES — drop a `.prettierrc` inside a site dir to override |
+| Prettier ignore | `sites/.prettierignore` (shared) | YES — additional `.prettierignore` per site applies cumulatively |
 
-Each site's `package.json` MUST have `lint`, `format`, `format:fix` scripts that invoke `eslint .` and `prettier --check .` / `prettier --write .` from the site dir. The root configs are picked up automatically by walking up the directory tree.
+The repo root MUST stay free of code-style configs. Tooling configs live next to the code they format (`sites/`), not at the monorepo root.
 
-### Why root-shared (a controlled exception to self-contained)
+Each site's `package.json` MUST have `lint`, `format`, `format:fix` scripts that invoke `eslint .` and `prettier --check .` / `prettier --write .` from the site dir. Prettier walks up from each site dir and finds `sites/.prettierrc` automatically.
 
-Code style is a developer-time concern, not a deployment artifact. Self-contained means "the runtime artifact has no shared dependencies" — that still holds. Sharing the lint config across sites reduces drift and makes refactors easier.
+### Note: ESLint configs are inlined per-site, not shared
 
-If a site genuinely needs different rules (e.g. academy wants a stricter rule for vitest test files that landing doesn't need), that site adds its own `.eslintrc.cjs` with `extends: ['../../.eslintrc.cjs', /* additions */]`.
+ESLint v8 resolves parsers and plugins from the location of the config file, not the working directory. The monorepo has no root `package.json` and no root `node_modules`, so a root-level shared ESLint config can't resolve `@typescript-eslint/parser` or `astro-eslint-parser`. Instead, each site has its own `.eslintrc.cjs` with the full config inlined.
+
+To keep both in lockstep, edit one site's `.eslintrc.cjs` and mirror the relevant changes to the other. The duplication is ~50 lines per site; the cost of trying to share is broken `bun run lint` on every site.
+
+Future state: ESLint flat config (`eslint.config.js`) uses ESM imports and has different resolution rules; that may unlock a shared config. Tracked per-site in `TODOS.md`.
 
 ---
 
@@ -181,7 +203,9 @@ bun init -y    # creates package.json — replace contents with the convention a
 bun add astro@6.1.10
 bun add -d @fontsource/inter @tailwindcss/vite tailwindcss vite@7.3.2 vitest
 
-# (eslint+prettier inherited from root — just need parsers in devDeps)
+# Prettier config shared at sites/.prettierrc (auto-picked-up via tree-walk).
+# ESLint must be configured per-site (parser/plugin resolution requires it):
+# copy sites/landing/.eslintrc.cjs into the new site dir verbatim.
 bun add -d @typescript-eslint/eslint-plugin@^7 @typescript-eslint/parser@^7 \
   astro-eslint-parser eslint@^8 eslint-plugin-astro \
   prettier prettier-plugin-astro

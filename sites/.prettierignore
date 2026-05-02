@@ -2,24 +2,13 @@
 node_modules/
 dist/
 .astro/
+**/.astro/
 
 # Lockfiles (managed by package managers)
 package-lock.json
 bun.lock
 yarn.lock
 pnpm-lock.yaml
-
-# Generated content collections cache
-**/.astro/
-
-# Infra & deployment
-infra/
-*.tfstate
-*.tfstate.*
-*.tfplan
-
-# CI artifacts
-.github/workflows/*.yml
 
 # Markdown — let humans format prose freely
 **/*.md
