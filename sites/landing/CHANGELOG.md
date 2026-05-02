@@ -27,7 +27,7 @@
 - Fixed `nginx.conf` SSG-style `try_files`: `$uri $uri/ $uri.html =404` (was SPA-style `/index.html` fallback). Added `error_page 404 /404.html;`.
 
 ### Tooling
-- Added shared root configs `.eslintrc.cjs` + `.prettierrc` + `.prettierignore` at `agevega.com/`. Each site extends/uses them via the `lint` and `format` scripts in their `package.json`.
+- Added shared Prettier configs `.prettierrc` + `.prettierignore` at `sites/`. Each site uses them via tree-walk in the `format` scripts. ESLint configs are inlined per-site (`.eslintrc.cjs` in each site dir).
 
 ### Reference
 Driven by audit design doc: `~/.gstack/projects/agevega-agevega.com/agevega-master-design-20260501-171908-sites-audit-parity.md`. Eng-reviewed via `/gstack-plan-eng-review` 2026-05-01.

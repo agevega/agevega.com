@@ -65,8 +65,8 @@ bun run dev        # Dev server at http://localhost:4321
 bun run build      # Build static site to dist/
 bun run preview    # Preview built site
 bun run test       # Vitest — 16 tests across 5 files
-bun run lint       # ESLint (uses root .eslintrc.cjs)
-bun run format     # Prettier check (uses root .prettierrc)
+bun run lint       # ESLint (uses per-site .eslintrc.cjs)
+bun run format     # Prettier check (uses sites/.prettierrc)
 bun run format:fix # Auto-format
 ```
 

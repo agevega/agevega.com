@@ -1,7 +1,7 @@
 # CLAUDE.md — agevega.com
 
 Personal portfolio monorepo for Alejandro Vega (Senior DevSecOps Engineer & Cloud Architect).
-**Stack:** Two static sites under `sites/` (Astro 5 + Astro 6), Docker/Nginx runtime, Lambda/API Gateway serverless backend, AWS infrastructure via Terraform, GitHub Actions CI/CD.
+**Stack:** Two static sites under `sites/` (both Astro 6), Docker/Nginx runtime, Lambda/API Gateway serverless backend, AWS infrastructure via Terraform, GitHub Actions CI/CD.
 
 ## Monorepo Layout
 
@@ -9,13 +9,12 @@ Each subdomain has its own self-contained app under `sites/`. Apps do not share 
 
 ```
 ├── sites/
-│   ├── landing/           # agevega.com — Astro 5 SSG, npm, Tailwind 3
+│   ├── landing/           # agevega.com — Astro 6 SSG, bun, Tailwind v4
 │   │   ├── src/
 │   │   │   ├── components/    # 10 Astro components (PascalCase)
 │   │   │   ├── layouts/       # Single Layout.astro
 │   │   │   └── pages/         # 5 pages: index, about, about-this-web, contact, laboratory
 │   │   ├── public/            # Static assets (favicon, og-image, etc.)
-│   │   ├── tailwind.config.mjs
 │   │   ├── astro.config.mjs
 │   │   ├── Dockerfile
 │   │   └── nginx.conf
@@ -34,9 +33,9 @@ Each subdomain has its own self-contained app under `sites/`. Apps do not share 
 
 ```bash
 cd sites/landing
-npm install        # Install dependencies
-npm run dev        # Dev server at http://localhost:4321
-npm run build      # Build static site to dist/
+bun install        # Install dependencies
+bun run dev        # Dev server at http://localhost:4321
+bun run build      # Build static site to dist/
 ```
 
 ## Academy Commands
@@ -54,8 +53,8 @@ bun run test       # Vitest schema tests
 - **Components:** One file per component in `src/components/`, always `PascalCase.astro`.
 - **Pages:** Lowercase kebab-case in `src/pages/` (e.g., `about-this-web.astro`).
 - **Layout:** Single `Layout.astro` wraps all pages. Receives `title` prop. Includes Navigation + Footer.
-- **Styling:** TailwindCSS utility classes. No custom CSS files except `<style is:global>` in Layout.
-- **Indentation:** Tabs in config files (tailwind, astro), 2 spaces in `.astro` component markup.
+- **Styling:** Tailwind v4 utilities (CSS-first). Custom tokens and animations in `src/styles/global.css` `@theme {}` block.
+- **Indentation:** Tabs in config files (astro), 2 spaces in `.astro` component markup.
 - **Imports:** Relative paths with `../` from current file. No aliases configured.
 - **TypeScript:** Minimal — only `Props` interface in frontmatter when needed.
 
@@ -131,7 +130,7 @@ Key scripts: `scripts/00_generate_cert.sh` (Let's Encrypt SSL), `scripts/01_depl
 
 - Install or remove npm dependencies without explicit approval.
 - Reformat or rename files not directly related to the current task.
-- Modify `package-lock.json` manually.
+- Modify `bun.lock` manually.
 - Touch `*.tfstate`, `*.lock`, or Terraform state files.
 
 ## Skill routing

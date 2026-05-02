@@ -8,7 +8,7 @@ AgeVega Academy: static course site for DevSecOps and Cloud content from the Age
 This app lives at `agevega.com/sites/academy/`, sibling of `agevega.com/sites/landing/`. The monorepo at `agevega.com/` hosts one self-contained static site per subdomain under `sites/`. Conventions:
 
 - **Sites pattern.** Every subdomain gets its own directory under `sites/<name>/`. The parent dir `sites/` is for grouping only — there is no shared `package.json`, no nx, no turborepo, no orchestration tool.
-- **Self-contained.** Each app has its own `Dockerfile`, `nginx.conf`, package manager, and framework version. No shared lockfile. Landing uses npm + Astro 5 + Tailwind 3; this app uses bun + Astro 6 + Tailwind v4. They do not interact at build time.
+- **Self-contained.** Each app has its own `Dockerfile`, `nginx.conf`, package manager, and framework version. No shared lockfile. Both landing and academy use bun + Astro 6 + Tailwind v4 (post-2026-05-02 convergence). They do not interact at build time.
 - **No root-level package manifests.** Do NOT look for `package.json` at the monorepo root. Each app's manifest lives in its own directory.
 - **Shared by inheritance only:** the repo-level `.gitignore` (with wildcards `*/node_modules/`, `*/.astro/`) and the repo-level `LICENSE` cover this app. Do not introduce a per-app `LICENSE` unless licenses diverge.
 - **CI/CD scope.** The 3 workflows in `agevega.com/.github/workflows/` (00-generate-docker-image, 01-deploy-bastion, 02-deploy-production) belong to the `landing` app exclusively (build context = `./sites/landing`, ECR = `agevegacom-landing`, container = `landing`). Academy's CI/CD is deferred to a follow-up iteration. Tags `v*` apply repo-wide and currently fire only the landing pipeline.

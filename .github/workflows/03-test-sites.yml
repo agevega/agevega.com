@@ -5,18 +5,18 @@ on:
     paths:
       - 'sites/**'
       - '.github/workflows/03-test-sites.yml'
-      - '.eslintrc.cjs'
-      - '.prettierrc'
-      - '.prettierignore'
+      - 'sites/.prettierrc'
+      - 'sites/.prettierignore'
+      - 'sites/**/.eslintrc.cjs'
   push:
     branches:
       - master
     paths:
       - 'sites/**'
       - '.github/workflows/03-test-sites.yml'
-      - '.eslintrc.cjs'
-      - '.prettierrc'
-      - '.prettierignore'
+      - 'sites/.prettierrc'
+      - 'sites/.prettierignore'
+      - 'sites/**/.eslintrc.cjs'
 
 jobs:
   test:

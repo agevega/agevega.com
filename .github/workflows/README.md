@@ -45,6 +45,12 @@ graph TD;
      - Solo continúa cuando el 100% de las instancias están saludables.
   3. **Invalidate Cache**: Purga la caché de CloudFront (Producción) para asegurar que los usuarios reciban la nueva versión de landing inmediatamente.
 
+### 4. Test Sites (`03-test-sites.yml`)
+
+- **Trigger**: Push a `master` o Pull Request que toque `sites/**` o configs de estilo.
+- **Acción**: Ejecuta `bun install --frozen-lockfile && bun run build && bun run test` para cada site (matrix: landing, academy).
+- **Propósito**: Gate informativo — verifica que ambos sites compilan y pasan tests tras cualquier cambio.
+
 ## 🔐 Secretos Requeridos
 
 Para que los pipelines funcionen, el repositorio debe tener configurados los siguientes **Secrets** y **Variables**:

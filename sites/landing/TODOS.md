@@ -17,7 +17,7 @@ Deferred work for landing. Each entry: trigger condition + what + why + effort e
 ## TODO: Migrate ESLint to flat config (eslint.config.js) (P3)
 
 **Trigger:** ESLint v8 reaches end-of-life or a plugin we depend on drops v8 support.
-**What:** Replace `agevega.com/.eslintrc.cjs` with `agevega.com/eslint.config.js` (flat config). Bump `eslint` to v9, `@typescript-eslint/*` to v8. Update `lint` scripts if needed.
+**What:** Replace each site's `.eslintrc.cjs` with `eslint.config.js` (flat config). Bump `eslint` to v9, `@typescript-eslint/*` to v8. Update `lint` scripts if needed.
 **Why:** Flat config is the future of ESLint. v8 + .eslintrc is on a deprecation track.
 **Effort:** S (~30 min CC). Currently boring-by-default — wait for actual deprecation pressure.
 
