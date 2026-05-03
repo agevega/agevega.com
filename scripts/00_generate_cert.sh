@@ -24,12 +24,17 @@ echo "Stopping any running landing container..."
 sudo docker stop landing || true
 
 # 3. Request Certificate (Using Route53)
-echo "Requesting certificate for $DOMAIN and www.$DOMAIN using Route53..."
+# One multi-SAN cert covers all 6 names for both sites (landing + academy, dev/prod/www).
+# --expand is required: --keep-until-expiring alone treats the existing cert as valid
+# and skips the SAN expansion, leaving academy domains uncovered.
+echo "Requesting certificate for landing + academy domains using Route53..."
 sudo certbot certonly --dns-route53 \
   -d "$DOMAIN" -d "www.$DOMAIN" -d "dev.$DOMAIN" \
+  -d "academy.$DOMAIN" -d "www.academy.$DOMAIN" -d "dev.academy.$DOMAIN" \
   --email "$EMAIL" \
   --agree-tos \
   --non-interactive \
+  --expand \
   --keep-until-expiring
 
 echo "------------------------------------------------"

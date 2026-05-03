@@ -28,8 +28,14 @@ variable "common_tags" {
   }
 }
 
-variable "repository_name" {
-  description = "The name of the ECR repository"
+variable "repository_name_landing" {
+  description = "The name of the ECR repository for the landing site"
   type        = string
   default     = "agevegacom-landing"
+}
+
+variable "repository_name_academy" {
+  description = "The name of the ECR repository for the academy site"
+  type        = string
+  default     = "agevegacom-academy"
 }

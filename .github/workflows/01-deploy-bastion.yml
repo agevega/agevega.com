@@ -14,9 +14,15 @@ env:
   EC2_HOST: ""
   EC2_USER: ec2-user
 
+# Serialize bastion deploys: only one deploy on the EC2 at a time, regardless of tag.
+# Avoids racing on docker daemon, cert files, and CloudFront invalidations.
+concurrency:
+  group: deploy-bastion
+  cancel-in-progress: false
+
 jobs:
   deploy:
-    name: Deploy to Bastion
+    name: Deploy landing + academy to Bastion
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -33,14 +39,18 @@ jobs:
         id: get-ssm
         run: |
           echo "Fetching configuration from SSM..."
-          ECR_REPO=$(aws ssm get-parameter --name "/${{ env.PROJECT_NAME }}/02-shared-resources/01-ecr-repositories/ecr-repository" --query "Parameter.Value" --output text)
-          CLOUDFRONT_ID=$(aws ssm get-parameter --name "/${{ env.PROJECT_NAME }}/04-bastion-host/04-cloudfront/cloudfront-distribution-id" --query "Parameter.Value" --output text)
+          ECR_REPO_LANDING=$(aws ssm get-parameter --name "/${{ env.PROJECT_NAME }}/02-shared-resources/01-ecr-repositories/ecr-repository-landing" --query "Parameter.Value" --output text)
+          ECR_REPO_ACADEMY=$(aws ssm get-parameter --name "/${{ env.PROJECT_NAME }}/02-shared-resources/01-ecr-repositories/ecr-repository-academy" --query "Parameter.Value" --output text)
+          CLOUDFRONT_ID_LANDING=$(aws ssm get-parameter --name "/${{ env.PROJECT_NAME }}/04-bastion-host/04-cloudfront/cloudfront-distribution-id" --query "Parameter.Value" --output text)
+          CLOUDFRONT_ID_ACADEMY=$(aws ssm get-parameter --name "/${{ env.PROJECT_NAME }}/04-bastion-host/04-cloudfront/cloudfront-distribution-id-academy" --query "Parameter.Value" --output text)
           BASTION_HOST=$(aws ssm get-parameter --name "/${{ env.PROJECT_NAME }}/04-bastion-host/02-ec2-instance/bastion-public-dns" --query "Parameter.Value" --output text)
-          
+
           echo "Found Bastion Host: $BASTION_HOST"
           echo "EC2_HOST=$BASTION_HOST" >> $GITHUB_ENV
-          echo "ECR_REPO=$ECR_REPO" >> $GITHUB_OUTPUT
-          echo "CLOUDFRONT_ID=$CLOUDFRONT_ID" >> $GITHUB_OUTPUT
+          echo "ECR_REPO_LANDING=$ECR_REPO_LANDING" >> $GITHUB_OUTPUT
+          echo "ECR_REPO_ACADEMY=$ECR_REPO_ACADEMY" >> $GITHUB_OUTPUT
+          echo "CLOUDFRONT_ID_LANDING=$CLOUDFRONT_ID_LANDING" >> $GITHUB_OUTPUT
+          echo "CLOUDFRONT_ID_ACADEMY=$CLOUDFRONT_ID_ACADEMY" >> $GITHUB_OUTPUT
 
       - name: Login to Amazon ECR
         id: login-ecr
@@ -55,39 +65,65 @@ jobs:
 
       - name: Copy deployment scripts
         run: |
-          # Copiamos ambos scripts al bastion
-          scp -i ~/.ssh/id_rsa scripts/00_generate_cert.sh scripts/01_deploy_landing.sh ${{ env.EC2_USER }}@${{ env.EC2_HOST }}:~/
-          # Damos permisos de ejecución a ambos
-          ssh -i ~/.ssh/id_rsa ${{ env.EC2_USER }}@${{ env.EC2_HOST }} "chmod +x ~/00_generate_cert.sh ~/01_deploy_landing.sh"
+          # Copiamos los tres scripts al bastion (cert + landing + academy)
+          scp -i ~/.ssh/id_rsa scripts/00_generate_cert.sh scripts/01_deploy_landing.sh scripts/01_deploy_academy.sh ${{ env.EC2_USER }}@${{ env.EC2_HOST }}:~/
+          # Permisos de ejecución
+          ssh -i ~/.ssh/id_rsa ${{ env.EC2_USER }}@${{ env.EC2_HOST }} "chmod +x ~/00_generate_cert.sh ~/01_deploy_landing.sh ~/01_deploy_academy.sh"
 
-      - name: Deploy on EC2
+      - name: Generate certificates (multi-SAN, idempotent)
+        run: |
+          # 6-SAN cert covering both sites' subdomains. --keep-until-expiring + --expand
+          # makes this safe to call on every deploy.
+          ssh -i ~/.ssh/id_rsa ${{ env.EC2_USER }}@${{ env.EC2_HOST }} "./00_generate_cert.sh"
+
+      - name: Login to ECR on bastion
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPO: ${{ steps.get-ssm.outputs.ECR_REPO }}
-          IMAGE_TAG: ${{ inputs.image_tag }}
         run: |
-          FULL_IMAGE_URI="$ECR_REGISTRY/$ECR_REPO:$IMAGE_TAG"
-          echo "Deploying image: $FULL_IMAGE_URI"
-
-          # Login to ECR on the remote instance
           aws ecr get-login-password --region $AWS_REGION | \
           ssh -i ~/.ssh/id_rsa ${{ env.EC2_USER }}@${{ env.EC2_HOST }} \
           "docker login --username AWS --password-stdin $ECR_REGISTRY"
 
-          # 1. Ejecutar generación de certificados
-          ssh -i ~/.ssh/id_rsa ${{ env.EC2_USER }}@${{ env.EC2_HOST }} "./00_generate_cert.sh"
-
-          # 2. Ejecutar el script de despliegue
+      - name: Deploy landing
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPO: ${{ steps.get-ssm.outputs.ECR_REPO_LANDING }}
+          IMAGE_TAG: ${{ inputs.image_tag }}
+        run: |
+          FULL_IMAGE_URI="$ECR_REGISTRY/$ECR_REPO:$IMAGE_TAG"
+          echo "Deploying landing image: $FULL_IMAGE_URI"
           ssh -i ~/.ssh/id_rsa ${{ env.EC2_USER }}@${{ env.EC2_HOST }} "./01_deploy_landing.sh $FULL_IMAGE_URI"
 
-      - name: Invalidate CloudFront Cache
+      - name: Deploy academy
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPO: ${{ steps.get-ssm.outputs.ECR_REPO_ACADEMY }}
+          IMAGE_TAG: ${{ inputs.image_tag }}
+        run: |
+          FULL_IMAGE_URI="$ECR_REGISTRY/$ECR_REPO:$IMAGE_TAG"
+          echo "Deploying academy image: $FULL_IMAGE_URI"
+          ssh -i ~/.ssh/id_rsa ${{ env.EC2_USER }}@${{ env.EC2_HOST }} "./01_deploy_academy.sh $FULL_IMAGE_URI"
+
+      - name: Invalidate CloudFront landing
         if: success()
         env:
-          CLOUDFRONT_ID: ${{ steps.get-ssm.outputs.CLOUDFRONT_ID }}
+          CLOUDFRONT_ID: ${{ steps.get-ssm.outputs.CLOUDFRONT_ID_LANDING }}
         run: |
           if [ -n "$CLOUDFRONT_ID" ] && [ "$CLOUDFRONT_ID" != "None" ]; then
-            echo "Invalidating CloudFront Distribution: $CLOUDFRONT_ID"
+            echo "Invalidating CloudFront landing distribution: $CLOUDFRONT_ID"
             aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_ID --paths "/*"
           else
-            echo "CloudFront Distribution ID not found in SSM. Skipping invalidation."
+            echo "CloudFront landing distribution ID not found in SSM. Skipping invalidation."
+          fi
+
+      - name: Invalidate CloudFront academy
+        if: success()
+        env:
+          CLOUDFRONT_ID: ${{ steps.get-ssm.outputs.CLOUDFRONT_ID_ACADEMY }}
+        run: |
+          if [ -n "$CLOUDFRONT_ID" ] && [ "$CLOUDFRONT_ID" != "None" ]; then
+            echo "Invalidating CloudFront academy distribution: $CLOUDFRONT_ID"
+            aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_ID --paths "/*"
+          else
+            echo "CloudFront academy distribution ID not found in SSM. Skipping invalidation."
           fi

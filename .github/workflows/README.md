@@ -8,31 +8,39 @@ La automatización sigue un flujo encadenado ("Chain Reaction") para garantizar 
 
 ```mermaid
 graph TD;
-    A[Push Tag v*.*.*] -->|Triggers| B(00 Build & Push);
-    B -->|Builds Docker Image| C{Success?};
-    C -->|Yes| D[Push to ECR];
-    D -->|Triggers via gh CLI| E(01 Deploy to Bastion);
-    E -->|SSH| F["Bastion Host (dev)"];
-    F -->|Pull & Keep New Version| G[Update Container];
-    E -->|AWS CLI| H[Invalidate CloudFront];
+    A[Push Tag v*.*.*] -->|Triggers| B(00 test matrix landing+academy);
+    B -->|fail-fast: true| C{Both pass?};
+    C -->|No| X[ABORT - no images built];
+    C -->|Yes| D(00 build matrix landing+academy);
+    D -->|Both push to ECR| E(00 trigger-deploy);
+    E -->|gh CLI| F(01 Deploy to Bastion);
+    F -->|SSH| G["Bastion Host (dev)"];
+    G -->|cert + landing then academy| H[Update both containers];
+    H -->|on success only| I[Invalidate both CloudFronts];
 ```
 
 ### 1. Build & Push (`00-generate-docker-image.yml`)
 
 - **Trigger**: Push de un tag semántico (e.g., `v1.0.2`).
-- **Acción**:
-  1. Construye la imagen Docker de landing (multi-arch) desde `sites/landing/`.
-  2. Publica la imagen en **AWS ECR** con el tag de versión y `latest`.
-  3. **Dispara automáticamente** el siguiente workflow (`01-deploy-bastion`).
+- **Estructura**: 3 jobs encadenados, todos con matrix `[landing, academy]` y `fail-fast: true`.
+  1. **`test`**: `bun install` + `bun run build` + `bun run test` por sitio. Cualquier fallo aborta antes de construir imagen.
+  2. **`build`** (`needs: test`): construye la imagen Docker (multi-arch `linux/amd64,linux/arm64`) desde `sites/${{ matrix.site }}/` y la publica en su ECR (`agevegacom-landing` / `agevegacom-academy`) con tags `${{ ref_name }}` y `latest`. Landing recibe build-args `PUBLIC_APP_VERSION` + `PUBLIC_API_URL` (de SSM); academy no necesita build-args.
+  3. **`trigger-deploy`** (`needs: build`): dispara `01-deploy-bastion.yml` vía `gh workflow run`. Solo se ejecuta si TODA la matrix de build terminó OK — atomicidad entre sitios.
+- **Concurrency**: `deploy-${{ github.ref }}` repo-wide. Tags distintos pueden buildearse en paralelo (claves distintas); el mismo tag pusheado dos veces se serializa.
 
 ### 2. Deploy to Bastion (`01-deploy-bastion.yml`)
 
-- **Trigger**: `workflow_dispatch` (generalmente invocado por el workflow anterior).
-- **Acción**:
-  1. **Dynamic Discovery**: Busca la IP pública del "Bastion Host" mediante tags de AWS (`Name=bastion-host`).
-  2. **Remote Execution**: Conecta por SSH usando la clave privada almacenada en secretos.
-  3. **Deploy**: Ejecuta el script `scripts/01_deploy_landing.sh` en el servidor para rotar contenedores.
-  4. **Cache Purge**: Invalida la caché de CloudFront para el entorno de desarrollo (`dev.agevega.com`).
+- **Trigger**: `workflow_dispatch` (invocado por workflow 00 al final, o manualmente con `image_tag` para rollback).
+- **Acción** (single job, steps secuenciales — fallo en uno aborta los siguientes):
+  1. **Discovery**: lee de SSM ambos ECR repos, ambos CloudFront IDs, y la DNS del bastion.
+  2. **Setup SSH** + **scp** de los 3 scripts (`00_generate_cert.sh`, `01_deploy_landing.sh`, `01_deploy_academy.sh`) + `chmod +x`.
+  3. **Cert**: ejecuta `00_generate_cert.sh` (cert multi-SAN cubriendo landing + academy via `--dns-route53` + `--expand` + `--keep-until-expiring`, idempotente).
+  4. **Login ECR** en el bastion.
+  5. **Deploy landing** (script `01_deploy_landing.sh`, contenedor `landing`, host:443).
+  6. **Deploy academy** (script `01_deploy_academy.sh`, contenedor `academy`, host:8443) — si landing falla, no corre.
+  7. **CloudFront invalidation landing** (con `if: success()` — si algún deploy falló, no invalida).
+  8. **CloudFront invalidation academy** (mismo).
+- **Concurrency**: `deploy-bastion` (sin discriminador), serializa todos los deploys al mismo bastion para evitar race en docker daemon, certs, e invalidaciones.
 
 ### 3. Deploy to Production (`02-deploy-production.yml`)
 
@@ -61,7 +69,7 @@ Para que los pipelines funcionen, el repositorio debe tener configurados los sig
 | `AWS_SECRET_ACCESS_KEY` | Secret   | Credenciales de AWS IAM User (User: terraform).           |
 | `EC2_SSH_KEY`           | Secret   | Clave privada ssh para acceder al Bastion.                |
 | `AWS_REGION`            | Variable | Región de AWS (e.g., `eu-south-2`).                       |
-| `ECR_REPOSITORY`        | Variable | Nombre del repositorio ECR (e.g., `agevegacom-landing`). |
+| (ECR repo names)        | SSM      | Leídos en runtime: `/agevegacom/02-shared-resources/01-ecr-repositories/ecr-repository-{landing,academy}`. |
 
 ## 🛠 Ejecución Manual
 

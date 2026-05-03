@@ -133,19 +133,20 @@ Why deploy-all-every-time:
 
 - **Every tag is a known-good cut of the entire repo.** No ambiguity about "what version is academy on right now" when production is debugging.
 - **Idempotent redeploys are cheap.** A site with no source changes builds the same Docker layers (cache hit), pushes the same ECR digest (no-op), and the deploy script's `docker pull` returns the same image. The runtime container restarts but serves the same bytes.
-- **One pipeline failing must not block the others.** Each site's build/deploy workflow runs independently. Academy CI flaking does not stop landing from shipping.
 - **Continuous-deployment hygiene.** Every tag exercises the full deploy path for every site, so the path stays warm and tested. A site that hasn't deployed in 3 months is a deploy that's about to break.
 
 The cost of a no-op redeploy (a few seconds of CI + an idempotent container restart) is much smaller than the cost of an infrequent-firing deploy path silently rotting until the day you actually need it.
 
-### Resilience requirements for per-site deploy workflows
+### Atomicity requirements for the multi-site pipeline
 
-Each site's deploy workflow MUST satisfy:
+Every `v*` tag deploys all sites as one atomic unit. The pipeline gates each phase on every site succeeding:
 
-- **Build is independent.** Workflow file references only `sites/<name>/**` and the site's own assets. No coupling to the other site's source.
-- **No-source-change is not a failure.** If `git diff <prev-tag>..<this-tag> -- sites/<name>/` is empty, the workflow still builds and pushes the same image. It does NOT short-circuit with an error.
-- **Cross-site failure isolation.** Workflows do not share state, locks, or sequenced dependencies. Use `concurrency` per-site (e.g. `concurrency: deploy-landing-${{ github.ref }}`), not repo-wide.
-- **Tag glob is `v*`** in every workflow trigger. Identical across all sites.
+- **Test gate.** Workflow `00-generate-docker-image.yml` has a `test` job (matrix `[landing, academy]`, `fail-fast: true`). Any test failure aborts before any image is built.
+- **Build gate.** Same workflow's `build` job (`needs: test`, same matrix, `fail-fast: true`). Both pushes must succeed for the deploy trigger to fire. Tag glob is `v*` — identical across all sites.
+- **Deploy gate.** Workflow `01-deploy-bastion.yml` runs sequential steps in a single job: the academy deploy step does not start until the landing deploy step succeeds. GitHub Actions' default `if: success()` provides this for free. CloudFront invalidations only run when both deploys succeeded.
+- **Concurrency is repo-wide:** `concurrency: deploy-${{ github.ref }}`. NOT per-site. A second tag pushed mid-deploy waits.
+
+Trade-off explicitly accepted: a flaky test or build on one site blocks the release of the other. For a personal portfolio without an SLA, atomic consistency beats per-site availability. Revisit if the trade-off ever costs real customer impact.
 
 ---
 

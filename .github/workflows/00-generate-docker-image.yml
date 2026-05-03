@@ -9,14 +9,58 @@ env:
   AWS_REGION: eu-south-2
   PROJECT_NAME: agevegacom
 
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
-  deploy:
-    name: Build and Push to ECR
+  test:
+    name: Test ${{ matrix.site }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        site: [landing, academy]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: '1.1'
+
+      - name: Install dependencies (${{ matrix.site }})
+        working-directory: sites/${{ matrix.site }}
+        run: bun install --frozen-lockfile
+
+      - name: Build for test (${{ matrix.site }})
+        working-directory: sites/${{ matrix.site }}
+        env:
+          # Landing requires PUBLIC_API_URL via envField (optional: false).
+          # Academy ignores these but they're harmless to set.
+          PUBLIC_API_URL: https://stub.example.com
+          PUBLIC_APP_VERSION: ci-test
+        run: bun run build
+
+      - name: Test (${{ matrix.site }})
+        working-directory: sites/${{ matrix.site }}
+        env:
+          PUBLIC_API_URL: https://stub.example.com
+          PUBLIC_APP_VERSION: ci-test
+        run: bun run test
+
+  build:
+    name: Build and Push ${{ matrix.site }} to ECR
+    needs: test
     runs-on: ubuntu-latest
     permissions:
       id-token: write
       contents: read
-      actions: write
+    strategy:
+      fail-fast: true
+      matrix:
+        site: [landing, academy]
 
     steps:
       - name: Checkout code
@@ -39,29 +83,56 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Get SSM Parameters
-        id: get-ssm
+      - name: Get SSM ECR repo for ${{ matrix.site }}
+        id: get-ecr
         run: |
-          echo "Fetching configuration from SSM..."
-          ECR_REPO=$(aws ssm get-parameter --name "/${{ env.PROJECT_NAME }}/02-shared-resources/01-ecr-repositories/ecr-repository" --query "Parameter.Value" --output text)
-          API_URL=$(aws ssm get-parameter --name "/${{ env.PROJECT_NAME }}/03-backend-serverless/00-contact-api/endpoint" --query "Parameter.Value" --output text)
-
+          ECR_REPO=$(aws ssm get-parameter --name "/${{ env.PROJECT_NAME }}/02-shared-resources/01-ecr-repositories/ecr-repository-${{ matrix.site }}" --query "Parameter.Value" --output text)
           echo "ECR_REPO=$ECR_REPO" >> $GITHUB_OUTPUT
+
+      - name: Get SSM API endpoint (landing only)
+        id: get-api
+        if: matrix.site == 'landing'
+        run: |
+          API_URL=$(aws ssm get-parameter --name "/${{ env.PROJECT_NAME }}/03-backend-serverless/00-contact-api/endpoint" --query "Parameter.Value" --output text)
           echo "API_URL=$API_URL" >> $GITHUB_OUTPUT
 
-      - name: Build and push
+      - name: Build and push landing
+        if: matrix.site == 'landing'
         uses: docker/build-push-action@v5
         with:
           context: ./sites/landing
           push: true
           platforms: linux/amd64,linux/arm64
           tags: |
-            ${{ steps.login-ecr.outputs.registry }}/${{ steps.get-ssm.outputs.ECR_REPO }}:${{ github.ref_name }}
-            ${{ steps.login-ecr.outputs.registry }}/${{ steps.get-ssm.outputs.ECR_REPO }}:latest
+            ${{ steps.login-ecr.outputs.registry }}/${{ steps.get-ecr.outputs.ECR_REPO }}:${{ github.ref_name }}
+            ${{ steps.login-ecr.outputs.registry }}/${{ steps.get-ecr.outputs.ECR_REPO }}:latest
           build-args: |
             PUBLIC_APP_VERSION=${{ github.ref_name }}
-            PUBLIC_API_URL=${{ steps.get-ssm.outputs.API_URL }}
+            PUBLIC_API_URL=${{ steps.get-api.outputs.API_URL }}
           provenance: false
+
+      - name: Build and push academy
+        if: matrix.site == 'academy'
+        uses: docker/build-push-action@v5
+        with:
+          context: ./sites/academy
+          push: true
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            ${{ steps.login-ecr.outputs.registry }}/${{ steps.get-ecr.outputs.ECR_REPO }}:${{ github.ref_name }}
+            ${{ steps.login-ecr.outputs.registry }}/${{ steps.get-ecr.outputs.ECR_REPO }}:latest
+          provenance: false
+
+  trigger-deploy:
+    name: Trigger Deploy to Bastion
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Trigger Deploy to EC2
         env:

@@ -27,7 +27,7 @@ Each subdomain has its own self-contained app under `sites/`. Apps do not share 
 └── .github/               # GitHub Actions workflows (currently scoped to landing)
 ```
 
-**Naming divergence (intentional):** the directory is `sites/landing/`, the AWS ECR repo and EC2 container are also named `landing`. Tags `v*` apply repo-wide and currently trigger landing CI/CD only. Academy CI/CD and tag namespacing are deferred.
+**Naming pattern:** the directory is `sites/<name>/`, the AWS ECR repo is `agevegacom-<name>`, the EC2 container is also `<name>`. Tags `v*` apply repo-wide and atomically build, test, push, and deploy BOTH sites — see `sites/CONVENTIONS.md` "Atomicity requirements" for the failure semantics (any test/build failure aborts the whole pipeline).
 
 ## Landing Commands
 
@@ -111,13 +111,16 @@ Config values (ECR repo URL, API URL, CloudFront IDs) are fetched from **AWS SSM
 ## Deployment Flow
 
 ```
-git tag v*  →  GitHub Actions builds multi-arch Docker image (amd64 + arm64) from sites/landing/
-            →  Pushes to ECR (agevegacom-landing)
-            →  SSH to EC2, run 01_deploy_landing.sh (Docker + Nginx + SSL, container name: landing)
-            →  CloudFront cache invalidation
+git tag v*  →  Workflow 00: test (matrix landing+academy, fail-fast) → build (matrix, multi-arch) → trigger 01
+            →  Workflow 01: SSH to bastion → 00_generate_cert.sh (multi-SAN, --expand)
+                          → 01_deploy_landing.sh (container `landing` on host:443)
+                          → 01_deploy_academy.sh (container `academy` on host:8443)
+                          → CloudFront invalidations (landing + academy, only on success)
 ```
 
-Key scripts: `scripts/00_generate_cert.sh` (Let's Encrypt SSL), `scripts/01_deploy_landing.sh` (Docker deployment).
+Atomic semantics: any test or build failure aborts before deploy fires. CloudFront invalidations only run if both deploys succeeded. See `sites/CONVENTIONS.md` "Atomicity requirements".
+
+Key scripts: `scripts/00_generate_cert.sh` (Let's Encrypt SSL via DNS-01, 6-SAN cert covering both sites), `scripts/01_deploy_landing.sh` and `scripts/01_deploy_academy.sh` (Docker deployment per site).
 
 ## Workflow Preferences
 

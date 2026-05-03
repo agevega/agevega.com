@@ -38,9 +38,19 @@ resource "aws_security_group_rule" "egress_ssh_vpc" {
 
 resource "aws_security_group_rule" "ingress_https_cloudfront" {
   type              = "ingress"
-  description       = "Allow CloudFront Origin Traffic (HTTPS)"
+  description       = "Allow CloudFront Origin Traffic for landing (HTTPS 443)"
   from_port         = 443
   to_port           = 443
+  protocol          = "tcp"
+  prefix_list_ids   = [data.aws_ec2_managed_prefix_list.cloudfront.id]
+  security_group_id = aws_security_group.bastion_sg.id
+}
+
+resource "aws_security_group_rule" "ingress_https_8443_cloudfront" {
+  type              = "ingress"
+  description       = "Allow CloudFront Origin Traffic for academy (HTTPS 8443)"
+  from_port         = 8443
+  to_port           = 8443
   protocol          = "tcp"
   prefix_list_ids   = [data.aws_ec2_managed_prefix_list.cloudfront.id]
   security_group_id = aws_security_group.bastion_sg.id
