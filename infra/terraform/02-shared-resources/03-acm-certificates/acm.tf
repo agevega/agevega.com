@@ -2,7 +2,13 @@ resource "aws_acm_certificate" "cert" {
   domain_name       = data.terraform_remote_state.dns.outputs.domain_name
   validation_method = "DNS"
 
-  subject_alternative_names = ["*.${data.terraform_remote_state.dns.outputs.domain_name}"]
+  # `*.${domain}` only matches one label deep — covers `academy.${domain}` but NOT
+  # `www.academy.${domain}`. The second wildcard covers the two-label academy subdomains
+  # (`www.academy.*`, `dev.academy.*`) that the ALB serves behind the academy CloudFront.
+  subject_alternative_names = [
+    "*.${data.terraform_remote_state.dns.outputs.domain_name}",
+    "*.academy.${data.terraform_remote_state.dns.outputs.domain_name}",
+  ]
 
   tags = var.common_tags
 

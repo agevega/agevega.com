@@ -28,9 +28,19 @@ resource "aws_security_group_rule" "ingress_https_cloudfront" {
 
 resource "aws_security_group_rule" "egress_https_alb" {
   type                     = "egress"
-  description              = "HTTPS to instances (health checks and traffic)"
+  description              = "HTTPS to landing container on instances (health checks and traffic)"
   from_port                = 443
   to_port                  = 443
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.alb_sg.id
+  source_security_group_id = aws_security_group.instances_sg.id
+}
+
+resource "aws_security_group_rule" "egress_https_8443_alb" {
+  type                     = "egress"
+  description              = "HTTPS to academy container on instances (host port 8443)"
+  from_port                = 8443
+  to_port                  = 8443
   protocol                 = "tcp"
   security_group_id        = aws_security_group.alb_sg.id
   source_security_group_id = aws_security_group.instances_sg.id
@@ -62,9 +72,19 @@ resource "aws_security_group_rule" "ingress_ssh_bastion" {
 
 resource "aws_security_group_rule" "ingress_https_alb" {
   type                     = "ingress"
-  description              = "HTTPS from ALB"
+  description              = "HTTPS from ALB to landing container (port 443)"
   from_port                = 443
   to_port                  = 443
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.instances_sg.id
+  source_security_group_id = aws_security_group.alb_sg.id
+}
+
+resource "aws_security_group_rule" "ingress_https_8443_alb" {
+  type                     = "ingress"
+  description              = "HTTPS from ALB to academy container (host port 8443)"
+  from_port                = 8443
+  to_port                  = 8443
   protocol                 = "tcp"
   security_group_id        = aws_security_group.instances_sg.id
   source_security_group_id = aws_security_group.alb_sg.id

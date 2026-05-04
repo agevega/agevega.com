@@ -57,3 +57,9 @@ variable "asg_desired_capacity" {
   type        = number
   default     = 2
 }
+
+variable "domain_name" {
+  description = "Domain name (used for ALB listener rule host_header conditions)"
+  type        = string
+  default     = "agevega.com"
+}

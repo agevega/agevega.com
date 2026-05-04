@@ -10,7 +10,10 @@ resource "aws_autoscaling_group" "app_asg" {
     data.terraform_remote_state.vpc.outputs.subnet_private_3_id
   ]
 
-  target_group_arns         = [aws_lb_target_group.app_tg.arn]
+  target_group_arns = [
+    aws_lb_target_group.app_tg.arn,
+    aws_lb_target_group.app_tg_academy.arn,
+  ]
   health_check_type         = "ELB"
   health_check_grace_period = 300
 

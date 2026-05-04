@@ -9,8 +9,16 @@ chkconfig docker on
 # Login to ECR (one login covers both repos in the same registry)
 aws ecr get-login-password --region ${aws_region} | docker login --username AWS --password-stdin ${repository_url_landing}
 
-# Fetch Image Tag from SSM
-IMAGE_TAG=$(aws ssm get-parameter --name "${ssm_image_tag_name}" --region ${aws_region} --query "Parameter.Value" --output text)
+# Fetch Image Tags from SSM
+LANDING_IMAGE_TAG=$(aws ssm get-parameter --name "${ssm_image_tag_name}" --region ${aws_region} --query "Parameter.Value" --output text)
+ACADEMY_IMAGE_TAG=$(aws ssm get-parameter --name "${ssm_image_tag_name_academy}" --region ${aws_region} --query "Parameter.Value" --output text)
 
-# Run Container
-docker run -d --restart always -p 443:443 -e DEPLOYMENT_VERSION=$IMAGE_TAG --name app ${repository_url_landing}:$IMAGE_TAG
+# Run Landing Container — host:443 -> container:443. Container name 'app' is legacy
+# (predates the frontend->landing rename); preserved here to avoid touching production
+# behavior. New academy container uses convention-conforming '--name academy'.
+docker run -d --restart always -p 443:443 -e DEPLOYMENT_VERSION=$LANDING_IMAGE_TAG --name app ${repository_url_landing}:$LANDING_IMAGE_TAG
+
+# Run Academy Container — host:8443 -> container:443 (mirrors bastion topology).
+# ALB listener rule routes Host: academy.agevega.com / www.academy.agevega.com to
+# the academy target group on port 8443. CloudFront preserves the Host header.
+docker run -d --restart always -p 8443:443 -e DEPLOYMENT_VERSION=$ACADEMY_IMAGE_TAG --name academy ${repository_url_academy}:$ACADEMY_IMAGE_TAG
