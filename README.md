@@ -7,7 +7,7 @@
 ![Astro](https://img.shields.io/badge/astro-%232C2052.svg?style=for-the-badge&logo=astro&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
 ![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
-![Node.js](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)
+![Bun](https://img.shields.io/badge/bun-%23000000.svg?style=for-the-badge&logo=bun&logoColor=white)
 ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
 ![GitHub Actions](https://img.shields.io/badge/github%20actions-%232671E5.svg?style=for-the-badge&logo=githubactions&logoColor=white)
 
@@ -71,13 +71,13 @@ La red se despliega sobre una **VPC 3-Tier** personalizada, segmentando el tráf
 
 ```bash
 agevega.com/
-├── .gemini/                       # Contexto y Memoria del Proyecto
+├── .claude/                       # Claude Code config (commands, settings)
 ├── .github/                       # CI/CD Workflows (actualmente scoped a landing)
 │   └── workflows/
 ├── sites/                         # Sitios estáticos por subdominio (self-contained)
-│   ├── landing/                   # agevega.com — Astro 5 + npm + Tailwind 3
+│   ├── landing/                   # agevega.com — Astro 6 + bun + Tailwind v4
 │   │   ├── src/, public/
-│   │   ├── astro.config.mjs, tailwind.config.mjs
+│   │   ├── astro.config.mjs
 │   │   └── Dockerfile, nginx.conf
 │   └── academy/                   # academy.agevega.com — Astro 6 + bun + Tailwind v4
 │       ├── src/, public/
@@ -107,8 +107,8 @@ Cada sitio se levanta independiente. En paralelo (`landing` en 4321, `academy` e
 ```bash
 # Landing — agevega.com
 cd sites/landing
-npm install
-npm run dev          # http://localhost:4321
+bun install
+bun run dev          # http://localhost:4321
 
 # Academy — academy.agevega.com
 cd sites/academy
@@ -121,7 +121,7 @@ bun run dev          # http://localhost:4322
 El proyecto cuenta con workflows de GitHub Actions para gestionar el ciclo de vida de la aplicación:
 
 1.  **Build & Push**: Al pushear un tag (`v*.*.*`), se construye la imagen y se sube a **AWS ECR**.
-2.  **Deploy Automático**: El workflow anterior dispara automáticamente el despliegue (`01-deploy-to-ec2`), actualizando el Bastion Host con la nueva versión.
+2.  **Deploy Automático**: El workflow anterior dispara automáticamente el despliegue (`01-deploy-bastion`), actualizando el Bastion Host con la nueva versión.
 3.  **Manual (Opcional)**: Se puede forzar un despliegue manual si es necesario rollbackear o redesplegar una versión específica.
 
 > [!NOTE]

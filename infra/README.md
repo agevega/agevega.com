@@ -134,7 +134,7 @@ El estado de Terraform se almacena de forma remota y segura:
 ### 07/12/2025 — Despliegue de repositorio ECR (Módulo 03)
 
 - Despliegue del código en `infra/terraform/03-ECR` para gestión de imágenes Docker.
-- Creación de repositorio **ECR** `agevegacom-frontend` con escaneo de seguridad y políticas de ciclo de vida.
+- Creación de repositorio **ECR** `agevegacom-frontend` con escaneo de seguridad y políticas de ciclo de vida. _(Nota: renombrado a `agevegacom-landing` en mayo 2026 como parte del refactor `sites/`)._
 - Integración con el sistema de despliegue mediante Terraform backend S3.  
   ➡️ [Detalles](changelog/2025-12-07_despliegue-ecr.md)
 

@@ -1,0 +1,58 @@
+@import 'tailwindcss';
+
+@theme {
+  /* Brand colors (was extend.colors in v3 tailwind.config.mjs) */
+  --color-brand-dark: #0b1426;
+  --color-brand-surface: #0f172a;
+
+  /* Animations (was extend.animation in v3) */
+  --animate-fade-in: fadeIn 0.5s ease-out forwards;
+  --animate-fade-in-up: fadeInUp 0.8s ease-out forwards;
+  --animate-slide-up: slideUp 0.8s ease-out forwards;
+  --animate-slide-up-delayed: slideUp 0.8s ease-out 0.2s forwards;
+  --animate-gradient-x: gradient 15s ease infinite;
+}
+
+/* Keyframes (was extend.keyframes in v3) — separate @keyframes blocks in v4 */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes gradient {
+  0%,
+  100% {
+    background-size: 200% 200%;
+    background-position: left center;
+  }
+  50% {
+    background-size: 200% 200%;
+    background-position: right center;
+  }
+}

@@ -1,7 +1,7 @@
 # CLAUDE.md — agevega.com
 
 Personal portfolio monorepo for Alejandro Vega (Senior DevSecOps Engineer & Cloud Architect).
-**Stack:** Two static sites under `sites/` (Astro 5 + Astro 6), Docker/Nginx runtime, Lambda/API Gateway serverless backend, AWS infrastructure via Terraform, GitHub Actions CI/CD.
+**Stack:** Two static sites under `sites/` (both Astro 6), Docker/Nginx runtime, Lambda/API Gateway serverless backend, AWS infrastructure via Terraform, GitHub Actions CI/CD.
 
 ## Monorepo Layout
 
@@ -9,13 +9,12 @@ Each subdomain has its own self-contained app under `sites/`. Apps do not share 
 
 ```
 ├── sites/
-│   ├── landing/           # agevega.com — Astro 5 SSG, npm, Tailwind 3
+│   ├── landing/           # agevega.com — Astro 6 SSG, bun, Tailwind v4
 │   │   ├── src/
 │   │   │   ├── components/    # 10 Astro components (PascalCase)
 │   │   │   ├── layouts/       # Single Layout.astro
 │   │   │   └── pages/         # 5 pages: index, about, about-this-web, contact, laboratory
 │   │   ├── public/            # Static assets (favicon, og-image, etc.)
-│   │   ├── tailwind.config.mjs
 │   │   ├── astro.config.mjs
 │   │   ├── Dockerfile
 │   │   └── nginx.conf
@@ -28,15 +27,15 @@ Each subdomain has its own self-contained app under `sites/`. Apps do not share 
 └── .github/               # GitHub Actions workflows (currently scoped to landing)
 ```
 
-**Naming divergence (intentional):** the directory is `sites/landing/`, the AWS ECR repo and EC2 container are also named `landing`. Tags `v*` apply repo-wide and currently trigger landing CI/CD only. Academy CI/CD and tag namespacing are deferred.
+**Naming pattern:** the directory is `sites/<name>/`, the AWS ECR repo is `agevegacom-<name>`, the EC2 container is also `<name>`. Tags `v*` apply repo-wide and atomically build, test, push, and deploy BOTH sites — see `sites/CONVENTIONS.md` "Atomicity requirements" for the failure semantics (any test/build failure aborts the whole pipeline).
 
 ## Landing Commands
 
 ```bash
 cd sites/landing
-npm install        # Install dependencies
-npm run dev        # Dev server at http://localhost:4321
-npm run build      # Build static site to dist/
+bun install        # Install dependencies
+bun run dev        # Dev server at http://localhost:4321
+bun run build      # Build static site to dist/
 ```
 
 ## Academy Commands
@@ -54,8 +53,8 @@ bun run test       # Vitest schema tests
 - **Components:** One file per component in `src/components/`, always `PascalCase.astro`.
 - **Pages:** Lowercase kebab-case in `src/pages/` (e.g., `about-this-web.astro`).
 - **Layout:** Single `Layout.astro` wraps all pages. Receives `title` prop. Includes Navigation + Footer.
-- **Styling:** TailwindCSS utility classes. No custom CSS files except `<style is:global>` in Layout.
-- **Indentation:** Tabs in config files (tailwind, astro), 2 spaces in `.astro` component markup.
+- **Styling:** Tailwind v4 utilities (CSS-first). Custom tokens and animations in `src/styles/global.css` `@theme {}` block.
+- **Indentation:** Tabs in config files (astro), 2 spaces in `.astro` component markup.
 - **Imports:** Relative paths with `../` from current file. No aliases configured.
 - **TypeScript:** Minimal — only `Props` interface in frontmatter when needed.
 
@@ -112,13 +111,16 @@ Config values (ECR repo URL, API URL, CloudFront IDs) are fetched from **AWS SSM
 ## Deployment Flow
 
 ```
-git tag v*  →  GitHub Actions builds multi-arch Docker image (amd64 + arm64) from sites/landing/
-            →  Pushes to ECR (agevegacom-landing)
-            →  SSH to EC2, run 01_deploy_landing.sh (Docker + Nginx + SSL, container name: landing)
-            →  CloudFront cache invalidation
+git tag v*  →  Workflow 00: test (matrix landing+academy, fail-fast) → build (matrix, multi-arch) → trigger 01
+            →  Workflow 01: SSH to bastion → 00_generate_cert.sh (multi-SAN, --expand)
+                          → 01_deploy_landing.sh (container `landing` on host:443)
+                          → 01_deploy_academy.sh (container `academy` on host:8443)
+                          → CloudFront invalidations (landing + academy, only on success)
 ```
 
-Key scripts: `scripts/00_generate_cert.sh` (Let's Encrypt SSL), `scripts/01_deploy_landing.sh` (Docker deployment).
+Atomic semantics: any test or build failure aborts before deploy fires. CloudFront invalidations only run if both deploys succeeded. See `sites/CONVENTIONS.md` "Atomicity requirements".
+
+Key scripts: `scripts/00_generate_cert.sh` (Let's Encrypt SSL via DNS-01, 6-SAN cert covering both sites), `scripts/01_deploy_landing.sh` and `scripts/01_deploy_academy.sh` (Docker deployment per site).
 
 ## Workflow Preferences
 
@@ -131,7 +133,7 @@ Key scripts: `scripts/00_generate_cert.sh` (Let's Encrypt SSL), `scripts/01_depl
 
 - Install or remove npm dependencies without explicit approval.
 - Reformat or rename files not directly related to the current task.
-- Modify `package-lock.json` manually.
+- Modify `bun.lock` manually.
 - Touch `*.tfstate`, `*.lock`, or Terraform state files.
 
 ## Skill routing

@@ -8,10 +8,10 @@ AgeVega Academy: static course site for DevSecOps and Cloud content from the Age
 This app lives at `agevega.com/sites/academy/`, sibling of `agevega.com/sites/landing/`. The monorepo at `agevega.com/` hosts one self-contained static site per subdomain under `sites/`. Conventions:
 
 - **Sites pattern.** Every subdomain gets its own directory under `sites/<name>/`. The parent dir `sites/` is for grouping only — there is no shared `package.json`, no nx, no turborepo, no orchestration tool.
-- **Self-contained.** Each app has its own `Dockerfile`, `nginx.conf`, package manager, and framework version. No shared lockfile. Landing uses npm + Astro 5 + Tailwind 3; this app uses bun + Astro 6 + Tailwind v4. They do not interact at build time.
+- **Self-contained.** Each app has its own `Dockerfile`, `nginx.conf`, package manager, and framework version. No shared lockfile. Both landing and academy use bun + Astro 6 + Tailwind v4 (post-2026-05-02 convergence). They do not interact at build time.
 - **No root-level package manifests.** Do NOT look for `package.json` at the monorepo root. Each app's manifest lives in its own directory.
 - **Shared by inheritance only:** the repo-level `.gitignore` (with wildcards `*/node_modules/`, `*/.astro/`) and the repo-level `LICENSE` cover this app. Do not introduce a per-app `LICENSE` unless licenses diverge.
-- **CI/CD scope.** The 3 workflows in `agevega.com/.github/workflows/` (00-generate-docker-image, 01-deploy-bastion, 02-deploy-production) belong to the `landing` app exclusively (build context = `./sites/landing`, ECR = `agevegacom-landing`, container = `landing`). Academy's CI/CD is deferred to a follow-up iteration. Tags `v*` apply repo-wide and currently fire only the landing pipeline.
+- **CI/CD scope.** Workflows `00-generate-docker-image` and `01-deploy-bastion` cover both sites (matrix [landing, academy], `fail-fast: true`, sequential bastion deploy). Academy's bastion container runs on host:8443 behind its own CloudFront distribution serving `dev.academy.agevega.com`. ECR repo: `agevegacom-academy`. A single `v*` tag tests, builds, and deploys both sites atomically — see `sites/CONVENTIONS.md` "Atomicity requirements". `02-deploy-production` (manual) still ships landing-only; production for academy (`academy.agevega.com` + `www.academy.agevega.com`) is deferred until module 05-academy lands. The ACM cert already includes those SANs in anticipation.
 - **Local dev port allocation.** Landing runs on `:4321` (Astro default), academy on `:4322` (set via `server.port` in `astro.config.mjs`). They can run in parallel without collision.
 
 ## Repository Structure
@@ -110,11 +110,15 @@ bun run preview    # Preview built site
 
 ## Deployment
 
-Plain HTTP/80. SSL terminates at CloudFront (same pattern as agevega.com).
+TLS terminates inside the container on port 443 (mirrors landing). The bastion deploy script mounts the real LE cert (multi-SAN, shared with landing) read-only over `/etc/nginx/certs`. Self-signed fallback is baked into the image for local dev.
+
+In dev (bastion): host:8443 → container:443. CloudFront origin connects on 8443.
 
 ```bash
 docker build -t agevega-academy .
-docker run -p 80:80 agevega-academy
+docker run -p 8080:443 agevega-academy
+
+# Then open https://localhost:8080 (accept self-signed cert)
 ```
 
 ## Testing
