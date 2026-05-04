@@ -6,11 +6,11 @@ service docker start
 usermod -a -G docker ec2-user
 chkconfig docker on
 
-# Login to ECR
-aws ecr get-login-password --region ${aws_region} | docker login --username AWS --password-stdin ${repository_url}
+# Login to ECR (one login covers both repos in the same registry)
+aws ecr get-login-password --region ${aws_region} | docker login --username AWS --password-stdin ${repository_url_landing}
 
 # Fetch Image Tag from SSM
 IMAGE_TAG=$(aws ssm get-parameter --name "${ssm_image_tag_name}" --region ${aws_region} --query "Parameter.Value" --output text)
 
 # Run Container
-docker run -d --restart always -p 443:443 -e DEPLOYMENT_VERSION=$IMAGE_TAG --name app ${repository_url}:$IMAGE_TAG
+docker run -d --restart always -p 443:443 -e DEPLOYMENT_VERSION=$IMAGE_TAG --name app ${repository_url_landing}:$IMAGE_TAG
