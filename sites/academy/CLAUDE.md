@@ -110,11 +110,15 @@ bun run preview    # Preview built site
 
 ## Deployment
 
-Plain HTTP/80. SSL terminates at CloudFront (same pattern as agevega.com).
+TLS terminates inside the container on port 443 (mirrors landing). The bastion deploy script mounts the real LE cert (multi-SAN, shared with landing) read-only over `/etc/nginx/certs`. Self-signed fallback is baked into the image for local dev.
+
+In dev (bastion): host:8443 → container:443. CloudFront origin connects on 8443.
 
 ```bash
 docker build -t agevega-academy .
-docker run -p 80:80 agevega-academy
+docker run -p 8080:443 agevega-academy
+
+# Then open https://localhost:8080 (accept self-signed cert)
 ```
 
 ## Testing

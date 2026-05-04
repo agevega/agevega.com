@@ -16,7 +16,9 @@ bun run test       # Vitest — schema validation
 
 ```bash
 docker build -t agevega-academy .
-docker run -p 80:80 agevega-academy
+docker run -p 8080:443 agevega-academy
+
+# Then open https://localhost:8080 (accept self-signed cert)
 ```
 
 Ver [CLAUDE.md](CLAUDE.md) para convenciones del proyecto y [TESTING.md](TESTING.md) para la estrategia de tests.
