@@ -28,10 +28,10 @@ jobs:
         site: [landing, academy]
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           # Required by Astro 6 (engines: ">=22.12.0"). The astro CLI shebang is
           # `#!/usr/bin/env node`, so even under `bun run`, scripts delegate to node.

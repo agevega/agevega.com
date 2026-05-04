@@ -27,9 +27,12 @@ resource "aws_iam_role_policy" "ssm_access" {
     Version = "2012-10-17"
     Statement = [
       {
-        Action   = "ssm:GetParameter"
-        Effect   = "Allow"
-        Resource = "arn:aws:ssm:*:*:parameter/${var.project_name}/production/image_tag"
+        Action = "ssm:GetParameter"
+        Effect = "Allow"
+        Resource = [
+          "arn:aws:ssm:*:*:parameter/${var.project_name}/production/image_tag",
+          "arn:aws:ssm:*:*:parameter/${var.project_name}/production/image_tag_academy",
+        ]
       }
     ]
   })

@@ -14,9 +14,11 @@ resource "aws_launch_template" "app_lt" {
   }
 
   user_data = base64encode(templatefile("${path.module}/user_data.sh.tpl", {
-    aws_region         = var.aws_region
-    repository_url     = data.terraform_remote_state.ecr.outputs.repository_url
-    ssm_image_tag_name = aws_ssm_parameter.image_tag.name
+    aws_region                 = var.aws_region
+    repository_url_landing     = data.terraform_remote_state.ecr.outputs.repository_url_landing
+    repository_url_academy     = data.terraform_remote_state.ecr.outputs.repository_url_academy
+    ssm_image_tag_name         = aws_ssm_parameter.image_tag.name
+    ssm_image_tag_name_academy = aws_ssm_parameter.image_tag_academy.name
   }))
 
   instance_market_options {
