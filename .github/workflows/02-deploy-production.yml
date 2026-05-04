@@ -11,6 +11,7 @@ on:
 env:
   AWS_REGION: eu-south-2
   SSM_PARAM_NAME: "/agevegacom/production/image_tag"
+  SSM_PARAM_NAME_ACADEMY: "/agevegacom/production/image_tag_academy"
   ASG_NAME: "ha-cluster-asg"
 
 jobs:
@@ -25,11 +26,18 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Update Image Tag in SSM
+      - name: Update Image Tags in SSM (landing + academy)
         run: |
-          echo "Updating SSM Parameter: ${{ env.SSM_PARAM_NAME }} -> ${{ inputs.image_tag }}"
+          echo "Updating ${{ env.SSM_PARAM_NAME }} -> ${{ inputs.image_tag }}"
           aws ssm put-parameter \
             --name "${{ env.SSM_PARAM_NAME }}" \
+            --value "${{ inputs.image_tag }}" \
+            --type "String" \
+            --overwrite
+
+          echo "Updating ${{ env.SSM_PARAM_NAME_ACADEMY }} -> ${{ inputs.image_tag }}"
+          aws ssm put-parameter \
+            --name "${{ env.SSM_PARAM_NAME_ACADEMY }}" \
             --value "${{ inputs.image_tag }}" \
             --type "String" \
             --overwrite
@@ -105,15 +113,23 @@ jobs:
             sleep 30
           done
 
-      - name: Invalidate CloudFront Cache
+      - name: Invalidate CloudFront Caches (landing + academy)
         if: success()
         run: |
-          echo "Fetching CloudFront Distribution ID..."
-          DIST_ID=$(aws ssm get-parameter --name "/agevegacom/05-high-availability/03-cloudfront/cloudfront-distribution-id" --query "Parameter.Value" --output text || echo "")
-          
-          if [ -n "$DIST_ID" ] && [ "$DIST_ID" != "None" ]; then
-            echo "Invalidating successfully deployed distribution: $DIST_ID"
-            aws cloudfront create-invalidation --distribution-id "$DIST_ID" --paths "/*"
-          else
-            echo "CloudFront Distribution ID not found. Skipping invalidation."
-          fi
+          set -euo pipefail
+
+          invalidate() {
+            local site="$1" ssm_key="$2"
+            local dist_id
+            dist_id=$(aws ssm get-parameter --name "$ssm_key" --query "Parameter.Value" --output text 2>/dev/null || echo "")
+            if [ -n "$dist_id" ] && [ "$dist_id" != "None" ]; then
+              echo "Invalidating $site distribution: $dist_id"
+              aws cloudfront create-invalidation --distribution-id "$dist_id" --paths "/*"
+            else
+              echo "::error::$site CloudFront Distribution ID not found at $ssm_key"
+              exit 1
+            fi
+          }
+
+          invalidate landing "/agevegacom/05-high-availability/03-cloudfront/cloudfront-distribution-id"
+          invalidate academy "/agevegacom/05-high-availability/03-cloudfront/cloudfront-distribution-id-academy"
