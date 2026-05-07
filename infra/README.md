@@ -29,7 +29,7 @@ La infraestructura se organiza en módulos numerados secuencialmente según su o
 | :------------------------------------------------------------- | :----------------------- | :--------------------------------------------------------------------- |
 | **[00-setup](./terraform/00-setup)**                           | **IaC & Gobierno**       | Backend S3/DynamoDB, CloudTrail, AWS Config, Budgets.                  |
 | **[01-networking](./terraform/01-networking)**                 | **Recursos de Red**      | VPC (3-Tier), Subnets, NAT (Opcional), VPC Endpoints.                  |
-| **[02-shared-resources](./terraform/02-shared-resources)**     | **Recursos Compartidos** | SSH Keys, ECR, S3 Assets.                                              |
+| **[02-shared-resources](./terraform/02-shared-resources)**     | **Recursos Compartidos** | SSH Keys, ECR, S3 Assets, Regional ACM Certificate.                    |
 | **[03-backend-serverless](./terraform/03-backend-serverless)** | **Serverless Backend**   | Lambda (Python), API Gateway, SES.                                     |
 | **[04-bastion-host](./terraform/04-bastion-host)**             | **Bastion SSH**          | EC2 Bastion, Elastic IP, Security Groups, WAF, CloudFront, DNS Record. |
 | **[05-high-availability](./terraform/05-high-availability)**   | **Alta Disponibilidad**  | ASG (Spot), ALB, CloudFront, WAF, Auto-Scaling, DNS Record.            |
