@@ -1,4 +1,4 @@
-﻿terraform {
+terraform {
   backend "s3" {
     bucket         = "agevegacom-terraform-state"
     key            = "modules/04-bastion-host/02-ec2-instance/terraform.tfstate"

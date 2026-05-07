@@ -2,7 +2,7 @@ data "aws_caller_identity" "current" {}
 
 resource "aws_s3_bucket" "assets" {
   bucket = var.assets_bucket_name
-  tags = var.common_tags
+  tags   = var.common_tags
 }
 
 resource "aws_s3_bucket_public_access_block" "assets" {

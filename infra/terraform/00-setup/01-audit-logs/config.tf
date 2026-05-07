@@ -62,7 +62,7 @@ data "aws_iam_policy_document" "config_logs" {
       identifiers = ["config.amazonaws.com"]
     }
 
-    actions = ["s3:GetBucketAcl"]
+    actions   = ["s3:GetBucketAcl"]
     resources = [aws_s3_bucket.config_logs.arn]
 
     condition {
@@ -81,7 +81,7 @@ data "aws_iam_policy_document" "config_logs" {
       identifiers = ["config.amazonaws.com"]
     }
 
-    actions = ["s3:ListBucket"]
+    actions   = ["s3:ListBucket"]
     resources = [aws_s3_bucket.config_logs.arn]
 
     condition {
@@ -100,7 +100,7 @@ data "aws_iam_policy_document" "config_logs" {
       identifiers = ["config.amazonaws.com"]
     }
 
-    actions = ["s3:PutObject"]
+    actions   = ["s3:PutObject"]
     resources = ["${aws_s3_bucket.config_logs.arn}/AWSLogs/${data.aws_caller_identity.current.account_id}/Config/*"]
 
     condition {

@@ -11,7 +11,7 @@ This app lives at `agevega.com/sites/landing/`, sibling of `agevega.com/sites/ac
 - **Self-contained.** Each app has its own `Dockerfile`, `nginx.conf`, package manager, and framework version. No shared lockfile.
 - **Stack converged (post-2026-05-02 audit):** both landing and academy now run Astro 6 + Tailwind v4 + bun. Versions evolve per-app from this baseline.
 - **Local dev port allocation.** Landing on `:4321` (Astro default), academy on `:4322` (set via `server.port` in academy's `astro.config.mjs`). Run in parallel without collision.
-- **CI/CD scope.** Workflows `00-generate-docker-image` and `01-deploy-bastion` are repo-wide: a single `v*` tag tests, builds, and deploys BOTH landing and academy atomically (matrix per site, fail-fast, sequential bastion deploy). Landing's bastion container runs on host:443, academy on host:8443. `02-deploy-production` (manual `workflow_dispatch`) currently still ships landing-only to the prod ASG behind CloudFront — production for academy is deferred until module 05-academy lands. See `sites/CONVENTIONS.md` "Atomicity requirements".
+- **CI/CD scope.** Workflows `00-generate-docker-image` and `01-deploy-bastion` are repo-wide: a single `v*` tag tests, builds, and deploys BOTH landing and academy atomically (matrix per site, fail-fast, sequential bastion deploy). Landing's bastion container runs on host:443, academy on host:8443. `02-deploy-production` (manual `workflow_dispatch`) ships both sites to the prod ASG: updates a shared SSM image tag, triggers an instance refresh, and invalidates both landing and academy CloudFront distributions. See `sites/CONVENTIONS.md` "Atomicity requirements".
 
 ## Repository Structure
 

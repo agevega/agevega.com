@@ -22,7 +22,7 @@ data "aws_iam_policy_document" "lambda_assume_role" {
 resource "aws_iam_role" "lambda_role" {
   name               = "${var.project_name}-contact-lambda-role"
   assume_role_policy = data.aws_iam_policy_document.lambda_assume_role.json
-  tags = var.common_tags
+  tags               = var.common_tags
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_basic_execution" {
@@ -32,8 +32,8 @@ resource "aws_iam_role_policy_attachment" "lambda_basic_execution" {
 
 data "aws_iam_policy_document" "lambda_ses_policy" {
   statement {
-    effect    = "Allow"
-    actions   = ["ses:SendEmail", "ses:SendRawEmail"]
+    effect  = "Allow"
+    actions = ["ses:SendEmail", "ses:SendRawEmail"]
     resources = [
       aws_ses_email_identity.default.arn
     ]
@@ -81,7 +81,7 @@ resource "aws_lambda_function" "contact_form" {
 resource "aws_apigatewayv2_api" "http_api" {
   name          = "${var.project_name}-contact-api"
   protocol_type = "HTTP"
-  
+
   cors_configuration {
     allow_origins = ["https://agevega.com", "https://www.agevega.com", "https://dev.agevega.com", "http://localhost:4321"]
     allow_methods = ["POST", "OPTIONS"]
@@ -109,7 +109,7 @@ resource "aws_apigatewayv2_stage" "default" {
 resource "aws_cloudwatch_log_group" "lambda_logs" {
   name              = "/aws/lambda/${aws_lambda_function.contact_form.function_name}"
   retention_in_days = 7
-  tags = var.common_tags
+  tags              = var.common_tags
 }
 
 resource "aws_apigatewayv2_integration" "lambda_integration" {

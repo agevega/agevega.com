@@ -72,7 +72,7 @@ La red se despliega sobre una **VPC 3-Tier** personalizada, segmentando el tráf
 ```bash
 agevega.com/
 ├── .claude/                       # Claude Code config (commands, settings)
-├── .github/                       # CI/CD Workflows (actualmente scoped a landing)
+├── .github/                       # CI/CD Workflows (landing + academy)
 │   └── workflows/
 ├── sites/                         # Sitios estáticos por subdominio (self-contained)
 │   ├── landing/                   # agevega.com — Astro 6 + bun + Tailwind v4
@@ -93,7 +93,7 @@ agevega.com/
 │   │   ├── 05-high-availability/  # Entorno Prod (ASG + ALB)
 │   │   └── 99-domain/             # DNS Zones & ACM Certificates
 │   └── changelog/                 # Registro de cambios
-└── scripts/                       # Scripts de utilidad (actualmente scoped a landing)
+└── scripts/                       # Scripts de utilidad (landing + academy)
 ```
 
 ---
@@ -125,7 +125,7 @@ El proyecto cuenta con workflows de GitHub Actions para gestionar el ciclo de vi
 3.  **Manual (Opcional)**: Se puede forzar un despliegue manual si es necesario rollbackear o redesplegar una versión específica.
 
 > [!NOTE]
-> Los scripts subyacentes `scripts/01_deploy_landing.sh` y `scripts/00_generate_cert.sh` se ejecutan automáticamente en el servidor durante el despliegue, pero pueden usarse manualmente en caso de debug.
+> Los scripts subyacentes `scripts/01_deploy_landing.sh`, `scripts/01_deploy_academy.sh` y `scripts/00_generate_cert.sh` se ejecutan automáticamente en el servidor durante el despliegue, pero pueden usarse manualmente en caso de debug.
 
 ### Despliegue de Infraestructura
 

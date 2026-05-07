@@ -1,4 +1,4 @@
-﻿terraform {
+terraform {
   backend "s3" {
     bucket         = "agevegacom-terraform-state"
     key            = "modules/02-shared-resources/00-ssh-keys/terraform.tfstate"

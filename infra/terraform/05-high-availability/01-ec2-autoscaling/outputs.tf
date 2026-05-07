@@ -9,11 +9,6 @@ output "asg_name" {
 }
 
 output "ssm_image_tag_name" {
-  description = "Name of the SSM parameter storing the landing image tag for Production"
+  description = "Name of the SSM parameter storing the shared image tag for Production"
   value       = aws_ssm_parameter.image_tag.name
-}
-
-output "ssm_image_tag_name_academy" {
-  description = "Name of the SSM parameter storing the academy image tag for Production"
-  value       = aws_ssm_parameter.image_tag_academy.name
 }

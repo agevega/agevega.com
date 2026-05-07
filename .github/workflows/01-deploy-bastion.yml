@@ -41,7 +41,7 @@ jobs:
           echo "Fetching configuration from SSM..."
           ECR_REPO_LANDING=$(aws ssm get-parameter --name "/${{ env.PROJECT_NAME }}/02-shared-resources/01-ecr-repositories/ecr-repository-landing" --query "Parameter.Value" --output text)
           ECR_REPO_ACADEMY=$(aws ssm get-parameter --name "/${{ env.PROJECT_NAME }}/02-shared-resources/01-ecr-repositories/ecr-repository-academy" --query "Parameter.Value" --output text)
-          CLOUDFRONT_ID_LANDING=$(aws ssm get-parameter --name "/${{ env.PROJECT_NAME }}/04-bastion-host/04-cloudfront/cloudfront-distribution-id" --query "Parameter.Value" --output text)
+          CLOUDFRONT_ID_LANDING=$(aws ssm get-parameter --name "/${{ env.PROJECT_NAME }}/04-bastion-host/04-cloudfront/cloudfront-distribution-id-landing" --query "Parameter.Value" --output text)
           CLOUDFRONT_ID_ACADEMY=$(aws ssm get-parameter --name "/${{ env.PROJECT_NAME }}/04-bastion-host/04-cloudfront/cloudfront-distribution-id-academy" --query "Parameter.Value" --output text)
           BASTION_HOST=$(aws ssm get-parameter --name "/${{ env.PROJECT_NAME }}/04-bastion-host/02-ec2-instance/bastion-public-dns" --query "Parameter.Value" --output text)
 

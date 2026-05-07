@@ -67,9 +67,9 @@ data "aws_iam_policy_document" "cloudtrail_logs" {
     actions   = ["s3:GetBucketAcl"]
     resources = [aws_s3_bucket.cloudtrail_logs.arn]
     condition {
-       test     = "StringEquals"
-       variable = "aws:SourceArn"
-       values   = ["arn:aws:cloudtrail:${var.aws_region}:${data.aws_caller_identity.current.account_id}:trail/${var.cloudtrail_name}"]
+      test     = "StringEquals"
+      variable = "aws:SourceArn"
+      values   = ["arn:aws:cloudtrail:${var.aws_region}:${data.aws_caller_identity.current.account_id}:trail/${var.cloudtrail_name}"]
     }
   }
 
@@ -90,10 +90,10 @@ data "aws_iam_policy_document" "cloudtrail_logs" {
       variable = "s3:x-amz-acl"
       values   = ["bucket-owner-full-control"]
     }
-     condition {
-       test     = "StringEquals"
-       variable = "aws:SourceArn"
-       values   = ["arn:aws:cloudtrail:${var.aws_region}:${data.aws_caller_identity.current.account_id}:trail/${var.cloudtrail_name}"]
+    condition {
+      test     = "StringEquals"
+      variable = "aws:SourceArn"
+      values   = ["arn:aws:cloudtrail:${var.aws_region}:${data.aws_caller_identity.current.account_id}:trail/${var.cloudtrail_name}"]
     }
   }
 }
@@ -120,7 +120,7 @@ resource "aws_cloudtrail" "main" {
   }
 
   tags = merge(var.common_tags, {
-    Name   = var.cloudtrail_name
+    Name = var.cloudtrail_name
   })
 
   depends_on = [aws_s3_bucket_policy.cloudtrail_logs]

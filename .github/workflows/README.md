@@ -46,12 +46,12 @@ graph TD;
 
 - **Trigger**: Ejecución **manual** tras verificar en desarrollo. Se le indica la versión que queremos desplegar.
 - **Acción**:
-  1. **SSM Parameter**: Actualiza la versión de la imagen en Parameter Store (`/agevegacom/production/image_tag`).
+  1. **SSM Parameter**: Actualiza la versión de la imagen en Parameter Store (`/agevegacom/production/image_tag`) — parámetro compartido entre landing y academy.
   2. **Instance Refresh**: Inicia la rotación de instancias en el Auto Scaling Group.
      - **Síncrono**: El pipeline espera y monitorea el estado del refresco.
      - Si falla o se cancela, el pipeline se detiene.
      - Solo continúa cuando el 100% de las instancias están saludables.
-  3. **Invalidate Cache**: Purga la caché de CloudFront (Producción) para asegurar que los usuarios reciban la nueva versión de landing inmediatamente.
+  3. **Invalidate Cache**: Purga la caché de ambas distribuciones CloudFront (landing + academy) para asegurar que los usuarios reciban la nueva versión inmediatamente.
 
 ### 4. Test Sites (`03-test-sites.yml`)
 

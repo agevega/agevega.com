@@ -20,11 +20,11 @@ Each subdomain has its own self-contained app under `sites/`. Apps do not share 
 │   │   └── nginx.conf
 │   └── academy/           # academy.agevega.com — Astro 6 SSG, bun, Tailwind v4
 │       ├── src/, public/, astro.config.mjs, Dockerfile, nginx.conf
-│       └── (own CLAUDE.md, README.md, vitest tests, deploy NOT yet wired)
+│       └── (own CLAUDE.md, README.md, vitest tests)
 ├── infra/terraform/       # AWS infrastructure (numbered modules)
-├── scripts/               # Deployment & SSL scripts (currently scoped to landing)
+├── scripts/               # Deployment & SSL scripts (landing + academy)
 ├── .claude/               # Claude Code config (commands, settings)
-└── .github/               # GitHub Actions workflows (currently scoped to landing)
+└── .github/               # GitHub Actions workflows (landing + academy)
 ```
 
 **Naming pattern:** the directory is `sites/<name>/`, the AWS ECR repo is `agevegacom-<name>`, the EC2 container is also `<name>`. Tags `v*` apply repo-wide and atomically build, test, push, and deploy BOTH sites — see `sites/CONVENTIONS.md` "Atomicity requirements" for the failure semantics (any test/build failure aborts the whole pipeline).

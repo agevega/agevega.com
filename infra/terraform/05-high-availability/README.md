@@ -41,7 +41,7 @@ Este módulo despliega el entorno de **Producción**, diseñado para máxima dis
 ### 5. [04-dns-record](./04-dns-record)
 
 - **Función**: Registro DNS Final.
-- **Recursos**: Registro `A` (Alias) en Route53 (`agevega.com` y `www.agevega.com`) apuntando a CloudFront.
+- **Recursos**: Registros `A` (Alias) en Route53 (`agevega.com`, `www.agevega.com`, `academy.agevega.com`, `www.academy.agevega.com`) apuntando a sus respectivas distribuciones CloudFront.
 
 ---
 

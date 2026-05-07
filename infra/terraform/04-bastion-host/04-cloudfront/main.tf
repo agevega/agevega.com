@@ -11,7 +11,7 @@ resource "aws_cloudfront_origin_access_control" "s3_oac" {
   signing_protocol                  = "sigv4"
 }
 
-resource "aws_cloudfront_distribution" "bastion_distribution" {
+resource "aws_cloudfront_distribution" "bastion_distribution_landing" {
   enabled         = true
   is_ipv6_enabled = true
   comment         = "Bastion Host Origin (Module 04) - Distribution for dev.${var.domain_name}"
@@ -118,7 +118,9 @@ resource "aws_cloudfront_distribution" "bastion_distribution" {
     minimum_protocol_version = "TLSv1.2_2021"
   }
 
-  tags = var.common_tags
+  tags = merge(var.common_tags, {
+    Site = "landing"
+  })
 }
 
 resource "aws_cloudfront_response_headers_policy" "no_cache" {
@@ -134,13 +136,15 @@ resource "aws_cloudfront_response_headers_policy" "no_cache" {
   }
 }
 
-resource "aws_ssm_parameter" "cloudfront_distribution_id" {
-  name        = "/${var.project_name}/04-bastion-host/04-cloudfront/cloudfront-distribution-id"
+resource "aws_ssm_parameter" "cloudfront_distribution_id_landing" {
+  name        = "/${var.project_name}/04-bastion-host/04-cloudfront/cloudfront-distribution-id-landing"
   description = "CloudFront Distribution ID (Bastion landing)"
   type        = "String"
-  value       = aws_cloudfront_distribution.bastion_distribution.id
+  value       = aws_cloudfront_distribution.bastion_distribution_landing.id
 
-  tags = var.common_tags
+  tags = merge(var.common_tags, {
+    Site = "landing"
+  })
 }
 
 # ------------------------------------------------------------------------------
@@ -149,10 +153,6 @@ resource "aws_ssm_parameter" "cloudfront_distribution_id" {
 # Same bastion EC2 hosts both containers. Each site has its own CloudFront so
 # they can be invalidated independently and so each origin has its own port.
 # Reuses the existing aws_cloudfront_response_headers_policy.no_cache.
-#
-# TODO(module-05-academy): when prod-academy lands, extend `aliases` here with
-# academy.${var.domain_name} + www.academy.${var.domain_name} via a
-# var.assume_prod_academy ternary, mirroring the landing pattern.
 # ------------------------------------------------------------------------------
 
 resource "aws_cloudfront_distribution" "bastion_distribution_academy" {

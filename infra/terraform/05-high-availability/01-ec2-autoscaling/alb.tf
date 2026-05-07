@@ -12,11 +12,11 @@ resource "aws_lb" "app_alb" {
   enable_deletion_protection = false
 
   tags = merge(var.common_tags, {
-    Name   = "ha-cluster-alb"
+    Name = "ha-cluster-alb"
   })
 }
 
-resource "aws_lb_target_group" "app_tg" {
+resource "aws_lb_target_group" "app_tg_landing" {
   name        = "ha-cluster-tg"
   port        = 443
   protocol    = "HTTPS"
@@ -72,7 +72,7 @@ resource "aws_lb_listener" "https" {
   # Default action forwards to landing target group (preserves existing behavior).
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.app_tg.arn
+    target_group_arn = aws_lb_target_group.app_tg_landing.arn
   }
 }
 

@@ -11,7 +11,7 @@ resource "aws_cloudfront_origin_access_control" "s3_oac" {
   signing_protocol                  = "sigv4"
 }
 
-resource "aws_cloudfront_distribution" "prod_distribution" {
+resource "aws_cloudfront_distribution" "prod_distribution_landing" {
   enabled         = true
   is_ipv6_enabled = true
   comment         = "High Availability Cluster Origin (Module 05) - Distribution for ${var.domain_name}, www.${var.domain_name}"
@@ -118,7 +118,9 @@ resource "aws_cloudfront_distribution" "prod_distribution" {
     minimum_protocol_version = "TLSv1.2_2021"
   }
 
-  tags = var.common_tags
+  tags = merge(var.common_tags, {
+    Site = "landing"
+  })
 }
 
 resource "aws_cloudfront_response_headers_policy" "no_cache" {
@@ -134,13 +136,15 @@ resource "aws_cloudfront_response_headers_policy" "no_cache" {
   }
 }
 
-resource "aws_ssm_parameter" "cloudfront_distribution_id" {
-  name        = "/${var.project_name}/05-high-availability/03-cloudfront/cloudfront-distribution-id"
+resource "aws_ssm_parameter" "cloudfront_distribution_id_landing" {
+  name        = "/${var.project_name}/05-high-availability/03-cloudfront/cloudfront-distribution-id-landing"
   description = "CloudFront Distribution ID (Prod landing)"
   type        = "String"
-  value       = aws_cloudfront_distribution.prod_distribution.id
+  value       = aws_cloudfront_distribution.prod_distribution_landing.id
 
-  tags = var.common_tags
+  tags = merge(var.common_tags, {
+    Site = "landing"
+  })
 }
 
 # ------------------------------------------------------------------------------

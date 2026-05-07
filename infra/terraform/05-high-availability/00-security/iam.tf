@@ -31,7 +31,6 @@ resource "aws_iam_role_policy" "ssm_access" {
         Effect = "Allow"
         Resource = [
           "arn:aws:ssm:*:*:parameter/${var.project_name}/production/image_tag",
-          "arn:aws:ssm:*:*:parameter/${var.project_name}/production/image_tag_academy",
         ]
       }
     ]

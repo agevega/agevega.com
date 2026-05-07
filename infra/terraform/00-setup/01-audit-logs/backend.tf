@@ -1,4 +1,5 @@
 ﻿terraform {
+terraform {
   backend "s3" {
     bucket         = "agevegacom-terraform-state"
     key            = "modules/00-setup/01-audit-logs/terraform.tfstate"
