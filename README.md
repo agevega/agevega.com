@@ -133,20 +133,6 @@ Los cambios en AWS se aplican mediante Terraform. Para más detalles, consulta l
 
 ---
 
-## 🗺 Roadmap
-
-Estado actual de las tareas principales y evolución prevista:
-
-- [x] **Seguridad y Observabilidad**: CloudTrail, AWS Config y Budgets activos.
-- [x] **Infraestructura Core**: VPC 3-Tier y gestión de estado remoto.
-- [x] **Frontend & CI/CD**: Astro, Docker y Pipelines de GitHub Actions.
-- [x] **Serverless Backend**: API Gateway + Lambda para contacto.
-- [x] **Alta Disponibilidad**: Cluster de producción con Spot Instances y Autoscaling.
-- [x] **Optimización de Costes**: Migración a ARM64 y WAF 'Plug & Play'.
-- [x] **Refactorización Modular**: Organización granular de IaC.
-
----
-
 ## 📄 Licencia
 
 © Alejandro Vega. Este proyecto es open source bajo la licencia [MIT](./LICENSE).
