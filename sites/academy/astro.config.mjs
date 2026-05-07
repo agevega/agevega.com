@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig } from 'astro/config';
+import { defineConfig, envField } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import sitemap from '@astrojs/sitemap';
 
@@ -9,6 +9,16 @@ export default defineConfig({
   integrations: [sitemap()],
   vite: {
     plugins: [tailwindcss()],
+  },
+  env: {
+    schema: {
+      PUBLIC_APP_VERSION: envField.string({
+        context: 'client',
+        access: 'public',
+        optional: true,
+        default: 'dev',
+      }),
+    },
   },
   markdown: {
     shikiConfig: {

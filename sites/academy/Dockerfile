@@ -3,6 +3,10 @@ FROM oven/bun:1.3 AS builder
 
 WORKDIR /app
 
+# Arguments
+ARG PUBLIC_APP_VERSION
+ENV PUBLIC_APP_VERSION=$PUBLIC_APP_VERSION
+
 COPY package.json bun.lock ./
 RUN bun install --frozen-lockfile
 

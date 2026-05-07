@@ -51,7 +51,7 @@ jobs:
         working-directory: sites/${{ matrix.site }}
         env:
           # Landing requires PUBLIC_API_URL via envField (optional: false).
-          # Academy has no required env vars today.
+          # Both sites use PUBLIC_APP_VERSION (optional, default: 'dev').
           PUBLIC_API_URL: https://stub.example.com
           PUBLIC_APP_VERSION: ci-test
         run: bun run build
