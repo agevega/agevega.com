@@ -1,6 +1,6 @@
 # 🛡️ 04-bastion-host
 
-Este módulo despliega el punto de entrada de la red y la distribución de contenido de desarrollo (dev). Combina seguridad perimetral y acceso remoto seguro.
+Este módulo despliega el punto de entrada de la red y las distribuciones de contenido de desarrollo (dev) para **landing** y **academy**. Combina seguridad perimetral, acceso remoto seguro y CDN global.
 
 ![Architecture Diagram](../../diagrams/02-bastion-EC2.png)
 
@@ -8,10 +8,10 @@ Este módulo despliega el punto de entrada de la red y la distribución de conte
 
 ## 🏛️ Arquitectura
 
-- **Bastion Host**: Instancia EC2 mínima (`t4g.nano`) en subred pública para tunelización SSH.
-- **CDN Global**: CloudFront actúa como frontal para el contenido estático de desarrollo.
+- **Bastion Host**: Instancia EC2 mínima (`t4g.nano`) en subred pública para tunelización SSH. Ejecuta **dos contenedores**: landing en host:443 y academy en host:8443.
+- **CDN Global**: Dos distribuciones CloudFront (una por site) como frontal para el contenido de desarrollo. Cada distribución apunta al mismo bastion pero en puertos distintos.
 - **Seguridad**:
-  - **HTTPS-Only**: Tráfico cifrado End-to-End desde CloudFront hasta la aplicación (puerto 443), con validación DNS-01.
+  - **HTTPS-Only**: Tráfico cifrado End-to-End desde CloudFront hasta la aplicación, con certificado multi-SAN Let's Encrypt (DNS-01).
   - **Security Groups**: Whitelist para acceso SSH.
   - **EIP (Opcional)**: IP estática para el bastion (deshabilitado por defecto).
   - **WAF (Opcional)**: Protección contra ataques web (deshabilitado por defecto).
@@ -23,7 +23,7 @@ Este módulo despliega el punto de entrada de la red y la distribución de conte
 ### 1. [00-security](./00-security)
 
 - **Función**: Firewall de red.
-- **Recursos**: Security Groups (SSH 22, HTTPS 443) y IAM Role para el Bastion.
+- **Recursos**: Security Groups (SSH 22, HTTPS 443, HTTPS 8443) y IAM Role para el Bastion.
 
 ### 2. [01-eip](./01-eip) (Opcional)
 
@@ -43,12 +43,16 @@ Este módulo despliega el punto de entrada de la red y la distribución de conte
 ### 5. [04-cloudfront](./04-cloudfront)
 
 - **Función**: CDN Global.
-- **Recursos**: Distribución con orígenes múltiples (S3 y EC2).
+- **Recursos**: Dos distribuciones CloudFront con orígenes múltiples (EC2 Bastion + S3).
+  - **Landing**: origin port 443 → `dev.agevega.com`
+  - **Academy**: origin port 8443 → `dev.academy.agevega.com`
 
 ### 6. [05-dns-record](./05-dns-record)
 
-- **Función**: Registro DNS Final.
-- **Recursos**: Registro `A` (Alias) en Route53 (`dev.agevega.com`) apuntando a CloudFront.
+- **Función**: Registros DNS de desarrollo.
+- **Recursos**: Registros `A` (Alias) en Route53 apuntando a CloudFront:
+  - `dev.agevega.com` → distribución landing
+  - `dev.academy.agevega.com` → distribución academy
 
 ---
 
@@ -119,7 +123,11 @@ terraform apply -var="enable_waf=true"
 ```
 
 **Opción C: Asumir tráfico de Producción**
-Añade los aliases `agevega.com` y `www.agevega.com` a la distribución dev. Requiere quitar los aliases de prod.
+Añade los aliases de producción a las distribuciones dev:
+- Landing: `agevega.com`, `www.agevega.com`
+- Academy: `academy.agevega.com`, `www.academy.agevega.com`
+
+Requiere quitar previamente los aliases de las distribuciones de producción (módulo 05).
 
 ```bash
 cd 04-cloudfront
@@ -175,6 +183,14 @@ Conectar al Bastion Host a través de SSH sin EIP asociada:
 ssh -A -i ~/.ssh/id_rsa ec2-user@$(aws ec2 describe-instances --filters "Name=tag:Name,Values=bastion-host" "Name=instance-state-name,Values=running" --query "Reservations[*].Instances[*].[PublicDnsName]" --output text --profile=terraform)
 ```
 
+Verificar contenedores en el bastion:
+
+```bash
+docker ps                          # Ambos contenedores: app (landing:443), academy (:8443)
+curl -k https://localhost/         # Landing
+curl -k https://localhost:8443/    # Academy
+```
+
 Ver logs de inicialización de la instancia:
 
 ```bash
@@ -200,3 +216,4 @@ sudo tail -f /var/log/cloud-init-output.log
 
 - **EIP y WAF opcionales**: Son los componentes mas costosos de este submódulo y no son estrictamente imprescindibles para su funcionamiento, al estar en un entorno de desarrollo se han deshabilitado por defecto por ahorro de costes.
 - **Instancia Nano ARM**: Uso de `t4g.nano` que ofrece el coste más bajo posible para una instancia EC2 on-demand, suficiente para un bastion host.
+- **Single EC2, dual container**: Ambos sites comparten la misma instancia, eliminando el coste de una segunda EC2 para academy.

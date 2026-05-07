@@ -41,7 +41,7 @@ variable "enable_waf" {
 }
 
 variable "assume_prod" {
-  description = "Add production aliases to dev CloudFront distribution"
+  description = "Add production aliases to dev CloudFront distributions (landing + academy)."
   type        = bool
   default     = false
 }

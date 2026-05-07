@@ -162,7 +162,7 @@ resource "aws_cloudfront_distribution" "bastion_distribution_academy" {
 
   web_acl_id = var.enable_waf ? data.terraform_remote_state.waf[0].outputs.web_acl_arn : null
 
-  aliases = ["dev.academy.${var.domain_name}"]
+  aliases = var.assume_prod ? ["dev.academy.${var.domain_name}", "academy.${var.domain_name}", "www.academy.${var.domain_name}"] : ["dev.academy.${var.domain_name}"]
 
   origin {
     domain_name = data.terraform_remote_state.bastion_instance.outputs.bastion_public_dns
