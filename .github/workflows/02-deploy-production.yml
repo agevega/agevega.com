@@ -11,7 +11,7 @@ on:
 env:
   AWS_REGION: eu-south-2
   SSM_PARAM_NAME: "/agevegacom/production/image_tag"
-  ASG_NAME: "ha-cluster-asg"
+  PROJECT_NAME: agevegacom
 
 jobs:
   deploy:
@@ -24,6 +24,15 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
+
+      - name: Discover ASG name from SSM
+        id: discover
+        run: |
+          ASG_NAME=$(aws ssm get-parameter \
+            --name "/${{ env.PROJECT_NAME }}/05-high-availability/01-ec2-autoscaling/asg-name" \
+            --query "Parameter.Value" --output text)
+          echo "ASG_NAME=$ASG_NAME" >> $GITHUB_ENV
+          echo "Discovered ASG: $ASG_NAME"
 
       - name: Update Image Tag in SSM (shared)
         run: |
@@ -112,15 +121,22 @@ jobs:
 
           invalidate() {
             local site="$1" ssm_key="$2"
-            local dist_id
+            local dist_id inv_id
             dist_id=$(aws ssm get-parameter --name "$ssm_key" --query "Parameter.Value" --output text 2>/dev/null || echo "")
-            if [ -n "$dist_id" ] && [ "$dist_id" != "None" ]; then
-              echo "Invalidating $site distribution: $dist_id"
-              aws cloudfront create-invalidation --distribution-id "$dist_id" --paths "/*"
-            else
+            if [ -z "$dist_id" ] || [ "$dist_id" == "None" ]; then
               echo "::error::$site CloudFront Distribution ID not found at $ssm_key"
               exit 1
             fi
+
+            echo "Invalidating $site distribution: $dist_id"
+            inv_id=$(aws cloudfront create-invalidation \
+              --distribution-id "$dist_id" --paths "/*" \
+              --query "Invalidation.Id" --output text)
+
+            echo "Waiting for $site invalidation $inv_id to complete..."
+            aws cloudfront wait invalidation-completed \
+              --distribution-id "$dist_id" --id "$inv_id"
+            echo "$site invalidation $inv_id completed."
           }
 
           invalidate landing "/agevegacom/05-high-availability/03-cloudfront/cloudfront-distribution-id-landing"

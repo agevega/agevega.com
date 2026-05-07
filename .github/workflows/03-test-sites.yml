@@ -62,3 +62,55 @@ jobs:
           PUBLIC_API_URL: https://stub.example.com
           PUBLIC_APP_VERSION: ci-test
         run: bun run test
+
+  cert-san-check:
+    name: Verify ALB cert SANs
+    runs-on: ubuntu-latest
+    # Only on push to master — not needed on every PR, and requires AWS creds
+    if: github.event_name == 'push'
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-south-2
+
+      - name: Check ALB cert SANs
+        run: |
+          set -euo pipefail
+
+          # Find the cert ARN for agevega.com in eu-south-2 (ALB cert)
+          CERT_ARN=$(aws acm list-certificates \
+            --query "CertificateSummaryList[?DomainName=='agevega.com'].CertificateArn | [0]" \
+            --output text)
+
+          if [ "$CERT_ARN" == "None" ] || [ -z "$CERT_ARN" ]; then
+            echo "::error::No ACM certificate found for agevega.com in eu-south-2"
+            exit 1
+          fi
+
+          echo "Found cert: $CERT_ARN"
+          SANS=$(aws acm describe-certificate \
+            --certificate-arn "$CERT_ARN" \
+            --query "Certificate.SubjectAlternativeNames" \
+            --output text)
+
+          echo "SANs: $SANS"
+
+          MISSING=0
+          for EXPECTED in "*.agevega.com" "*.academy.agevega.com"; do
+            if echo "$SANS" | grep -qw "$EXPECTED"; then
+              echo "✅ Found: $EXPECTED"
+            else
+              echo "::error::❌ Missing SAN: $EXPECTED"
+              MISSING=1
+            fi
+          done
+
+          if [ "$MISSING" -eq 1 ]; then
+            echo "::error::ALB cert is missing required SANs — www.academy.agevega.com will 502"
+            exit 1
+          fi
+
+          echo "All required SANs present."
