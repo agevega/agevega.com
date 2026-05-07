@@ -43,6 +43,9 @@ La infraestructura se organiza en módulos numerados secuencialmente según su o
 
 - **Terraform** >= 1.5.0
 - **AWS CLI** configurado con perfil `terraform` o variable `AWS_PROFILE`.
+  ```bash
+  export AWS_PROFILE=terraform
+  ```
 
 ### Flujo de Trabajo
 
