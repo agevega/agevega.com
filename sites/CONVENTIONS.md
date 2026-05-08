@@ -220,4 +220,4 @@ bun run test
 # Add a TODO in academy/landing CHANGELOG noting the new sibling site exists
 ```
 
-If your new site needs a CI deploy pipeline, follow the academy CI/CD pattern (deferred until first cut) or copy from landing's three workflow files. Update tag namespacing per the rules above.
+If your new site needs a CI deploy pipeline, extend the existing matrix in `.github/workflows/00-generate-docker-image.yml` and `03-test-sites.yml` to include the new site, then add deploy steps in `01-deploy-bastion.yml` and `02-deploy-production.yml` following the landing/academy parallel pattern. Update tag namespacing per the rules above.
