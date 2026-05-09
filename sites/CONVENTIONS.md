@@ -263,7 +263,7 @@ Implementation lives inline in `Navigation.astro`'s `<script>` block. Replicate 
 |---|---|---|
 | Skip-to-content link | first focusable element, `href="#main-content"` | MUST |
 | `<main>` element | MUST have `id="main-content"` for the skip link target | MUST |
-| `<main>` top padding | NO `pt-16` on `<main>` — the home hero MUST be `min-h-screen flex items-center` to absorb the nav overlap with vertical centering. Other pages with their own top padding handle clearance themselves | MUST |
+| `<main>` top padding | NO `pt-16` on `<main>` — the home hero MUST be `min-h-screen flex items-center` to absorb the nav overlap with vertical centering. Non-home pages MUST start their outer container with `pt-24` minimum (96px = 64px nav + 32px breathing room); `py-12` alone is INSUFFICIENT and the nav will clip the page heading. 404 pages with `py-32` are fine. | MUST |
 | Ambient glow | three fixed `blur-[100-120px]` divs (blue/emerald/blue) inside `<div class="fixed inset-0 z-[-1] pointer-events-none">`, sized as percentages of viewport (no `overflow-hidden` wrapper). Replicate landing's markup verbatim. | MUST |
 | Body class | `bg-brand-dark text-slate-100 font-sans antialiased selection:bg-emerald-500/30 overflow-x-hidden relative flex flex-col min-h-screen` — identical across sites so backgrounds and selection color match | MUST |
 | Custom scrollbar | `<style is:global>` block with `::-webkit-scrollbar` rules using `#0b1426` track and `#1e293b` thumb, plus `html { overflow-y: scroll }` to prevent layout shift. Replicate verbatim | MUST |
