@@ -1,15 +1,35 @@
 ---
+const pathname = Astro.url.pathname;
 
+const isActive = (path: string): boolean => {
+  if (path === '/') return pathname === '/';
+  return pathname === path || pathname.startsWith(path + '/');
+};
+
+const navLinks = [
+  { href: '/', label: 'Inicio' },
+  { href: '/about-this-web', label: 'Sobre esta Web' },
+  { href: '/about', label: 'Sobre Mí' },
+  { href: '/laboratory', label: 'Laboratorio' },
+];
+
+const linkBase =
+  'px-3 py-2 rounded-md text-sm transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400';
+const linkActive = 'text-emerald-400 font-semibold';
+const linkInactive = 'text-slate-300 hover:text-white hover:bg-white/5';
 ---
 
-<nav class="fixed top-0 w-full z-50 transition-all duration-300" id="navbar" aria-label="Navegación principal">
+<nav
+  class="fixed top-0 w-full z-50 transition-all duration-300"
+  id="navbar"
+  aria-label="Navegación principal"
+>
   <div
     class="absolute inset-0 bg-brand-dark/80 backdrop-blur-md border-b border-white/10 shadow-lg"
   >
   </div>
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
     <div class="flex items-center h-16">
-      <!-- Logo (left) -->
       <a href="/" class="flex-shrink-0" aria-label="Inicio - Alejandro Vega">
         <img
           src="/images/logos/original.png"
@@ -20,52 +40,43 @@
         />
       </a>
 
-      <!-- Desktop Menu (centered) -->
       <div class="hidden md:flex flex-1 items-center justify-center">
         <div class="flex items-baseline space-x-4">
-          <a
-            href="/"
-            class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
-            >Inicio</a
-          >
-          <a
-            href="/about-this-web"
-            class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
-            >Sobre esta Web</a
-          >
-          <a
-            href="/about"
-            class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
-            >Sobre Mí</a
-          >
-          <a
-            href="/laboratory"
-            class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
-            >Laboratorio</a
-          >
+          {
+            navLinks.map((link) => {
+              const active = isActive(link.href);
+              return (
+                <a
+                  href={link.href}
+                  aria-current={active ? 'page' : undefined}
+                  class={`${linkBase} ${active ? linkActive : linkInactive}`}
+                >
+                  {link.label}
+                </a>
+              );
+            })
+          }
         </div>
       </div>
 
-      <!-- Contacto button (right) -->
       <div class="hidden md:block flex-shrink-0">
         <a
           href="/contact"
-          class="nav-link-contact px-3 py-2 rounded-md text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-500 shadow-lg shadow-emerald-500/20 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-dark"
+          aria-current={isActive('/contact') ? 'page' : undefined}
+          class="px-3 py-2 rounded-md text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-500 shadow-lg shadow-emerald-500/20 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-dark"
           >Contacto</a
         >
       </div>
 
-      <!-- Mobile Menu Button -->
       <div class="ml-auto flex md:hidden">
         <button
           type="button"
           id="mobile-menu-btn"
-          class="inline-flex items-center justify-center p-2 rounded-md text-slate-400 hover:text-white hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-emerald-500"
+          class="inline-flex items-center justify-center p-2 rounded-md text-slate-400 hover:text-white hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-emerald-400"
           aria-controls="mobile-menu"
           aria-expanded="false"
         >
           <span class="sr-only">Abrir menú</span>
-          <!-- Icon: Menu -->
           <svg
             class="block h-6 w-6"
             xmlns="http://www.w3.org/2000/svg"
@@ -80,7 +91,6 @@
               stroke-width="2"
               d="M4 6h16M4 12h16M4 18h16"></path>
           </svg>
-          <!-- Icon: X (hidden) -->
           <svg
             class="hidden h-6 w-6"
             xmlns="http://www.w3.org/2000/svg"
@@ -100,35 +110,31 @@
     </div>
   </div>
 
-  <!-- Mobile Menu -->
   <div
     class="md:hidden hidden bg-brand-dark/95 backdrop-blur-xl border-b border-white/10"
     id="mobile-menu"
   >
     <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-      <a
-        href="/"
-        class="mobile-nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-white/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
-        >Inicio</a
-      >
-      <a
-        href="/about-this-web"
-        class="mobile-nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-white/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
-        >Sobre esta Web</a
-      >
-      <a
-        href="/about"
-        class="mobile-nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-white/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
-        >Sobre Mí</a
-      >
-      <a
-        href="/laboratory"
-        class="mobile-nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-white/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
-        >Laboratorio</a
-      >
+      {
+        navLinks.map((link) => {
+          const active = isActive(link.href);
+          return (
+            <a
+              href={link.href}
+              aria-current={active ? 'page' : undefined}
+              class={`mobile-nav-link block px-3 py-3 rounded-md text-base font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 ${
+                active ? linkActive : linkInactive
+              }`}
+            >
+              {link.label}
+            </a>
+          );
+        })
+      }
       <a
         href="/contact"
-        class="mobile-nav-link block px-3 py-2 rounded-md text-base font-medium text-white bg-emerald-600 hover:bg-emerald-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+        aria-current={isActive('/contact') ? 'page' : undefined}
+        class="mobile-nav-link block px-3 py-3 rounded-md text-base font-medium text-white bg-emerald-600 hover:bg-emerald-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
         >Contacto</a
       >
     </div>
@@ -136,99 +142,65 @@
 </nav>
 
 <script>
-  const navbar = document.getElementById("navbar");
-  const mobileMenuBtn = document.getElementById("mobile-menu-btn");
-  const mobileMenu = document.getElementById("mobile-menu");
-  const menuIcons = mobileMenuBtn?.querySelectorAll("svg");
-  const mobileLinks = document.querySelectorAll(".mobile-nav-link");
+  import { shouldCondense } from '../lib/scroll-condense';
 
-  // Toggle Mobile Menu
-  mobileMenuBtn?.addEventListener("click", () => {
-    const isExpanded = mobileMenuBtn.getAttribute("aria-expanded") === "true";
-    mobileMenuBtn.setAttribute("aria-expanded", `${!isExpanded}`);
-    mobileMenu?.classList.toggle("hidden");
+  const navbar = document.getElementById('navbar');
+  const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const menuIcons = mobileMenuBtn?.querySelectorAll('svg');
+  const mobileLinks = document.querySelectorAll('.mobile-nav-link');
 
-    // Toggle Icons
-    menuIcons?.forEach((icon) => icon.classList.toggle("hidden"));
-    menuIcons?.forEach((icon) => icon.classList.toggle("block"));
-  });
-
-  // Close mobile menu on link click
-  mobileLinks.forEach((link) => {
-    link.addEventListener("click", () => {
-      mobileMenu?.classList.add("hidden");
-      mobileMenuBtn?.setAttribute("aria-expanded", "false");
-      // Reset icons
-      menuIcons?.[0].classList.remove("hidden");
-      menuIcons?.[0].classList.add("block");
-      menuIcons?.[1].classList.add("hidden");
-      menuIcons?.[1].classList.remove("block");
-    });
-  });
-
-  // Highlight active link based on current page
-  const navLinks = document.querySelectorAll(".nav-link");
-  const mobileNavLinks = document.querySelectorAll(".mobile-nav-link");
-
-  function setActiveLink(linkHref: string | null) {
-    if (!linkHref) return;
-
-    const normalize = (path: string) =>
-      path === "/" || path === "" ? "/" : path.replace(/\/$/, "");
-    const current = normalize(linkHref);
-
-    const updateLinks = (links: NodeListOf<Element>) => {
-      links.forEach((link) => {
-        const href = link.getAttribute("href");
-        if (href && normalize(href) === current) {
-          // Only style nav-link items (not Contacto which has nav-link-contact)
-          if (!link.classList.contains("nav-link-contact")) {
-            link.classList.remove("text-slate-300");
-            link.classList.add("text-emerald-400", "font-semibold");
-          }
-        } else {
-          if (!link.classList.contains("nav-link-contact")) {
-            link.classList.remove("text-emerald-400", "font-semibold");
-            link.classList.add("text-slate-300");
-          }
-        }
-      });
-    };
-
-    updateLinks(navLinks);
-    updateLinks(mobileNavLinks);
+  function closeMobileMenu() {
+    mobileMenu?.classList.add('hidden');
+    mobileMenuBtn?.setAttribute('aria-expanded', 'false');
+    menuIcons?.[0].classList.remove('hidden');
+    menuIcons?.[0].classList.add('block');
+    menuIcons?.[1].classList.add('hidden');
+    menuIcons?.[1].classList.remove('block');
   }
 
-  // Check if we are on a specific page
-  const currentPath = window.location.pathname;
-  setActiveLink(currentPath);
-
-  // Navbar background on scroll
-  window.addEventListener("scroll", () => {
-    if (window.scrollY > 20) {
-      navbar?.classList.add("py-2");
-    } else {
-      navbar?.classList.remove("py-2");
-    }
+  mobileMenuBtn?.addEventListener('click', () => {
+    const isExpanded = mobileMenuBtn.getAttribute('aria-expanded') === 'true';
+    mobileMenuBtn.setAttribute('aria-expanded', `${!isExpanded}`);
+    mobileMenu?.classList.toggle('hidden');
+    menuIcons?.forEach((icon) => icon.classList.toggle('hidden'));
+    menuIcons?.forEach((icon) => icon.classList.toggle('block'));
   });
 
-  // Focus trap for mobile menu
+  mobileLinks.forEach((link) => {
+    link.addEventListener('click', closeMobileMenu);
+  });
+
+  let ticking = false;
+  window.addEventListener(
+    'scroll',
+    () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          if (shouldCondense(window.scrollY)) {
+            navbar?.classList.add('py-2');
+          } else {
+            navbar?.classList.remove('py-2');
+          }
+          ticking = false;
+        });
+        ticking = true;
+      }
+    },
+    { passive: true },
+  );
+
   function handleMobileMenuKeydown(e: KeyboardEvent) {
-    if (e.key === "Escape") {
-      mobileMenu?.classList.add("hidden");
-      mobileMenuBtn?.setAttribute("aria-expanded", "false");
-      menuIcons?.[0].classList.remove("hidden");
-      menuIcons?.[0].classList.add("block");
-      menuIcons?.[1].classList.add("hidden");
-      menuIcons?.[1].classList.remove("block");
+    if (e.key === 'Escape') {
+      closeMobileMenu();
       mobileMenuBtn?.focus();
       return;
     }
 
-    if (e.key !== "Tab") return;
+    if (e.key !== 'Tab') return;
 
     const focusableEls = mobileMenu?.querySelectorAll(
-      'a[href], button, [tabindex]:not([tabindex="-1"])'
+      'a[href], button, [tabindex]:not([tabindex="-1"])',
     );
     if (!focusableEls || focusableEls.length === 0) return;
 
@@ -244,17 +216,16 @@
     }
   }
 
-  // Attach/detach focus trap when menu toggles
   const observer = new MutationObserver(() => {
-    const isOpen = !mobileMenu?.classList.contains("hidden");
+    const isOpen = !mobileMenu?.classList.contains('hidden');
     if (isOpen) {
-      document.addEventListener("keydown", handleMobileMenuKeydown);
+      document.addEventListener('keydown', handleMobileMenuKeydown);
     } else {
-      document.removeEventListener("keydown", handleMobileMenuKeydown);
+      document.removeEventListener('keydown', handleMobileMenuKeydown);
     }
   });
 
   if (mobileMenu) {
-    observer.observe(mobileMenu, { attributes: true, attributeFilter: ["class"] });
+    observer.observe(mobileMenu, { attributes: true, attributeFilter: ['class'] });
   }
 </script>

@@ -11,42 +11,28 @@ const { featuredCourses } = Astro.props;
 const version = PUBLIC_APP_VERSION;
 ---
 
-<section class="relative max-w-6xl mx-auto px-4 md:px-8 pt-20 pb-16">
-  <!-- Hero -->
-  <div class="text-center mb-20 animate-fade-in-up">
-    <h1 class="text-4xl md:text-5xl font-bold tracking-tight mb-6 leading-tight">
-      Aprende DevSecOps y Cloud<br class="hidden md:block" />
-      <span class="text-emerald-400">de forma práctica</span>
-    </h1>
-    <p class="text-lg text-slate-300 max-w-2xl mx-auto mb-10 leading-relaxed">
-      Recursos, código y guías de los vídeos de <strong class="text-white">AgeVega Master</strong>.
-      Todo lo que no cabe en el vídeo, organizado para que lo encuentres cuando lo necesitas.
-    </p>
-    <a
-      href="/cursos"
-      class="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-gray-900 font-semibold px-8 py-3.5 rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-dark"
-    >
-      Ver cursos →
-    </a>
-  </div>
-
-  <!-- Featured courses -->
-  {featuredCourses.length > 0 && (
-    <div>
-      <h2 class="text-xl font-semibold mb-6 text-slate-300">Cursos destacados</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {featuredCourses.map((course) => <CourseCard course={course} />)}
-      </div>
-      <div class="text-center mt-10">
-        <a
-          href="/cursos"
-          class="text-emerald-400 hover:text-emerald-300 transition-colors text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 rounded"
-        >
-          Ver todos los cursos →
-        </a>
-      </div>
+<section
+  id="home"
+  class="min-h-screen flex items-center relative overflow-hidden"
+>
+  <div class="max-w-7xl mx-auto px-4 md:px-8 w-full">
+    <div class="text-center animate-fade-in-up">
+      <h1 class="text-4xl md:text-5xl font-bold tracking-tight mb-6 leading-tight">
+        Aprende DevSecOps y Cloud<br class="hidden md:block" />
+        <span class="text-emerald-400">de forma práctica</span>
+      </h1>
+      <p class="text-lg text-slate-300 max-w-2xl mx-auto mb-10 leading-relaxed">
+        Recursos, código y guías de los vídeos de <strong class="text-white">AgeVega Master</strong>.
+        Todo lo que no cabe en el vídeo, organizado para que lo encuentres cuando lo necesitas.
+      </p>
+      <a
+        href="/cursos"
+        class="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-gray-900 font-semibold px-8 py-3.5 rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-dark"
+      >
+        Ver cursos →
+      </a>
     </div>
-  )}
+  </div>
 
   <!-- Version Tag -->
   <div class="absolute bottom-4 right-4 z-20">
@@ -57,3 +43,20 @@ const version = PUBLIC_APP_VERSION;
     </span>
   </div>
 </section>
+
+{featuredCourses.length > 0 && (
+  <section class="max-w-7xl mx-auto px-4 md:px-8 pt-4 pb-20">
+    <h2 class="text-xl font-semibold mb-6 text-slate-300">Cursos destacados</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {featuredCourses.map((course) => <CourseCard course={course} />)}
+    </div>
+    <div class="text-center mt-10">
+      <a
+        href="/cursos"
+        class="text-emerald-400 hover:text-emerald-300 transition-colors text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 rounded"
+      >
+        Ver todos los cursos →
+      </a>
+    </div>
+  </section>
+)}

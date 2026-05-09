@@ -1,109 +1,233 @@
 ---
 const pathname = Astro.url.pathname;
-const isActive = (path: string) =>
-  path === '/' ? pathname === '/' : pathname.startsWith(path);
+
+const isActive = (path: string): boolean => {
+  if (path === '/') return pathname === '/';
+  return pathname === path || pathname.startsWith(path + '/');
+};
+
+const navLinks = [
+  { href: '/', label: 'Inicio' },
+  { href: '/cursos', label: 'Cursos' },
+];
+
+const linkBase =
+  'px-3 py-2 rounded-md text-sm transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400';
+const linkActive = 'text-emerald-400 font-semibold';
+const linkInactive = 'text-slate-300 hover:text-white hover:bg-white/5';
 ---
 
-<header class="sticky top-0 z-50 border-b border-slate-800/60 backdrop-blur-sm" style="background:rgba(11,20,38,0.92);">
-  <nav class="max-w-6xl mx-auto px-4 md:px-8 flex items-center justify-between h-16">
-    <!-- Logo -->
-    <a
-      href="/"
-      aria-label="AgeVega Academy — inicio"
-      class="font-semibold text-white text-lg tracking-tight hover:text-emerald-400 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 rounded"
-    >
-      AgeVega Academy
-    </a>
-
-    <!-- Desktop nav -->
-    <div class="hidden md:flex items-center gap-1">
+<nav
+  class="fixed top-0 w-full z-50 transition-all duration-300"
+  id="navbar"
+  aria-label="Navegación principal"
+>
+  <div
+    class="absolute inset-0 bg-brand-dark/80 backdrop-blur-md border-b border-white/10 shadow-lg"
+  >
+  </div>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+    <div class="flex items-center h-16">
       <a
         href="/"
-        class={`px-3 py-1.5 rounded text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 ${
-          isActive('/') && pathname === '/'
-            ? 'text-white font-medium'
-            : 'text-slate-400 hover:text-white'
-        }`}
+        class="flex-shrink-0 text-white hover:text-emerald-400 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 rounded"
+        aria-label="AgeVega Academy — inicio"
       >
-        {isActive('/') && pathname === '/' && (
-          <span class="border-b border-emerald-400 pb-0.5">Inicio</span>
-        )}
-        {!(isActive('/') && pathname === '/') && 'Inicio'}
+        <span class="font-semibold text-lg tracking-tight">AgeVega Academy</span>
       </a>
-      <a
-        href="/cursos"
-        class={`px-3 py-1.5 rounded text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 ${
-          isActive('/cursos')
-            ? 'text-white font-medium'
-            : 'text-slate-400 hover:text-white'
-        }`}
-      >
-        {isActive('/cursos') ? (
-          <span class="border-b border-emerald-400 pb-0.5">Cursos</span>
-        ) : 'Cursos'}
-      </a>
-      <a
-        href="https://agevega.com"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="px-3 py-1.5 rounded text-sm text-slate-400 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
-      >
-        agevega.com ↗
-      </a>
-    </div>
 
-    <!-- Mobile hamburger -->
-    <button
-      id="nav-toggle"
-      class="md:hidden text-slate-400 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 rounded p-1"
-      aria-expanded="false"
-      aria-controls="mobile-nav"
-      aria-label="Abrir menú"
-    >
-      <svg id="nav-icon-open" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-      </svg>
-      <svg id="nav-icon-close" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-      </svg>
-    </button>
-  </nav>
+      <div class="hidden md:flex flex-1 items-center justify-center">
+        <div class="flex items-baseline space-x-4">
+          {
+            navLinks.map((link) => {
+              const active = isActive(link.href);
+              return (
+                <a
+                  href={link.href}
+                  aria-current={active ? 'page' : undefined}
+                  class={`${linkBase} ${active ? linkActive : linkInactive}`}
+                >
+                  {link.label}
+                </a>
+              );
+            })
+          }
+        </div>
+      </div>
 
-  <!-- Mobile menu -->
-  <div id="mobile-nav" class="hidden md:hidden border-t border-slate-800/60" style="background:rgba(11,20,38,0.97);">
-    <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col gap-1">
-      <a href="/" class={`px-3 py-3 rounded text-sm transition-colors ${pathname === '/' ? 'text-white font-medium' : 'text-slate-400 hover:text-white'}`}>Inicio</a>
-      <a href="/cursos" class={`px-3 py-3 rounded text-sm transition-colors ${isActive('/cursos') ? 'text-white font-medium' : 'text-slate-400 hover:text-white'}`}>Cursos</a>
-      <a href="https://agevega.com" target="_blank" rel="noopener noreferrer" class="px-3 py-3 rounded text-sm text-slate-400 hover:text-white transition-colors">agevega.com ↗</a>
+      <div class="hidden md:block flex-shrink-0">
+        <a
+          href="https://agevega.com/contact"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="agevega.com (se abre en nueva pestaña)"
+          class="px-3 py-2 rounded-md text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-500 shadow-lg shadow-emerald-500/20 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-dark"
+        >
+          agevega.com
+        </a>
+      </div>
+
+      <div class="ml-auto flex md:hidden">
+        <button
+          type="button"
+          id="mobile-menu-btn"
+          class="inline-flex items-center justify-center p-2 rounded-md text-slate-400 hover:text-white hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-emerald-400"
+          aria-controls="mobile-menu"
+          aria-expanded="false"
+        >
+          <span class="sr-only">Abrir menú</span>
+          <svg
+            class="block h-6 w-6"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            aria-hidden="true"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+          <svg
+            class="hidden h-6 w-6"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            aria-hidden="true"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
     </div>
   </div>
-</header>
+
+  <div
+    class="md:hidden hidden bg-brand-dark/95 backdrop-blur-xl border-b border-white/10"
+    id="mobile-menu"
+  >
+    <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+      {
+        navLinks.map((link) => {
+          const active = isActive(link.href);
+          return (
+            <a
+              href={link.href}
+              aria-current={active ? 'page' : undefined}
+              class={`mobile-nav-link block px-3 py-3 rounded-md text-base font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 ${
+                active ? linkActive : linkInactive
+              }`}
+            >
+              {link.label}
+            </a>
+          );
+        })
+      }
+      <a
+        href="https://agevega.com/contact"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="agevega.com (se abre en nueva pestaña)"
+        class="mobile-nav-link block px-3 py-3 rounded-md text-base font-medium text-white bg-emerald-600 hover:bg-emerald-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+      >
+        agevega.com
+      </a>
+    </div>
+  </div>
+</nav>
 
 <script>
-  const toggle = document.getElementById('nav-toggle');
-  const menu = document.getElementById('mobile-nav');
-  const iconOpen = document.getElementById('nav-icon-open');
-  const iconClose = document.getElementById('nav-icon-close');
+  import { shouldCondense } from '../lib/scroll-condense';
 
-  function openMenu() {
-    menu?.classList.remove('hidden');
-    toggle?.setAttribute('aria-expanded', 'true');
-    iconOpen?.classList.add('hidden');
-    iconClose?.classList.remove('hidden');
+  const navbar = document.getElementById('navbar');
+  const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const menuIcons = mobileMenuBtn?.querySelectorAll('svg');
+  const mobileLinks = document.querySelectorAll('.mobile-nav-link');
+
+  function closeMobileMenu() {
+    mobileMenu?.classList.add('hidden');
+    mobileMenuBtn?.setAttribute('aria-expanded', 'false');
+    menuIcons?.[0].classList.remove('hidden');
+    menuIcons?.[0].classList.add('block');
+    menuIcons?.[1].classList.add('hidden');
+    menuIcons?.[1].classList.remove('block');
   }
 
-  function closeMenu() {
-    menu?.classList.add('hidden');
-    toggle?.setAttribute('aria-expanded', 'false');
-    iconOpen?.classList.remove('hidden');
-    iconClose?.classList.add('hidden');
+  mobileMenuBtn?.addEventListener('click', () => {
+    const isExpanded = mobileMenuBtn.getAttribute('aria-expanded') === 'true';
+    mobileMenuBtn.setAttribute('aria-expanded', `${!isExpanded}`);
+    mobileMenu?.classList.toggle('hidden');
+    menuIcons?.forEach((icon) => icon.classList.toggle('hidden'));
+    menuIcons?.forEach((icon) => icon.classList.toggle('block'));
+  });
+
+  mobileLinks.forEach((link) => {
+    link.addEventListener('click', closeMobileMenu);
+  });
+
+  let ticking = false;
+  window.addEventListener(
+    'scroll',
+    () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          if (shouldCondense(window.scrollY)) {
+            navbar?.classList.add('py-2');
+          } else {
+            navbar?.classList.remove('py-2');
+          }
+          ticking = false;
+        });
+        ticking = true;
+      }
+    },
+    { passive: true },
+  );
+
+  function handleMobileMenuKeydown(e: KeyboardEvent) {
+    if (e.key === 'Escape') {
+      closeMobileMenu();
+      mobileMenuBtn?.focus();
+      return;
+    }
+
+    if (e.key !== 'Tab') return;
+
+    const focusableEls = mobileMenu?.querySelectorAll(
+      'a[href], button, [tabindex]:not([tabindex="-1"])',
+    );
+    if (!focusableEls || focusableEls.length === 0) return;
+
+    const firstEl = focusableEls[0] as HTMLElement;
+    const lastEl = focusableEls[focusableEls.length - 1] as HTMLElement;
+
+    if (e.shiftKey && document.activeElement === firstEl) {
+      e.preventDefault();
+      lastEl.focus();
+    } else if (!e.shiftKey && document.activeElement === lastEl) {
+      e.preventDefault();
+      firstEl.focus();
+    }
   }
 
-  toggle?.addEventListener('click', () => {
-    menu?.classList.contains('hidden') ? openMenu() : closeMenu();
+  const observer = new MutationObserver(() => {
+    const isOpen = !mobileMenu?.classList.contains('hidden');
+    if (isOpen) {
+      document.addEventListener('keydown', handleMobileMenuKeydown);
+    } else {
+      document.removeEventListener('keydown', handleMobileMenuKeydown);
+    }
   });
 
-  menu?.querySelectorAll('a').forEach((link) => {
-    link.addEventListener('click', closeMenu);
-  });
+  if (mobileMenu) {
+    observer.observe(mobileMenu, { attributes: true, attributeFilter: ['class'] });
+  }
 </script>

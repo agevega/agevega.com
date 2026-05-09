@@ -172,6 +172,162 @@ Future state: ESLint flat config (`eslint.config.js`) uses ESM imports and has d
 
 ---
 
+## Site chrome canonical patterns
+
+Established 2026-05-09 by the chrome convergence audit (`audit/optimize-design`). These rules apply to every site under `sites/` — Navigation, Footer, Layout shell. Each site replicates these patterns hand-edited per-site (no `sites/_shared/`, no component lib). Replicate, don't abstract.
+
+### Navigation structure (canonical)
+
+`brand mark (left) | links (centered, flex-1 justify-center) | CTA (right)` inside a container at `h-16`. The container width MUST match the site's content section width (see "Container width" below).
+
+| Concern | Canonical | Required? |
+|---|---|---|
+| Container width | `max-w-7xl mx-auto px-4 sm:px-6 lg:px-8` — single canonical width across ALL sites and ALL elements (nav, footer, pages, sections). Never diverge per-site or per-element; the misalignment is visible at a glance. | MUST |
+| Height | `h-16` | MUST |
+| Position | `fixed top-0 z-50` | MUST |
+| Backdrop | `bg-brand-dark/80 backdrop-blur-md border-b border-white/10 shadow-lg` | MUST |
+| Brand mark on left | `<a href="/" aria-label>` — content per-site choice (landing: `<img>` 32×32 logo; academy: `<span>` text "AgeVega Academy"). Choose ONE; keep it minimal. | MUST |
+| Centered links | `hidden md:flex flex-1 items-center justify-center` | MUST |
+| CTA on right | `bg-emerald-600 text-white shadow-lg shadow-emerald-500/20`. Visible label per-site: landing "Contacto" (internal `/contact`), academy "agevega.com ↗" (external to landing) | MUST |
+| Mobile menu hamburger | right-aligned via `ml-auto flex md:hidden` | MUST |
+
+### Active state mechanism (canonical)
+
+Server-side rendered, NOT JavaScript-driven. Use `Astro.url.pathname` in the component frontmatter. The predicate MUST handle the prefix-collision case (e.g. `/about` vs `/about-this-web`):
+
+```ts
+const pathname = Astro.url.pathname;
+
+const isActive = (path: string): boolean => {
+  if (path === '/') return pathname === '/';
+  return pathname === path || pathname.startsWith(path + '/');
+};
+```
+
+The naive `pathname.startsWith(path)` is **forbidden** — it matches `/about` when on `/about-this-web`. The corrected predicate above is required (regression-tested in each site's `Navigation.test.ts`).
+
+### Active visual (canonical)
+
+Active link: `text-emerald-400 font-semibold`, **no background**.
+Inactive link: `text-slate-300 hover:text-white hover:bg-white/5`.
+Active link MUST also receive `aria-current="page"` for screen reader semantics.
+
+The CTA Contacto is the only element with a solid emerald fill. The active link is text-only emerald to keep visual hierarchy: "you are here" (text) vs "click to act" (filled CTA).
+
+### CTA Contacto (canonical)
+
+Same visual styling across all sites: `bg-emerald-600 text-white shadow-lg shadow-emerald-500/20 hover:bg-emerald-500`.
+
+| Site | href | Visible label | Behavior |
+|---|---|---|---|
+| landing | `/contact` | `Contacto` | internal route |
+| academy | `https://agevega.com/contact` | `agevega.com` | external — MUST have `target="_blank" rel="noopener noreferrer"` AND `aria-label="agevega.com (se abre en nueva pestaña)"`. NO visible `↗` glyph in the nav CTA (the domain name itself signals destination; the glyph adds visual noise to the pill) |
+| (future site) | external if no own form, internal otherwise | per-site, see rule below | follow rule above |
+
+If a site does not have its own `/contact` route, link to landing's contact page. Do NOT duplicate the contact form per-site. The visible label SHOULD reflect the destination domain (e.g. `agevega.com ↗`) rather than the abstract action ("Contacto"), so the user knows they are leaving the current subdomain. The pattern decision: the visitor leaves the subdomain context but lands on the same brand surface (agevega.com).
+
+### Scroll-aware navbar (canonical)
+
+Both sites condense the navbar at `scrollY > 20px` (toggle `py-2`). Implementation MUST:
+- import `shouldCondense` from `src/lib/scroll-condense.ts` (per-site copy of the same 3-line module)
+- use `requestAnimationFrame` guard to coalesce events (avoid 60Hz layout reads)
+- attach with `{ passive: true }`
+
+```ts
+import { shouldCondense } from '../lib/scroll-condense';
+
+let ticking = false;
+window.addEventListener('scroll', () => {
+  if (!ticking) {
+    requestAnimationFrame(() => {
+      navbar.classList.toggle('py-2', shouldCondense(window.scrollY));
+      ticking = false;
+    });
+    ticking = true;
+  }
+}, { passive: true });
+```
+
+### Mobile menu (canonical)
+
+- Toggle via `aria-expanded` on the hamburger button
+- Focus trap on Tab/Shift+Tab while open
+- Escape closes the menu and returns focus to the hamburger
+- Click on any link inside closes the menu
+
+Implementation lives inline in `Navigation.astro`'s `<script>` block. Replicate verbatim across sites — when fixing a bug in one, fix it in all.
+
+### Layout shell (canonical)
+
+| Concern | Canonical | Required? |
+|---|---|---|
+| Skip-to-content link | first focusable element, `href="#main-content"` | MUST |
+| `<main>` element | MUST have `id="main-content"` for the skip link target | MUST |
+| `<main>` top padding | NO `pt-16` on `<main>` — the home hero MUST be `min-h-screen flex items-center` to absorb the nav overlap with vertical centering. Other pages with their own top padding handle clearance themselves | MUST |
+| Ambient glow | three fixed `blur-[100-120px]` divs (blue/emerald/blue) inside `<div class="fixed inset-0 z-[-1] pointer-events-none">`, sized as percentages of viewport (no `overflow-hidden` wrapper). Replicate landing's markup verbatim. | MUST |
+| Body class | `bg-brand-dark text-slate-100 font-sans antialiased selection:bg-emerald-500/30 overflow-x-hidden relative flex flex-col min-h-screen` — identical across sites so backgrounds and selection color match | MUST |
+| Custom scrollbar | `<style is:global>` block with `::-webkit-scrollbar` rules using `#0b1426` track and `#1e293b` thumb, plus `html { overflow-y: scroll }` to prevent layout shift. Replicate verbatim | MUST |
+| Reduced-motion media query | inside the same `<style is:global>` block, neutralizes animations / transitions / scroll-smoothing | MUST |
+| Version tag (home only) | placed inside the home hero `<section>` at `absolute bottom-4 right-4 z-20`, hero MUST be `min-h-screen` so the tag visually anchors to the bottom-right of the first viewport | MUST |
+| OG meta | `og:type, og:url, og:title, og:description, og:image` (image optional) | MUST |
+| Twitter card meta | `twitter:card=summary_large_image, twitter:url, twitter:title, twitter:description, twitter:image` | SHOULD |
+| Canonical URL | `<link rel="canonical">` from `Astro.url.pathname + Astro.site` | MUST |
+| Title pattern | per-site choice (landing uses `{title}` directly, academy uses `{title} | AgeVega Academy`) | MAY |
+| `lang` attribute | `lang="es"` (project default) | MUST |
+
+### Footer
+
+Footers diverge by site density — there is **no** unified canonical footer. The cross-cutting rules:
+
+| Concern | Canonical | Required? |
+|---|---|---|
+| Container width | `max-w-7xl mx-auto px-4 sm:px-6 lg:px-8` (same canonical as nav, same across sites) | MUST |
+| Right-side group wrapper | links on the right side MUST be wrapped in `<div class="flex items-center gap-6">` (even if there is only one link) — keeps the structural shape identical across sites | MUST |
+| Licence attribution | factual against repo `LICENSE` (currently MIT) — never "Todos los derechos reservados" | MUST |
+| Cross-site link | every site SHOULD include a link to the sibling site as the last footer element, with `target="_blank" rel="noopener noreferrer"` and the `↗` glyph | SHOULD |
+| Link set | per-site, appropriate to content density. Landing: minimal (copyright + cross-site). Academy: rich (copyright + Cursos + RSS + cross-site). | MAY |
+| Border / spacing | `border-t border-slate-800/60 py-8` | SHOULD |
+
+The decision (audit 2026-05-09): replicating the same link set on both sites was ruled noisy. Each footer matches its site's content nature.
+
+### `global.css` tokens (canonical)
+
+Every site's `src/styles/global.css` MUST declare these `@theme` tokens:
+
+```css
+--color-brand-dark: #0b1426;
+--color-brand-surface: #0f172a;
+--animate-fade-in: fadeIn 0.5s ease-out forwards;
+--animate-fade-in-up: fadeInUp 0.8s ease-out forwards;
+--animate-slide-up: slideUp 0.8s ease-out forwards;
+--animate-slide-up-delayed: slideUp 0.8s ease-out 0.2s forwards;
+```
+
+Hex casing: lowercase (`#0b1426`, not `#0B1426`).
+Animations a site does not use SHOULD be omitted (e.g. landing previously declared `--animate-gradient-x` without using it — deleted in this audit).
+
+`.content-body` markdown styles live in `global.css` only on sites that use Astro content collections (today: academy only). Other sites MUST NOT define `.content-body`.
+
+### Version tag env (canonical)
+
+Every site's `astro.config.mjs` MUST declare `PUBLIC_APP_VERSION` with `default: 'Localhost'` (NOT `'dev'`). The version tag in the home hero displays this value when no `.env` overrides it. Using "Localhost" as the dev-time default makes the tag legible to humans during local work; CI/CD overrides with the real `vX.Y.Z` git tag at build time.
+
+### Tests (canonical)
+
+Each site MUST have, at minimum:
+- `src/test/Navigation.test.ts` with route-collision regression test (asserts `/about` does NOT match `/about-this-web` and vice versa)
+- `src/test/Footer.test.ts` asserting the site's chosen container width (must match nav) and licence-text
+- `src/test/scroll-condense.test.ts` for the pure threshold function (the DOM integration of the scroll listener is not unit-tested in vitest's node env; document the gap)
+- `vitest.config.ts` MUST use `getViteConfig` from `astro/config` to enable Container API
+
+Adding a new site: copy the chrome from either landing or academy (post 2026-05-09 they comply with this section). Diverge only if the site's IA genuinely needs different chrome — and update this section.
+
+### Future: deduplication
+
+While `replicate, don't abstract` holds with N=2 sites, hand-replication of identical chrome compounds. If a third site lands and its chrome is also identical, this section's rules SHOULD be promoted to a `sites/_chrome/` directory containing two verbatim files (`Navigation.astro`, `Footer.astro`) imported by each site's `Layout.astro`. That is *deduplication*, not parametrization — the user-stated preference still holds. Tracked in `TODOS.md`.
+
+---
+
 ## What sites MUST NOT do
 
 - **No root-level `package.json`.** Each site has its own. There is no monorepo orchestration tool (no nx, no turborepo, no lerna). The parent dir `sites/` is for grouping only.
