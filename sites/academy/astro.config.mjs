@@ -16,7 +16,7 @@ export default defineConfig({
         context: 'client',
         access: 'public',
         optional: true,
-        default: 'dev',
+        default: 'Localhost',
       }),
     },
   },
