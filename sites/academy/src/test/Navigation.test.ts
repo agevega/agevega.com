@@ -64,4 +64,14 @@ describe('Navigation', () => {
     expect(html).toMatch(/aria-label="agevega\.com[^"]*nueva pesta/);
     expect(html).toContain('agevega.com');
   });
+
+  it('CTA does NOT show the ↗ glyph (regression: visual-noise removal)', async () => {
+    const html = await renderAt('/');
+    // Extract just the desktop CTA pill anchor and assert no ↗ inside
+    const ctaMatch = html.match(
+      /<a[^>]*href="https:\/\/agevega\.com\/contact"[^>]*bg-emerald-600[^>]*>([\s\S]*?)<\/a>/,
+    );
+    expect(ctaMatch, 'desktop CTA anchor must exist').not.toBeNull();
+    expect(ctaMatch![1]).not.toContain('↗');
+  });
 });
