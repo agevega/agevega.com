@@ -30,6 +30,13 @@ describe('Footer', () => {
     expect(html).not.toMatch(/[Tt]odos los derechos reservados/);
   });
 
+  it('includes a secondary "Apoyar" link to /donate', async () => {
+    const container = await AstroContainer.create();
+    const html = await container.renderToString(Footer);
+    expect(html).toMatch(/href="\/donate"/);
+    expect(html).toMatch(/Apoyar/);
+  });
+
   it('includes cross-site link to academy with rel=noopener and target=_blank', async () => {
     const container = await AstroContainer.create();
     const html = await container.renderToString(Footer);

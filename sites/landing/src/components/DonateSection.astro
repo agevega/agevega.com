@@ -1,0 +1,114 @@
+---
+const paypalBase = "https://paypal.me/agevega";
+const amounts = [2, 5, 15];
+---
+
+<section id="donate" class="py-20 relative">
+  <div class="container mx-auto px-4">
+    <div class="max-w-2xl mx-auto">
+      <div class="text-center mb-10">
+        <h2 class="text-3xl font-bold text-white mb-4">Apoya mi trabajo</h2>
+        <p class="text-slate-400">
+          Si mi contenido sobre cloud, DevSecOps y mis cursos te aporta valor,
+          puedes invitarme a un café. Cada aporte me ayuda a seguir creando y
+          compartiendo en abierto.
+        </p>
+      </div>
+
+      <div
+        class="bg-slate-800/50 p-8 rounded-2xl border border-slate-700/50 backdrop-blur-sm"
+      >
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          {
+            amounts.map((amount) => (
+              <a
+                href={`${paypalBase}/${amount}EUR`}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Apoyar con ${amount}€ vía PayPal (abre en nueva pestaña)`}
+                class="flex items-center justify-center gap-1.5 py-3 px-4 rounded-lg bg-emerald-600 text-white font-semibold hover:bg-emerald-500 transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-emerald-500/25 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-dark"
+              >
+                {amount}€<span aria-hidden="true">↗</span>
+              </a>
+            ))
+          }
+        </div>
+
+        <form
+          id="donate-custom-form"
+          data-paypal={paypalBase}
+          class="mt-3 flex gap-2"
+        >
+          <label for="donate-custom-amount" class="sr-only"
+            >Otra cantidad en euros</label
+          >
+          <div class="relative flex-1">
+            <span
+              class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400"
+              aria-hidden="true">€</span
+            >
+            <input
+              id="donate-custom-amount"
+              name="amount"
+              type="text"
+              inputmode="decimal"
+              autocomplete="off"
+              maxlength="9"
+              placeholder="Otra cantidad"
+              aria-describedby="donate-custom-error"
+              class="w-full pl-8 pr-4 py-3 bg-slate-900/50 border border-slate-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-white placeholder-slate-500 transition-colors"
+            />
+          </div>
+          <button
+            type="submit"
+            class="flex items-center justify-center gap-1.5 py-3 px-5 rounded-lg border border-slate-600 text-slate-200 font-medium hover:bg-white/5 transition-colors whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-dark"
+          >
+            Apoyar <span aria-hidden="true">↗</span>
+          </button>
+        </form>
+
+        <p
+          id="donate-custom-error"
+          role="alert"
+          class="hidden mt-2 text-sm text-red-400"
+        >
+        </p>
+
+        <p class="mt-6 text-center text-sm text-slate-500">
+          Pago seguro vía PayPal
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const form = document.getElementById(
+    "donate-custom-form",
+  ) as HTMLFormElement | null;
+  const input = document.getElementById(
+    "donate-custom-amount",
+  ) as HTMLInputElement | null;
+  const error = document.getElementById(
+    "donate-custom-error",
+  ) as HTMLParagraphElement | null;
+
+  form?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (!input || !error) return;
+
+    const raw = input.value.trim();
+    const value = Number(raw.replace(",", "."));
+    if (!/^\d+([.,]\d{1,2})?$/.test(raw) || !(value > 0)) {
+      error.textContent = "Introduce una cantidad válida en euros.";
+      error.classList.remove("hidden");
+      input.focus();
+      return;
+    }
+
+    error.classList.add("hidden");
+    const amount = Number.isInteger(value) ? String(value) : value.toFixed(2);
+    const base = form.dataset.paypal ?? "https://paypal.me/agevega";
+    window.open(`${base}/${amount}EUR`, "_blank", "noopener,noreferrer");
+  });
+</script>
