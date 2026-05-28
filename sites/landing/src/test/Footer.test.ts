@@ -34,7 +34,7 @@ describe('Footer', () => {
     const container = await AstroContainer.create();
     const html = await container.renderToString(Footer);
     expect(html).toMatch(/href="\/donate"/);
-    expect(html).toMatch(/Invítame a un café/);
+    expect(html).toMatch(/Apóyame con un café/);
   });
 
   it('includes cross-site link to academy with rel=noopener and target=_blank', async () => {
