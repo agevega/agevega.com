@@ -6,11 +6,7 @@ const isActive = (path: string): boolean => {
   return pathname === path || pathname.startsWith(path + '/');
 };
 
-const navLinks = [
-  { href: '/', label: 'Inicio' },
-  { href: '/about-this-web', label: 'Sobre esta Web' },
-  { href: '/about', label: '¿Quién está detrás?' },
-];
+const navLinks: { href: string; label: string }[] = [];
 
 const linkBase =
   'px-3 py-2 rounded-md text-sm transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400';
