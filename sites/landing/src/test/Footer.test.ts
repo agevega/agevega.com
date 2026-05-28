@@ -37,6 +37,13 @@ describe('Footer', () => {
     expect(html).toMatch(/Apóyame con un café/);
   });
 
+  it('copyright text links to /license', async () => {
+    const container = await AstroContainer.create();
+    const html = await container.renderToString(Footer);
+    expect(html).toMatch(/href="\/license"/);
+    expect(html).toMatch(/Alejandro Vega — Contenido bajo licencia MIT/);
+  });
+
   it('includes cross-site link to academy with rel=noopener and target=_blank', async () => {
     const container = await AstroContainer.create();
     const html = await container.renderToString(Footer);

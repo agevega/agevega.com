@@ -1,0 +1,18 @@
+---
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+
+// process.cwd() is sites/landing/ during build and test; go up 2 levels to repo root
+const licenseText = readFileSync(resolve(process.cwd(), '../../LICENSE'), 'utf-8');
+---
+
+<section id="license" class="py-20 relative">
+  <div class="container mx-auto px-4">
+    <div class="max-w-2xl mx-auto">
+      <h2 class="text-3xl font-bold text-white mb-8">Licencia</h2>
+      <div class="bg-brand-surface border border-slate-800/60 rounded-lg p-6">
+        <pre class="text-sm text-slate-300 font-mono whitespace-pre-wrap leading-relaxed">{licenseText}</pre>
+      </div>
+    </div>
+  </div>
+</section>

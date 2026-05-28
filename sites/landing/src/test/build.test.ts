@@ -25,6 +25,7 @@ describe('build artifacts', () => {
     ['contact/index.html', '/contact'],
     ['donate/index.html', '/donate'],
     ['laboratory/index.html', '/laboratory'],
+    ['license/index.html', '/license'],
     ['404.html', '404 page (added Issue 4A)'],
   ];
 
