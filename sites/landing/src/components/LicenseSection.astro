@@ -1,9 +1,14 @@
 ---
-import { readFileSync } from 'node:fs';
+import { readFileSync, existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 
-// process.cwd() is sites/landing/ during build and test; go up 2 levels to repo root
-const licenseText = readFileSync(resolve(process.cwd(), '../../LICENSE'), 'utf-8');
+// Docker (WORKDIR=/app): LICENSE is copied into the build context by CI.
+// Local/CI test (cwd=sites/landing/): fall back to repo root two levels up.
+const cwd = process.cwd();
+const licensePath = existsSync(resolve(cwd, 'LICENSE'))
+  ? resolve(cwd, 'LICENSE')
+  : resolve(cwd, '../../LICENSE');
+const licenseText = readFileSync(licensePath, 'utf-8');
 ---
 
 <section id="license" class="py-20 relative">

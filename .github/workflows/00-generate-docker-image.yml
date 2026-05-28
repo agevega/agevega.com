@@ -104,6 +104,10 @@ jobs:
           API_URL=$(aws ssm get-parameter --name "/${{ env.PROJECT_NAME }}/03-backend-serverless/00-contact-api/endpoint" --query "Parameter.Value" --output text)
           echo "API_URL=$API_URL" >> $GITHUB_OUTPUT
 
+      - name: Copy LICENSE into landing build context
+        if: matrix.site == 'landing'
+        run: cp LICENSE sites/landing/
+
       - name: Build and push landing
         if: matrix.site == 'landing'
         uses: docker/build-push-action@v7
