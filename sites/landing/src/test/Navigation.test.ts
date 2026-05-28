@@ -21,7 +21,6 @@ describe('Navigation', () => {
     expect(html).toMatch(/href="\/about"/);
     expect(html).toMatch(/href="\/about-this-web"/);
     expect(html).toMatch(/href="\/contact"/);
-    expect(html).toMatch(/href="\/laboratory"/);
   });
 
   it('includes the logo image with alt text', async () => {

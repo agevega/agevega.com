@@ -19,7 +19,7 @@ describe('HeroSection', () => {
     const html = await container.renderToString(HeroSection);
     // Version comes from astro:env/client. In dev/.env it's "Localhost",
     // in CI it's the git tag (e.g. "v1.1.0"), default fallback is "dev".
-    // Just verify the version badge span exists with non-empty content.
-    expect(html).toMatch(/<span[^>]*select-none[^>]*>\s*\S+\s*<\/span>/);
+    // Verify the version badge link exists and points to /laboratory (easter egg).
+    expect(html).toMatch(/<a[^>]*href="\/laboratory"[^>]*select-none[^>]*>\s*\S+\s*<\/a>/);
   });
 });
