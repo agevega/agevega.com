@@ -2,7 +2,7 @@
 
 @theme {
   /* Typography */
-  --font-sans: "Varela Round", system-ui, sans-serif;
+  --font-sans: "Inter", system-ui, sans-serif;
 
   /* Brand colors (was extend.colors in v3 tailwind.config.mjs) */
   --color-brand-dark: #0b1426;
