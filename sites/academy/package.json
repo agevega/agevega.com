@@ -16,12 +16,12 @@
     "format:fix": "prettier --write . --ignore-path ../.prettierignore"
   },
   "dependencies": {
+    "@fontsource/varela-round": "^5.2.8",
     "astro": "^6.1.10"
   },
   "devDependencies": {
     "@astrojs/rss": "^4.0.18",
     "@astrojs/sitemap": "^3.7.2",
-    "@fontsource/inter": "^5.2.8",
     "@tailwindcss/vite": "^4.2.4",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "@typescript-eslint/parser": "^7.18.0",

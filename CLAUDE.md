@@ -64,7 +64,7 @@ bun run test       # Vitest schema tests
 |---|---|---|
 | `brand-dark` | `#0B1426` | Page background, scrollbar track |
 | `brand-surface` | `#0F172A` | Card/section backgrounds |
-| Font | Inter (300–700) via `@fontsource/inter` | All text |
+| Font | Varela Round (400) via `@fontsource/varela-round` | All text (bold weights faux-synthesized) |
 | Accent palette | Slate (borders, muted text), Emerald (selections, CTAs), Blue (decorative glows) | Throughout |
 | Animations | `fade-in`, `fade-in-up`, `slide-up`, `slide-up-delayed`, `gradient-x` | Entry animations |
 | Background FX | Three `.blur-[100-120px]` divs — blue + emerald — fixed behind content | Ambient glow |
