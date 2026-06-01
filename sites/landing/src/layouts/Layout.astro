@@ -8,7 +8,11 @@ interface Props {
 import Navigation from "../components/Navigation.astro";
 import Footer from "../components/Footer.astro";
 import "../styles/global.css";
-import "@fontsource/varela-round/400.css";
+import "@fontsource/inter/300.css";
+import "@fontsource/inter/400.css";
+import "@fontsource/inter/500.css";
+import "@fontsource/inter/600.css";
+import "@fontsource/inter/700.css";
 
 const DEFAULT_DESCRIPTION = "Alejandro Vega - Senior DevSecOps Engineer & Cloud Architect. Especialista en AWS, Terraform, Kubernetes y automatización.";
 const { title, description = DEFAULT_DESCRIPTION, ogImage } = Astro.props;
@@ -82,7 +86,7 @@ const opengraph = {
 
 <style is:global>
   html {
-    font-family: "Varela Round", system-ui, sans-serif;
+    font-family: "Inter", system-ui, sans-serif;
     scroll-behavior: smooth;
     scroll-padding-top: 5rem; /* Offset for fixed navbar */
     overflow-y: scroll; /* Prevent layout shift when content doesn't overflow */
