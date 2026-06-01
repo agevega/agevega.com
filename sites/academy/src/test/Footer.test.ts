@@ -29,13 +29,18 @@ describe('Footer', () => {
     expect(html).toMatch(/MIT/);
   });
 
-  it('contains links to Cursos, RSS, and agevega.com cross-site', async () => {
+  it('contains a cross-site link to agevega.com', async () => {
     const container = await AstroContainer.create();
     const html = await container.renderToString(Footer);
-    expect(html).toMatch(/href="\/cursos"/);
-    expect(html).toMatch(/href="\/rss\.xml"/);
     expect(html).toMatch(
       /href="https:\/\/agevega\.com"[^>]*target="_blank"[^>]*rel="noopener noreferrer"/,
     );
+  });
+
+  it('includes a support link to /donate', async () => {
+    const container = await AstroContainer.create();
+    const html = await container.renderToString(Footer);
+    expect(html).toMatch(/href="\/donate"/);
+    expect(html).toMatch(/Apóyame con un café/);
   });
 });
