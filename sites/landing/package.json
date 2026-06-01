@@ -17,7 +17,7 @@
     "format:fix": "prettier --write . --ignore-path ../.prettierignore"
   },
   "dependencies": {
-    "@fontsource/inter": "^5.2.8",
+    "@fontsource/varela-round": "^5.2.8",
     "astro": "6.1.10"
   },
   "devDependencies": {

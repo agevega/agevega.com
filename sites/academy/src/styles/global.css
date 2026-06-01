@@ -1,7 +1,7 @@
 @import 'tailwindcss';
 
 @theme {
-  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-sans: 'Varela Round', system-ui, sans-serif;
   --color-brand-dark: #0B1426;
   --color-brand-surface: #0F172A;
 
