@@ -7,7 +7,7 @@ describe('Footer', () => {
     const container = await AstroContainer.create();
     const html = await container.renderToString(Footer);
     expect(html).toMatch(/<footer/);
-    expect(html).toMatch(/AgeVega Academy/);
+    expect(html).toMatch(/AgeVega/);
   });
 
   it('shows the current year', async () => {
@@ -23,10 +23,11 @@ describe('Footer', () => {
     expect(html).toMatch(/max-w-7xl/);
   });
 
-  it('attributes content under MIT licence', async () => {
+  it('shows AgeVega copyright linking to the license page', async () => {
     const container = await AstroContainer.create();
     const html = await container.renderToString(Footer);
-    expect(html).toMatch(/MIT/);
+    expect(html).toMatch(/AgeVega ©/);
+    expect(html).toMatch(/href="https:\/\/agevega\.com\/license"/);
   });
 
   it('contains a cross-site link to agevega.com', async () => {

@@ -7,7 +7,7 @@ describe('Footer', () => {
     const container = await AstroContainer.create();
     const html = await container.renderToString(Footer);
     expect(html).toMatch(/<footer/);
-    expect(html).toMatch(/Alejandro Vega/);
+    expect(html).toMatch(/AgeVega/);
   });
 
   it('shows the current year', async () => {
@@ -23,10 +23,10 @@ describe('Footer', () => {
     expect(html).toMatch(/max-w-7xl/);
   });
 
-  it('attributes content under MIT licence (not "todos los derechos reservados")', async () => {
+  it('shows AgeVega copyright (not "todos los derechos reservados")', async () => {
     const container = await AstroContainer.create();
     const html = await container.renderToString(Footer);
-    expect(html).toMatch(/MIT/);
+    expect(html).toMatch(/AgeVega ©/);
     expect(html).not.toMatch(/[Tt]odos los derechos reservados/);
   });
 
@@ -34,7 +34,7 @@ describe('Footer', () => {
     const container = await AstroContainer.create();
     const html = await container.renderToString(Footer);
     expect(html).toMatch(/href="\/license"/);
-    expect(html).toMatch(/Alejandro Vega — Contenido bajo licencia MIT/);
+    expect(html).toMatch(/AgeVega ©/);
   });
 
   it('includes cross-site link to academy with rel=noopener and target=_blank', async () => {
