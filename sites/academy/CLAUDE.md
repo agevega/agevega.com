@@ -74,7 +74,7 @@ bun run preview    # Preview built site
 | `brand-dark` | `#0B1426` | Page background |
 | `brand-surface` | `#0F172A` | Card backgrounds |
 | Accent | Emerald-500 | CTAs, active states, hover borders |
-| Font | Varela Round (400) via `@fontsource/varela-round` | All text (bold weights faux-synthesized) |
+| Font | Inter (300–700) via `@fontsource/inter`, exposed as `--font-sans` token | All text |
 | Code theme | github-dark (Shiki) | Markdown code blocks |
 
 ## Category Colors (CourseCard badges)

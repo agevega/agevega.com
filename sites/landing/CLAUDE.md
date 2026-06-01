@@ -74,7 +74,7 @@ bun run format:fix # Auto-format
 
 - **Components:** PascalCase Astro files in `src/components/`. Each section of the landing is its own component.
 - **Pages:** lowercase kebab-case in `src/pages/`. SSG route per file.
-- **Layout:** Single `Layout.astro` wraps all pages. Receives `title`, optional `description`, `ogImage`. Imports `global.css` and Varela Round (`@fontsource/varela-round/400.css`).
+- **Layout:** Single `Layout.astro` wraps all pages. Receives `title`, optional `description`, `ogImage`. Imports `global.css` and Inter weights (`@fontsource/inter`).
 - **Styling:** Tailwind v4 utilities. Custom tokens in `@theme {}` block in `global.css` (NOT in a `tailwind.config.mjs` — that's the v3 way and it's deleted).
 - **Imports:** Relative paths with `../` from current file. No path aliases configured.
 - **TypeScript:** Strict mode (inherited from `astro/tsconfigs/strict`). Frontmatter uses `interface Props` when needed.
@@ -85,7 +85,7 @@ bun run format:fix # Auto-format
 |---|---|---|
 | `--color-brand-dark` | `#0B1426` | Page background, scrollbar track |
 | `--color-brand-surface` | `#0F172A` | Card/section backgrounds |
-| `--font-sans` | Varela Round (400) via `@fontsource/varela-round` | All text (bold weights faux-synthesized) |
+| `--font-sans` | Inter (300–700) via `@fontsource/inter` | All text (token so `font-sans` utility resolves to Inter) |
 | Accent palette (Tailwind defaults) | Slate (borders, muted text), Emerald (selections, CTAs), Blue (decorative glows) | Throughout |
 | `--animate-fade-in` | `fadeIn 0.5s ease-out forwards` | Hero entry |
 | `--animate-fade-in-up` | `fadeInUp 0.8s ease-out forwards` | Section reveals |
