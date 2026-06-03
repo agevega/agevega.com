@@ -71,23 +71,6 @@
 
         <div>
           <label
-            for="subject"
-            class="block text-sm font-medium text-slate-300 mb-2">Asunto</label
-          >
-          <input
-            type="text"
-            id="subject"
-            name="subject"
-            required
-            aria-required="true"
-            maxlength="100"
-            class="w-full px-4 py-3 bg-slate-900/50 border border-slate-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-white placeholder-slate-500 transition-colors"
-            placeholder="¿Qué objetivo tienes en mente?"
-          />
-        </div>
-
-        <div>
-          <label
             for="message"
             class="block text-sm font-medium text-slate-300 mb-2">Mensaje</label
           >
@@ -110,7 +93,7 @@
           id="submit-btn"
           class="w-full bg-emerald-600 text-white font-semibold py-4 px-8 rounded-lg hover:bg-emerald-500 transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-emerald-500/25 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Enviar mail
+          Enviar mensaje
         </button>
       </form>
 
@@ -177,6 +160,9 @@
       const formData = new FormData(form);
       const data = Object.fromEntries(formData.entries());
       delete data.b_name_hp; // Don't send honeypot field
+
+      // Subject is built under the hood from name + email (no user-facing field)
+      data.subject = `Nuevo mensaje de ${data.name} - ${data.email}`;
 
       try {
         const response = await fetch(API_URL, {
