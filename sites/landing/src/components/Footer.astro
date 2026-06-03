@@ -4,23 +4,16 @@ const year = new Date().getFullYear();
 
 <footer class="border-t border-slate-800/60 mt-auto">
   <div
-    class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-slate-400"
+    class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex items-center gap-2 font-light text-slate-400 text-sm"
   >
     <a
       href="/license"
-      class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 rounded"
+      class="flex items-center gap-2 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 rounded"
     >
-      AgeVega © {year}
+      <span class="font-semibold text-emerald-400 tracking-wider">AgeVega</span>
+      <span>© {year}</span>
     </a>
-    <div class="flex items-center gap-6">
-      <a
-        href="https://academy.agevega.com"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 rounded"
-      >
-        <!-- academy.agevega.com <span aria-hidden="true">↗</span>-->
-      </a>
-    </div>
+    <span class="hidden sm:inline">·</span>
+    <span class="hidden sm:inline">Ingeniería de Plataformas</span>
   </div>
 </footer>

@@ -26,7 +26,8 @@ describe('Footer', () => {
   it('shows AgeVega copyright (not "todos los derechos reservados")', async () => {
     const container = await AstroContainer.create();
     const html = await container.renderToString(Footer);
-    expect(html).toMatch(/AgeVega ©/);
+    expect(html).toMatch(/AgeVega/);
+    expect(html).toMatch(/©/);
     expect(html).not.toMatch(/[Tt]odos los derechos reservados/);
   });
 
@@ -34,14 +35,12 @@ describe('Footer', () => {
     const container = await AstroContainer.create();
     const html = await container.renderToString(Footer);
     expect(html).toMatch(/href="\/license"/);
-    expect(html).toMatch(/AgeVega ©/);
+    expect(html).toMatch(/AgeVega/);
   });
 
-  it('includes cross-site link to academy with rel=noopener and target=_blank', async () => {
+  it('shows the "Ingeniería de Plataformas" tagline', async () => {
     const container = await AstroContainer.create();
     const html = await container.renderToString(Footer);
-    expect(html).toMatch(
-      /href="https:\/\/academy\.agevega\.com"[^>]*target="_blank"[^>]*rel="noopener noreferrer"/,
-    );
+    expect(html).toMatch(/Ingeniería de Plataformas/);
   });
 });
