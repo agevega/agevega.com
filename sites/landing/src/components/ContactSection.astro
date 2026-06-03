@@ -153,7 +153,7 @@
       // Loading state
       submitBtn.disabled = true;
       submitBtn.innerHTML = "Enviando...";
-      feedback.textContent = "Abriendo ticket...";
+      feedback.textContent = "Enviando mensaje...";
       feedback.classList.add("text-emerald-400");
       feedback.classList.remove("hidden");
 
@@ -174,7 +174,7 @@
         });
 
         if (response.ok) {
-          feedback.textContent = "¡Ticket abierto con éxito! Hablamos pronto.";
+          feedback.textContent = "¡Mensaje enviado con éxito! Hablamos pronto.";
           feedback.classList.replace("text-emerald-400", "text-green-400");
           form.reset();
         } else {
@@ -183,7 +183,7 @@
       } catch (error) {
         console.error("Submission error:", error);
         feedback.textContent =
-          "Vaya, algo falló al abrir el ticket. Por favor, inténtalo de nuevo.";
+          "Vaya, algo falló al enviar el mensaje. Por favor, inténtalo de nuevo.";
         feedback.classList.replace("text-emerald-400", "text-red-400");
       } finally {
         submitBtn.disabled = false;
