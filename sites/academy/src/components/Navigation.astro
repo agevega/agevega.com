@@ -144,9 +144,6 @@ const linkInactive = 'text-slate-300 hover:text-white hover:bg-white/5';
 </nav>
 
 <script>
-  import { shouldCondense } from '../lib/scroll-condense';
-
-  const navbar = document.getElementById('navbar');
   const mobileMenuBtn = document.getElementById('mobile-menu-btn');
   const mobileMenu = document.getElementById('mobile-menu');
   const menuIcons = mobileMenuBtn?.querySelectorAll('svg');
@@ -172,25 +169,6 @@ const linkInactive = 'text-slate-300 hover:text-white hover:bg-white/5';
   mobileLinks.forEach((link) => {
     link.addEventListener('click', closeMobileMenu);
   });
-
-  let ticking = false;
-  window.addEventListener(
-    'scroll',
-    () => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          if (shouldCondense(window.scrollY)) {
-            navbar?.classList.add('py-2');
-          } else {
-            navbar?.classList.remove('py-2');
-          }
-          ticking = false;
-        });
-        ticking = true;
-      }
-    },
-    { passive: true },
-  );
 
   function handleMobileMenuKeydown(e: KeyboardEvent) {
     if (e.key === 'Escape') {
