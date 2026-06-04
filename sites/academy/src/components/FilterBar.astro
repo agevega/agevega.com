@@ -57,7 +57,11 @@ const categories = [
     tab.addEventListener('click', () => {
       const cat = tab.dataset.filter ?? 'all';
       const url = new URL(window.location.href);
-      cat === 'all' ? url.searchParams.delete('cat') : url.searchParams.set('cat', cat);
+      if (cat === 'all') {
+        url.searchParams.delete('cat');
+      } else {
+        url.searchParams.set('cat', cat);
+      }
       history.replaceState(null, '', url);
       setActive(cat);
     });

@@ -42,6 +42,17 @@ jobs:
         working-directory: sites/${{ matrix.site }}
         run: bun install --frozen-lockfile
 
+      - name: Lint (${{ matrix.site }})
+        working-directory: sites/${{ matrix.site }}
+        run: bun run lint
+
+      - name: Type check (${{ matrix.site }})
+        working-directory: sites/${{ matrix.site }}
+        env:
+          PUBLIC_API_URL: https://stub.example.com
+          PUBLIC_APP_VERSION: ci-test
+        run: bun run check
+
       - name: Build for test (${{ matrix.site }})
         working-directory: sites/${{ matrix.site }}
         env:
@@ -58,6 +69,12 @@ jobs:
           PUBLIC_APP_VERSION: ci-test
         run: bun run test
 
+      - name: Dependency audit (${{ matrix.site }})
+        working-directory: sites/${{ matrix.site }}
+        # Gate on HIGH+CRITICAL, matching 03-test-sites.yml. A release tag cannot
+        # build on a vulnerable dependency tree.
+        run: bun audit --audit-level=high
+
   build:
     name: Build and Push ${{ matrix.site }} to ECR
     needs: test
@@ -65,6 +82,7 @@ jobs:
     permissions:
       id-token: write
       contents: read
+      security-events: write # upload image-scan SARIF to the Security tab
     strategy:
       fail-fast: true
       matrix:
@@ -136,6 +154,31 @@ jobs:
           build-args: |
             PUBLIC_APP_VERSION=${{ github.ref_name }}
           provenance: false
+
+      # Report-only: scan the pushed image for base-image (nginx:alpine) CVEs.
+      # Results go to the Security tab; this does NOT gate the release — base-image
+      # CVE remediation is tracked in the infra-hardening backlog. Trivy pulls the
+      # amd64 manifest from ECR using the AWS credentials configured above.
+      - name: Trivy image scan (report-only)
+        uses: aquasecurity/trivy-action@0.28.0
+        # Report-only must never gate the release: a scan/pull/auth error here
+        # would otherwise fail the build job and block the deploy trigger.
+        continue-on-error: true
+        with:
+          scan-type: image
+          image-ref: ${{ steps.login-ecr.outputs.registry }}/${{ steps.get-ecr.outputs.ECR_REPO }}:${{ github.ref_name }}
+          format: sarif
+          output: trivy-image.sarif
+          severity: HIGH,CRITICAL
+          exit-code: '0'
+
+      - name: Upload image-scan SARIF
+        if: always()
+        continue-on-error: true
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-image.sarif
+          category: trivy-image-${{ matrix.site }}
 
   trigger-deploy:
     name: Trigger Deploy to Bastion
