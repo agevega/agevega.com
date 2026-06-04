@@ -101,6 +101,12 @@ jobs:
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v4
+        with:
+          # Don't cache the binfmt image: the two matrix legs (landing + academy)
+          # run concurrently and race on the same cache key, logging a benign
+          # "Unable to reserve cache" warning. Disabling the cache removes the
+          # race; re-pulling binfmt each run is negligible.
+          cache-image: false
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
