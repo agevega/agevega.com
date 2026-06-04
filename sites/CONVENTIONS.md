@@ -13,10 +13,10 @@ The "MUST / SHOULD / MAY" terminology follows [RFC 2119](https://www.ietf.org/rf
 | Concern | Convention | Required? |
 |---|---|---|
 | Framework | Astro 6 (SSG) | MUST |
-| Astro version | Pin exact (e.g. `"6.1.10"`) until upstream rolldown+Tailwind compat lands | MUST (until Q3 2026, then re-evaluate) |
+| Astro version | Pin exact (e.g. `"6.4.4"`) until upstream rolldown+Tailwind compat lands | MUST (until Q3 2026, then re-evaluate) |
 | Package manager | Bun | MUST |
 | Lockfile | `bun.lock` (committed) | MUST |
-| Vite | Pin to `7.3.2` to match Astro 6.1.10's internal vite | MUST (transitional — see TODOS in apps for re-bump trigger) |
+| Vite | Pin exact to `7.3.2` to match Astro 6.4.4's `vite ^7.3.2` floor | MUST (transitional — see TODOS in apps for re-bump trigger) |
 | Tailwind | v4 CSS-first (`@import 'tailwindcss'` + `@theme {}` block) | MUST |
 | Tailwind plugin | `@tailwindcss/vite` in `astro.config.mjs:vite.plugins` | MUST |
 | TypeScript | `extends: "astro/tsconfigs/strict"` in `tsconfig.json` | MUST |
@@ -117,7 +117,7 @@ Both apps can run in parallel: open two terminals, `bun run dev` in each. No por
 | Concern | Convention | Required? |
 |---|---|---|
 | Tag convention | `v*` (repo-wide, e.g. `v1.1.0`) — every tag deploys ALL sites | MUST |
-| Test workflow | `.github/workflows/03-test-sites.yml` runs `bun install --frozen-lockfile && bun run build && bun run test` per site | MUST (gates merges informationally; not blocking by default) |
+| Test workflow | `.github/workflows/03-test-sites.yml` runs `lint → check → build → test → audit` per site. Security scans live in `04-security.yml`. See "CI security gates" below | MUST |
 | Build workflow | Per site, e.g. `00-generate-docker-image.yml` for landing → push to ECR | MUST (per site that deploys to prod) |
 | ECR repo naming | `agevegacom-<site>` (e.g. `agevegacom-landing`) | SHOULD |
 | Container name on EC2 | `<site>` (e.g. `landing`) | SHOULD |
@@ -154,21 +154,33 @@ Trade-off explicitly accepted: a flaky test or build on one site blocks the rele
 
 | Tool | Config location | Per-app override? |
 |---|---|---|
-| ESLint | Per-site `.eslintrc.cjs` (inlined — see note below) | N/A — already per-site |
+| ESLint | Per-site `eslint.config.js` (ESLint 9 flat — see note below) | N/A — already per-site |
 | Prettier | `sites/.prettierrc` (shared, picked up by walking up the tree) | YES — drop a `.prettierrc` inside a site dir to override |
 | Prettier ignore | `sites/.prettierignore` (shared) | YES — additional `.prettierignore` per site applies cumulatively |
 
 The repo root MUST stay free of code-style configs. Tooling configs live next to the code they format (`sites/`), not at the monorepo root.
 
-Each site's `package.json` MUST have `lint`, `format`, `format:fix` scripts that invoke `eslint .` and `prettier --check .` / `prettier --write .` from the site dir. Prettier walks up from each site dir and finds `sites/.prettierrc` automatically.
+Each site's `package.json` MUST have `lint`, `check`, `format`, `format:fix` scripts that invoke `eslint .`, `astro check`, and `prettier --check .` / `prettier --write .` from the site dir. Prettier walks up from each site dir and finds `sites/.prettierrc` automatically.
 
 ### Note: ESLint configs are inlined per-site, not shared
 
-ESLint v8 resolves parsers and plugins from the location of the config file, not the working directory. The monorepo has no root `package.json` and no root `node_modules`, so a root-level shared ESLint config can't resolve `@typescript-eslint/parser` or `astro-eslint-parser`. Instead, each site has its own `.eslintrc.cjs` with the full config inlined.
+Each site has its own `eslint.config.js` (ESLint 9 flat config) with the full config inlined. A root-level shared config can't resolve plugins/parsers because the monorepo has no root `package.json` / `node_modules`. The flat config composes `@eslint/js`, `typescript-eslint`, and `eslint-plugin-astro`'s `flat/recommended` — the last is what parses TypeScript inside `<script>` tags (the ESLint 8 `.eslintrc.cjs` could not, so `bun run lint` was silently broken until the ESLint 9 migration).
 
-To keep both in lockstep, edit one site's `.eslintrc.cjs` and mirror the relevant changes to the other. The duplication is ~50 lines per site; the cost of trying to share is broken `bun run lint` on every site.
+To keep both in lockstep, edit one site's `eslint.config.js` and mirror the relevant changes to the other. The duplication is ~40 lines per site; the cost of trying to share is broken `bun run lint` on every site.
 
-Future state: ESLint flat config (`eslint.config.js`) uses ESM imports and has different resolution rules; that may unlock a shared config. Tracked per-site in `TODOS.md`.
+### CI security gates
+
+`03-test-sites.yml` (PR + push to master) and the `test` job of `00-generate-docker-image.yml` (release tags) enforce, per site:
+
+- **lint / check / build / test** — fail the job on any error.
+- **`bun audit --audit-level=high`** — fails on HIGH/CRITICAL dependency advisories. Moderate/low are reported but do not block (e.g. the known `yaml` moderate via `@astrojs/check`, dev-only build tooling).
+
+Repo-wide jobs (in `04-security.yml`, which runs on **every** PR and push to master — no path filter, so infra-only and root-only changes are scanned too):
+
+- **gitleaks** — secret scan over full history; fails on any leak.
+- **trivy** — `vuln` scan gates on HIGH/CRITICAL; `misconfig` scan (Terraform IaC + Dockerfiles) is **report-only** (`continue-on-error`), uploading SARIF to the Security tab without blocking. The current misconfig backlog (ECR tag immutability, S3/CloudTrail CMK encryption, non-root nginx, encrypted EBS, ALB invalid-header drop) is tracked for a dedicated infra-hardening PR. `node_modules`, `dist`, and `.claude` are skipped.
+
+Image CVE scanning (`nginx:alpine` base) runs report-only in `00`'s build job after push.
 
 ---
 
@@ -357,14 +369,15 @@ cp -r ../landing/src/styles ./src/styles
 
 # Bootstrap deps:
 bun init -y    # creates package.json — replace contents with the convention above
-bun add astro@6.1.10
-bun add -d @fontsource/inter @tailwindcss/vite tailwindcss vite@7.3.2 vitest
+bun add astro@6.4.4
+bun add -d @astrojs/check typescript @types/node \
+  @fontsource/inter @tailwindcss/vite tailwindcss vite@7.3.2 vitest
 
 # Prettier config shared at sites/.prettierrc (auto-picked-up via tree-walk).
 # ESLint must be configured per-site (parser/plugin resolution requires it):
-# copy sites/landing/.eslintrc.cjs into the new site dir verbatim.
-bun add -d @typescript-eslint/eslint-plugin@^7 @typescript-eslint/parser@^7 \
-  astro-eslint-parser eslint@^8 eslint-plugin-astro \
+# copy sites/landing/eslint.config.js into the new site dir verbatim.
+bun add -d @eslint/js eslint@^9 typescript-eslint globals \
+  astro-eslint-parser eslint-plugin-astro \
   prettier prettier-plugin-astro
 
 # Build & test

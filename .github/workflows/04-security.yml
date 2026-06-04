@@ -1,0 +1,75 @@
+name: 04 Security Scan
+
+# Runs on EVERY change (no path filter) so infra-only and root-only PRs are
+# scanned too — the Terraform IaC misconfig scan must fire on Terraform changes.
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+jobs:
+  secret-scan:
+    name: Secret scan (gitleaks)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          # Full history so gitleaks scans every commit, not just the tip.
+          fetch-depth: 0
+
+      - name: Run gitleaks
+        uses: gitleaks/gitleaks-action@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  trivy-scan:
+    name: Security scan (Trivy)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write # required to upload SARIF to the Security tab
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      # Report-only: full misconfig scan (Terraform IaC + Dockerfiles). Results
+      # are published to the Security tab but DO NOT fail the build — the current
+      # backlog (ECR mutability, S3/CloudTrail CMK, non-root nginx, etc.) is
+      # tracked for a dedicated infra-hardening PR. See sites/CONVENTIONS.md.
+      - name: Trivy misconfig (report-only)
+        uses: aquasecurity/trivy-action@v0.36.0
+        # Report-only: a scan error must not red the PR. Findings are surfaced
+        # via SARIF, not by failing the job.
+        continue-on-error: true
+        with:
+          scan-type: fs
+          scanners: misconfig
+          scan-ref: .
+          format: sarif
+          output: trivy-misconfig.sarif
+          severity: HIGH,CRITICAL
+          exit-code: '0'
+          skip-dirs: '**/node_modules,**/dist,.claude'
+
+      - name: Upload misconfig SARIF
+        if: always()
+        continue-on-error: true
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: trivy-misconfig.sarif
+          category: trivy-misconfig
+
+      # Gate: dependency vulnerabilities (HIGH/CRITICAL) fail the build. This
+      # complements the per-site `bun audit` step with a repo-wide filesystem scan.
+      - name: Trivy vuln (gate)
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          scan-type: fs
+          scanners: vuln
+          scan-ref: .
+          format: table
+          severity: HIGH,CRITICAL
+          exit-code: '1'
+          skip-dirs: '**/node_modules,**/dist,.claude'

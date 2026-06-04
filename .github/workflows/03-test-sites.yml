@@ -7,7 +7,7 @@ on:
       - '.github/workflows/03-test-sites.yml'
       - 'sites/.prettierrc'
       - 'sites/.prettierignore'
-      - 'sites/**/.eslintrc.cjs'
+      - 'sites/**/eslint.config.js'
   push:
     branches:
       - master
@@ -16,7 +16,7 @@ on:
       - '.github/workflows/03-test-sites.yml'
       - 'sites/.prettierrc'
       - 'sites/.prettierignore'
-      - 'sites/**/.eslintrc.cjs'
+      - 'sites/**/eslint.config.js'
 
 jobs:
   test:
@@ -47,6 +47,19 @@ jobs:
         working-directory: sites/${{ matrix.site }}
         run: bun install --frozen-lockfile
 
+      - name: Lint (${{ matrix.site }})
+        working-directory: sites/${{ matrix.site }}
+        run: bun run lint
+
+      - name: Type check (${{ matrix.site }})
+        working-directory: sites/${{ matrix.site }}
+        env:
+          # astro check resolves astro:env, so landing's envField (PUBLIC_API_URL,
+          # optional: false) must be satisfied. Harmless for academy.
+          PUBLIC_API_URL: https://stub.example.com
+          PUBLIC_APP_VERSION: ci-test
+        run: bun run check
+
       - name: Build (${{ matrix.site }})
         working-directory: sites/${{ matrix.site }}
         env:
@@ -62,6 +75,13 @@ jobs:
           PUBLIC_API_URL: https://stub.example.com
           PUBLIC_APP_VERSION: ci-test
         run: bun run test
+
+      - name: Dependency audit (${{ matrix.site }})
+        working-directory: sites/${{ matrix.site }}
+        # Gate on HIGH+CRITICAL. Moderate/low are reported but do not fail.
+        # Known moderate (yaml, via @astrojs/check, dev-only build tooling) sits
+        # below this threshold. See sites/CONVENTIONS.md "CI security gates".
+        run: bun audit --audit-level=high
 
   cert-san-check:
     name: Verify ALB cert SANs
