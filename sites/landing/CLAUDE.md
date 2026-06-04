@@ -34,7 +34,7 @@ sites/landing/
 │   ├── pages/
 │   │   ├── index.astro     # Home — hero + sections
 │   │   ├── about.astro     # Bio
-│   │   ├── about-this-web.astro  # Renders meta.json (IMDS-derived) — infra-awareness page
+│   │   ├── about-this-web.astro  # Static architecture overview (renders ArchitectureSection)
 │   │   ├── contact.astro   # Contact form (POST to PUBLIC_API_URL)
 │   │   ├── laboratory.astro
 │   │   └── 404.astro       # Custom 404 page
@@ -113,7 +113,7 @@ Two-stage Docker image:
 - If local/non-AWS: falls back to `"Local (Simulated)"` values.
 - Then exec's nginx.
 
-The `/about-this-web` page client-fetches `/meta.json` and renders the infra info to the user (the "infra-awareness" feature).
+The infra-awareness page `public/pages/instance.html` (linked from `LaboratorioSection.astro`) client-fetches `/meta.json` and renders the live instance info to the user. Note: `/about-this-web` is a separate, static architecture overview and does NOT fetch `meta.json`.
 
 ## Deployment
 
