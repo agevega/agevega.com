@@ -39,7 +39,7 @@ jobs:
       # backlog (ECR mutability, S3/CloudTrail CMK, non-root nginx, etc.) is
       # tracked for a dedicated infra-hardening PR. See sites/CONVENTIONS.md.
       - name: Trivy misconfig (report-only)
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0.36.0
         # Report-only: a scan error must not red the PR. Findings are surfaced
         # via SARIF, not by failing the job.
         continue-on-error: true
@@ -64,7 +64,7 @@ jobs:
       # Gate: dependency vulnerabilities (HIGH/CRITICAL) fail the build. This
       # complements the per-site `bun audit` step with a repo-wide filesystem scan.
       - name: Trivy vuln (gate)
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           scan-type: fs
           scanners: vuln

@@ -160,7 +160,7 @@ jobs:
       # CVE remediation is tracked in the infra-hardening backlog. Trivy pulls the
       # amd64 manifest from ECR using the AWS credentials configured above.
       - name: Trivy image scan (report-only)
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0.36.0
         # Report-only must never gate the release: a scan/pull/auth error here
         # would otherwise fail the build job and block the deploy trigger.
         continue-on-error: true
