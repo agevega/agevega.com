@@ -40,6 +40,12 @@ variable "cloudtrail_bucket_name" {
   default     = "agevegacom-cloudtrail-logs"
 }
 
+variable "cloudtrail_access_logs_bucket_name" {
+  description = "Name of S3 bucket receiving server access logs of the CloudTrail bucket"
+  type        = string
+  default     = "agevegacom-cloudtrail-access-logs"
+}
+
 variable "config_bucket_name" {
   description = "Name of S3 bucket for AWS Config logs"
   type        = string

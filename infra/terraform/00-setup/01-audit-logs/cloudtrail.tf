@@ -37,6 +37,14 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "cloudtrail_logs" 
   }
 }
 
+resource "aws_s3_bucket_versioning" "cloudtrail_logs" {
+  bucket = aws_s3_bucket.cloudtrail_logs.id
+
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
 resource "aws_s3_bucket_lifecycle_configuration" "cloudtrail_logs" {
   bucket = aws_s3_bucket.cloudtrail_logs.id
 
@@ -51,7 +59,18 @@ resource "aws_s3_bucket_lifecycle_configuration" "cloudtrail_logs" {
     expiration {
       days = 90
     }
+
+    noncurrent_version_expiration {
+      noncurrent_days = 30
+    }
   }
+}
+
+resource "aws_s3_bucket_logging" "cloudtrail_logs" {
+  bucket = aws_s3_bucket.cloudtrail_logs.id
+
+  target_bucket = aws_s3_bucket.cloudtrail_access_logs.id
+  target_prefix = "cloudtrail-bucket/"
 }
 
 data "aws_iam_policy_document" "cloudtrail_logs" {

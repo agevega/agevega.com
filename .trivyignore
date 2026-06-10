@@ -38,3 +38,39 @@ AVD-AWS-0104
 # GitHub Secrets. BACKLOG: migrate deploys to SSM Run Command / Session
 # Manager and close port 22 entirely, then remove this entry.
 AVD-AWS-0107
+
+# Decision record: 2026-06-11 (PR-4, LOW/MEDIUM triage). Same security+FinOps
+# lens: the fixes worth their cost were applied (S3 versioning on audit/assets
+# buckets, CloudTrail bucket access logging, VPC Flow Logs REJECT-only, API
+# Gateway access logging, CloudFront standard logging v2, Dockerfile
+# HEALTHCHECKs, Lambda X-Ray); the entries below are the rejected remainder.
+
+# --- CMK upgrades, same rationale as AVD-AWS-0132/0015 above: ~$1/month/key
+# plus per-request charges for no threat-model change in a single-owner
+# account. Default AWS-managed encryption is already on. ---
+# ECR repositories (landing + academy) already encrypt with AES256.
+AVD-AWS-0033
+# DynamoDB tf-lock table already encrypted with an AWS-owned key.
+AVD-AWS-0025
+# CloudWatch log groups already encrypted with AWS-managed keys.
+AVD-AWS-0017
+
+# --- CloudFront access logging: IMPLEMENTED, but invisible to this check. ---
+# Standard logging v2 (CloudWatch vended delivery to S3, see logging.tf in
+# both CloudFront stacks) replaces the legacy logging_config block, which is
+# the only thing this static check inspects. The legacy block requires
+# ACL-enabled buckets; v2 does not. Do NOT "fix" by adding logging_config.
+AVD-AWS-0010
+
+# --- CloudTrail → CloudWatch Logs duplication. ---
+# The trail already delivers to S3 (versioned, 90-day lifecycle). Mirroring it
+# to CloudWatch Logs pays ingest for real-time alerting this project does not
+# use. FinOps: rejected.
+AVD-AWS-0162
+
+# --- S3 server access logging on every bucket. ---
+# Meta-logging with a chicken-and-egg problem (who logs the log bucket?).
+# CloudTrail already audits API access to all buckets. The one bucket where
+# server access logs add forensic value — the CloudTrail bucket itself — IS
+# logged (CIS, AVD-AWS-0163, see s3_access_logs.tf in 00-setup/01-audit-logs).
+AVD-AWS-0089

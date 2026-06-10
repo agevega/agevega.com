@@ -45,3 +45,9 @@ variable "assume_prod" {
   type        = bool
   default     = false
 }
+
+variable "cf_access_logs_bucket_name" {
+  description = "Name of the S3 bucket receiving CloudFront standard logs v2 (bastion distributions)"
+  type        = string
+  default     = "agevegacom-cf-access-logs-bastion"
+}

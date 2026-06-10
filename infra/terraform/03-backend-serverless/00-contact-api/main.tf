@@ -30,6 +30,11 @@ resource "aws_iam_role_policy_attachment" "lambda_basic_execution" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
+resource "aws_iam_role_policy_attachment" "lambda_xray_write" {
+  role       = aws_iam_role.lambda_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess"
+}
+
 data "aws_iam_policy_document" "lambda_ses_policy" {
   statement {
     effect  = "Allow"
@@ -73,6 +78,10 @@ resource "aws_lambda_function" "contact_form" {
       SES_REGION      = var.ses_region
     }
   }
+
+  tracing_config {
+    mode = "Active"
+  }
 }
 
 # ------------------------------------------------------------------------------
@@ -100,6 +109,23 @@ resource "aws_apigatewayv2_stage" "default" {
     throttling_rate_limit  = 1
   }
 
+  access_log_settings {
+    destination_arn = aws_cloudwatch_log_group.api_gw_access_logs.arn
+
+    format = jsonencode({
+      requestId        = "$context.requestId"
+      sourceIp         = "$context.identity.sourceIp"
+      userAgent        = "$context.identity.userAgent"
+      requestTime      = "$context.requestTime"
+      httpMethod       = "$context.httpMethod"
+      routeKey         = "$context.routeKey"
+      protocol         = "$context.protocol"
+      status           = "$context.status"
+      responseLength   = "$context.responseLength"
+      integrationError = "$context.integrationErrorMessage"
+    })
+  }
+
   tags = var.common_tags
 }
 
@@ -109,6 +135,12 @@ resource "aws_apigatewayv2_stage" "default" {
 resource "aws_cloudwatch_log_group" "lambda_logs" {
   name              = "/aws/lambda/${aws_lambda_function.contact_form.function_name}"
   retention_in_days = 7
+  tags              = var.common_tags
+}
+
+resource "aws_cloudwatch_log_group" "api_gw_access_logs" {
+  name              = "/aws/apigateway/${var.project_name}-contact-api"
+  retention_in_days = 30
   tags              = var.common_tags
 }
 
@@ -144,4 +176,3 @@ resource "aws_ssm_parameter" "api_endpoint" {
 
   tags = var.common_tags
 }
-

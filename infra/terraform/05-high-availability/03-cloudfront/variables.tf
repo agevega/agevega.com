@@ -39,3 +39,9 @@ variable "enable_waf" {
   type        = bool
   default     = true
 }
+
+variable "cf_access_logs_bucket_name" {
+  description = "Name of the S3 bucket receiving CloudFront standard logs v2 (prod distributions)"
+  type        = string
+  default     = "agevegacom-cf-access-logs-prod"
+}

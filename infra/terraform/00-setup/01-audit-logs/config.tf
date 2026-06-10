@@ -35,6 +35,14 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "config_logs" {
   }
 }
 
+resource "aws_s3_bucket_versioning" "config_logs" {
+  bucket = aws_s3_bucket.config_logs.id
+
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
 resource "aws_s3_bucket_lifecycle_configuration" "config_logs" {
   bucket = aws_s3_bucket.config_logs.id
 
@@ -48,6 +56,10 @@ resource "aws_s3_bucket_lifecycle_configuration" "config_logs" {
 
     expiration {
       days = 90
+    }
+
+    noncurrent_version_expiration {
+      noncurrent_days = 30
     }
   }
 }

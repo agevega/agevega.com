@@ -47,5 +47,10 @@ USER nginx
 
 EXPOSE 8443
 
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+    CMD printf 'GET /health HTTP/1.0\r\nHost: localhost\r\n\r\n' \
+    | openssl s_client -quiet -verify_quiet -connect localhost:8443 2>/dev/null \
+    | grep -q '200 OK' || exit 1
+
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["nginx", "-g", "daemon off;"]
