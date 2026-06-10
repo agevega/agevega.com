@@ -15,6 +15,11 @@ resource "aws_instance" "bastion" {
     http_tokens   = "required"
   }
 
+  # Encrypt the root EBS volume (default aws/ebs key, no KMS cost).
+  root_block_device {
+    encrypted = true
+  }
+
   tags = merge(var.common_tags, {
     Name = "bastion-host"
   })

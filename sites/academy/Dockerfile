@@ -14,20 +14,23 @@ COPY . .
 RUN bun run build
 
 # Runtime stage
-# Mirrors landing's pattern: TLS terminated inside the container on port 443.
-# In production the bastion deploy script mounts the real LE cert read-only over
-# /etc/nginx/certs (the self-signed cert below is the local-dev fallback).
-FROM nginx:alpine
+# nginx-unprivileged runs as user nginx (uid 101) and listens on unprivileged
+# ports — in-container 80/443 become 8080/8443 (host port mapping is unchanged)
+FROM nginxinc/nginx-unprivileged:alpine
+
+# Build-time setup needs root; the final USER below drops back to nginx.
+USER root
 
 # openssl for the self-signed fallback cert (dev only; prod overrides via volume mount)
 RUN apk add --no-cache openssl
 
-# Generate self-signed certificate (used in local Docker runs without a real cert mounted)
+# Generate self-signed certificate. Must be readable by uid 101 at runtime.
 RUN mkdir -p /etc/nginx/certs
 RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
     -keyout /etc/nginx/certs/privkey.pem \
     -out /etc/nginx/certs/fullchain.pem \
-    -subj "/C=ES/ST=Madrid/L=Madrid/O=Internal/OU=IT/CN=localhost"
+    -subj "/C=ES/ST=Madrid/L=Madrid/O=Internal/OU=IT/CN=localhost" && \
+    chown -R nginx:nginx /etc/nginx/certs
 
 # Copy nginx config
 COPY ./nginx.conf /etc/nginx/conf.d/default.conf
@@ -35,6 +38,8 @@ COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 # Copy built application
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-EXPOSE 443
+USER nginx
+
+EXPOSE 8443
 
 CMD ["nginx", "-g", "daemon off;"]

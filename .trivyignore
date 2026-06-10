@@ -1,0 +1,40 @@
+# Accepted Trivy misconfiguration findings — each entry documents WHY the
+# finding is by-design for this project. Review on every architecture change.
+#
+# Decision record: 2026-06-10 (PR-3 infra hardening). Security + FinOps lens:
+# free hardening was applied (EBS root encryption AVD-AWS-0131, ALB
+# drop_invalid_header_fields AVD-AWS-0052, non-root nginx DS-0002); the
+# items below are either paid upgrades without threat-model benefit for a
+# single-owner public-website account, or inherent to a public website.
+
+# --- Encryption: SSE-S3 (AES256) is already enforced on every bucket. ---
+# Upgrading to a customer-managed KMS key costs ~$1/month/key plus per-request
+# KMS charges (CloudTrail writes continuously). A CMK adds key-rotation and
+# cross-account audit controls that do not change the threat model of a
+# single-owner account serving public static content. FinOps: rejected.
+# S3 encryption should use Customer Managed Keys (tf-state, audit-logs, config, assets)
+AVD-AWS-0132
+# CloudTrail should use Customer managed keys to encrypt the logs
+AVD-AWS-0015
+
+# --- Public website topology: exposure is the product. ---
+# Load balancer is exposed to the internet — it serves www.agevega.com.
+# WAF + CloudFront sit in front; the ALB SG only admits CloudFront prefix-list traffic.
+AVD-AWS-0053
+# Instances in public subnets receive public IPs by default — this is the
+# public tier of the 3-tier VPC (bastion + ALB nodes). Private and data tiers
+# do not auto-assign public IPs.
+AVD-AWS-0164
+
+# --- Egress 0.0.0.0/0 on ports 80/443 only. ---
+# Instances must reach ECR (image pulls), AL2023 repos (dnf), Let's Encrypt
+# (DNS-01 cert issuance) and AWS APIs. Egress is already restricted to
+# 80/443/22-in-VPC; destination IPs of those services are not enumerable.
+AVD-AWS-0104
+
+# --- Bastion SSH 22 from 0.0.0.0/0 (key-only auth). ---
+# Workflow 01 deploys over SSH from GitHub-hosted runners whose IPs are
+# dynamic. Password auth is disabled; access requires the EC2 keypair held in
+# GitHub Secrets. BACKLOG: migrate deploys to SSM Run Command / Session
+# Manager and close port 22 entirely, then remove this entry.
+AVD-AWS-0107

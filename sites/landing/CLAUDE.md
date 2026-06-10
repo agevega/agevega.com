@@ -51,8 +51,8 @@ sites/landing/
 ├── astro.config.mjs        # @tailwindcss/vite plugin, envField (PUBLIC_API_URL, PUBLIC_APP_VERSION)
 ├── vitest.config.ts        # vitest with Astro's vite config (getViteConfig)
 ├── tsconfig.json           # extends astro/tsconfigs/strict
-├── Dockerfile              # oven/bun:1.1 builder → nginx:alpine runtime with SSL + IMDS
-├── nginx.conf              # HTTPS/443, $uri.html SSG fallback, /health endpoint, error_page 404
+├── Dockerfile              # oven/bun:1.3 builder → nginx-unprivileged (non-root) runtime with SSL + IMDS
+├── nginx.conf              # HTTPS/8443 (unprivileged), $uri.html SSG fallback, /health endpoint, error_page 404
 └── docker-entrypoint.sh    # Generates meta.json from AWS IMDSv2 at container start
 ```
 
@@ -105,8 +105,8 @@ See `.env.example` for the template (not committed: `.env` is gitignored).
 ## Runtime: Docker + Nginx + IMDS metadata
 
 Two-stage Docker image:
-1. **Builder** (`oven/bun:1.1`): runs `bun install --frozen-lockfile` then `bun run build`. Produces `dist/`.
-2. **Runtime** (`nginx:alpine`): copies `dist/` to `/usr/share/nginx/html`. Installs `curl` + `openssl`, generates self-signed cert for localhost dev. Copies `nginx.conf` + `docker-entrypoint.sh`. EXPOSE 443.
+1. **Builder** (`oven/bun:1.3`): runs `bun install --frozen-lockfile` then `bun run build`. Produces `dist/`.
+2. **Runtime** (`nginxinc/nginx-unprivileged:alpine`, runs as user nginx/uid 101): copies `dist/` to `/usr/share/nginx/html` (dir chowned to nginx so the entrypoint can write `meta.json`). Installs `curl` + `openssl`, generates self-signed cert for localhost dev. Copies `nginx.conf` + `docker-entrypoint.sh`. Listens in-container on 8080/8443 (non-root cannot bind <1024); host mapping stays 443. EXPOSE 8443.
 
 `docker-entrypoint.sh` runs on container start:
 - Tries to fetch AWS IMDSv2 token (timeout 2s).
@@ -121,7 +121,7 @@ The infra-awareness page `public/pages/instance.html` (linked from `LaboratorioS
 ```bash
 # Local Docker test
 docker build --build-arg PUBLIC_API_URL=https://stub.example.com --build-arg PUBLIC_APP_VERSION=test -t agevega-landing .
-docker run -p 8080:443 agevega-landing
+docker run -p 8080:8443 agevega-landing
 # Open https://localhost:8080 (accept self-signed cert)
 ```
 

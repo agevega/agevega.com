@@ -10,6 +10,7 @@ resource "aws_lb" "app_alb" {
   ]
 
   enable_deletion_protection = false
+  drop_invalid_header_fields = true
 
   tags = merge(var.common_tags, {
     Name = "ha-cluster-alb"

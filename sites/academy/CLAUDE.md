@@ -43,8 +43,8 @@ sites/academy/
 │       └── global.css     # Tailwind v4 @import + .content-body markdown styles
 ├── public/                # Static assets (favicon, og-image)
 ├── astro.config.mjs       # Tailwind vite plugin, sitemap, Shiki github-dark, server.port=4322
-├── Dockerfile             # oven/bun:1.1 builder → nginx:alpine
-└── nginx.conf             # Plain HTTP/80, try_files for SSG, 1y asset cache
+├── Dockerfile             # oven/bun:1.3 builder → nginx-unprivileged (non-root)
+└── nginx.conf             # HTTPS/8443 (unprivileged), try_files for SSG, 1y asset cache
 ```
 
 ## Commands
@@ -110,15 +110,15 @@ bun run preview    # Preview built site
 
 ## Deployment
 
-TLS terminates inside the container on port 443 (mirrors landing). The bastion deploy script mounts the real LE cert (multi-SAN, shared with landing) read-only over `/etc/nginx/certs`. Self-signed fallback is baked into the image for local dev.
+TLS terminates inside the container on port 8443 (mirrors landing; nginx-unprivileged runs as non-root and cannot bind <1024). The bastion deploy script mounts the real LE cert (multi-SAN, shared with landing) read-only over `/etc/nginx/certs`, chowned to uid 101 (the in-container nginx user). Self-signed fallback is baked into the image for local dev.
 
-In dev (bastion): host:8443 → container:443. CloudFront origin connects on 8443.
+In dev (bastion): host:8443 → container:8443. CloudFront origin connects on 8443.
 
-In prod (CloudFront → ALB host-based rules → ASG): ALB listener rule routes `Host: academy.agevega.com` / `www.academy.agevega.com` to the academy target group on port 8443. Each ASG instance runs both containers; the academy container listens on host:8443 → container:443. Same multi-SAN ALB cert (`*.agevega.com` + `*.academy.agevega.com`).
+In prod (CloudFront → ALB host-based rules → ASG): ALB listener rule routes `Host: academy.agevega.com` / `www.academy.agevega.com` to the academy target group on port 8443. Each ASG instance runs both containers; the academy container listens on host:8443 → container:8443. Same multi-SAN ALB cert (`*.agevega.com` + `*.academy.agevega.com`).
 
 ```bash
 docker build -t agevega-academy .
-docker run -p 8080:443 agevega-academy
+docker run -p 8080:8443 agevega-academy
 
 # Then open https://localhost:8080 (accept self-signed cert)
 ```

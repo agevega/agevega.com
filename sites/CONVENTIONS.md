@@ -39,10 +39,11 @@ The "MUST / SHOULD / MAY" terminology follows [RFC 2119](https://www.ietf.org/rf
 | Concern | Convention | Required? |
 |---|---|---|
 | Builder image | `oven/bun:1.1` for SSG build stage | MUST |
-| Runtime image | `nginx:alpine` for serving static dist | MUST |
+| Runtime image | `nginxinc/nginx-unprivileged:alpine` (non-root, uid 101) for serving static dist | MUST |
 | Two-stage build | `COPY --from=builder /app/dist /usr/share/nginx/html` | MUST |
+| Non-root runtime | Build-time `RUN`s under `USER root`, final `USER nginx`; in-container ports 8080/8443 (cannot bind <1024); mounted certs/web root readable/writable by uid 101 | MUST |
 | `.dockerignore` | Exclude `node_modules`, `dist`, `.git`, `.env`, `.astro`, `.vscode`, `*.md`, `Dockerfile` | MUST |
-| HTTPS in container | Self-signed cert via `openssl req` in Dockerfile, EXPOSE 443 | SHOULD (CloudFront terminates real TLS upstream) |
+| HTTPS in container | Self-signed cert via `openssl req` in Dockerfile, EXPOSE 8443 | SHOULD (CloudFront terminates real TLS upstream) |
 | Health endpoint | `nginx.conf` `location /health { return 200 'OK'; }` | SHOULD (ALB depends on it) |
 | IMDS metadata entrypoint | `docker-entrypoint.sh` reading IMDSv2 → `/usr/share/nginx/html/meta.json` | MAY (only if site renders infra info to user) |
 | Static asset cache | `nginx.conf` `expires 1y; add_header Cache-Control "public, max-age=31536000, immutable"` for `*.{js,css,png,jpg,...}` | SHOULD |

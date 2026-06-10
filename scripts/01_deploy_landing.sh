@@ -38,7 +38,9 @@ mkdir -p "$STAGING_DIR"
 echo "Staging certificates..."
 sudo cp -L "$CERT_PATH/fullchain.pem" "$STAGING_DIR/fullchain.pem"
 sudo cp -L "$CERT_PATH/privkey.pem" "$STAGING_DIR/privkey.pem"
-sudo chown -R "$(whoami):$(whoami)" "$STAGING_DIR"
+# uid 101 = the nginx user inside nginx-unprivileged; the container runs as
+# non-root, so the mounted certs must be readable by that uid.
+sudo chown -R 101:101 "$STAGING_DIR"
 
 # 3. Re-deploy container
 echo "Stopping old container..."
@@ -55,7 +57,7 @@ echo "Detected Deployment Version: $TAG"
 echo "Starting new container with SSL..."
 docker run -d \
   --restart always \
-  -p 443:443 \
+  -p 443:8443 \
   -v "$STAGING_DIR:/etc/nginx/certs:ro" \
   -e DEPLOYMENT_VERSION="$TAG" \
   --name landing \
