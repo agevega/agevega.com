@@ -45,6 +45,7 @@ jobs:
           format: sarif
           output: trivy-misconfig.sarif
           severity: HIGH,CRITICAL
+          limit-severities-for-sarif: true
           exit-code: '1'
           skip-dirs: '**/node_modules,**/dist,.claude'
           trivyignores: .trivyignore
