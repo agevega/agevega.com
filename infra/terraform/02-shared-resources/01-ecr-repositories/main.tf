@@ -4,7 +4,7 @@
 
 resource "aws_ecr_repository" "landing" {
   name                 = var.repository_name_landing
-  image_tag_mutability = "MUTABLE"
+  image_tag_mutability = "IMMUTABLE"
 
   image_scanning_configuration {
     scan_on_push = true
@@ -52,7 +52,7 @@ resource "aws_ssm_parameter" "ecr_repository_name_landing" {
 
 resource "aws_ecr_repository" "academy" {
   name                 = var.repository_name_academy
-  image_tag_mutability = "MUTABLE"
+  image_tag_mutability = "IMMUTABLE"
 
   image_scanning_configuration {
     scan_on_push = true

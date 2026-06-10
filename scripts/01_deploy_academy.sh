@@ -5,7 +5,9 @@ set -euo pipefail
 # both landing and academy domains). Container will serve dev.academy.agevega.com.
 DOMAIN="agevega.com"
 CERT_PATH="/etc/letsencrypt/live/$DOMAIN"
-IMAGE_NAME="${1:-academy:latest}" # Use first argument as image name, default to academy:latest
+# No default: ECR tags are immutable and :latest is never pushed, so the caller
+# must pass the full image URI with an explicit version tag.
+IMAGE_NAME="${1:?Usage: $0 <image-uri:version-tag>}"
 
 # 1. Check for certificates
 if ! sudo test -d "$CERT_PATH"; then
