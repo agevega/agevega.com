@@ -298,4 +298,73 @@
   .trace[data-state='local'] .v {
     color: #7dd3fc;
   }
+
+  /* Desktop (≥1024px): alternating timeline with a zigzag connector. Cards
+     alternate left/right, staggered; each hop's dot hugs its own card and the
+     line steps dot → down → elbow across → next dot, ending AT the Release
+     dot (no tail past the last hop). Mobile keeps the left-rail single column
+     above. DOM order stays 1→6 for screen readers. */
+  @media (min-width: 1024px) {
+    .hop {
+      grid-template-columns: 1fr 1.5rem 1fr; /* card | connector lane | card */
+      min-height: 0;
+    }
+    .hop + .hop {
+      margin-top: 0.25rem; /* breathing room between alternating blocks */
+    }
+    .hop-rail {
+      grid-column: 2;
+      grid-row: 1;
+    }
+    /* Each dot sits against its own card's edge — the zigzag amplitude. */
+    .hop:nth-child(odd) .hop-rail {
+      transform: translateX(-1.4rem);
+    }
+    .hop:nth-child(even) .hop-rail {
+      transform: translateX(1.4rem);
+    }
+    /* Straight dot-to-dot diagonals. Geometry: lanes are 2.8rem apart (dx),
+       consecutive dots sit 4.34rem lower (dy — uniform card heights + the
+       0.25rem block gap), so each connector is a 5.14rem line at ±57.7°
+       anchored on the hop's own dot. All rem-based, so the angle survives
+       zoom. Re-measure both numbers if card heights or the gap ever change. */
+    .hop-rail::before {
+      display: none;
+    }
+    .hop-rail::after {
+      content: '';
+      position: absolute;
+      top: 0.85rem; /* own dot center */
+      left: 50%;
+      width: 5.14rem;
+      height: 1px;
+      transform-origin: left center;
+      background: linear-gradient(to right, rgba(52, 211, 153, 0.35), rgba(59, 130, 246, 0.25));
+    }
+    .hop:nth-child(odd) .hop-rail::after {
+      transform: rotate(57.7deg); /* down-right to the next (right-lane) dot */
+    }
+    .hop:nth-child(even) .hop-rail::after {
+      transform: rotate(122.3deg); /* down-left to the next (left-lane) dot */
+    }
+    /* The trace ends at Release — no segment after the last dot. */
+    .hop--last .hop-rail::after {
+      display: none;
+    }
+    .hop:nth-child(odd) .hop-body {
+      grid-column: 1;
+      grid-row: 1;
+      padding-right: 1.4rem;
+    }
+    /* Left-side cards hug the spine: content right-aligned. */
+    .hop:nth-child(odd) .hop-head,
+    .hop:nth-child(odd) .hop-data {
+      justify-content: flex-end;
+    }
+    .hop:nth-child(even) .hop-body {
+      grid-column: 3;
+      grid-row: 1;
+      padding-left: 1.4rem;
+    }
+  }
 </style>
