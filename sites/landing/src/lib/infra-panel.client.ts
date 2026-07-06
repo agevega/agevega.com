@@ -138,13 +138,12 @@ function renderTrace(root: HTMLElement, view: InfraView): void {
 
   if (envNote) {
     if (view.env === 'dev') {
-      envNote.textContent = 'Entorno dev: CloudFront → bastion (sin ALB/WAF delante).';
+      envNote.textContent = 'Entorno de desarrollo: CloudFront → bastion (sin ALB/WAF delante).';
     } else if (view.env === 'local') {
       envNote.textContent =
         'Entorno local: sin CDN ni balanceador — los datos de instancia no aplican.';
     } else {
-      envNote.textContent =
-        'Ábrelo en DevTools → Network y compruébalo: el TTFB sale de tu propia petición y los datos de la instancia, de /meta.json.';
+      envNote.textContent = 'Entorno real: producción en AWS — auditable en DevTools → Network.';
     }
   }
 }
