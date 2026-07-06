@@ -99,7 +99,9 @@ function setState(root: HTMLElement, state: 'live' | 'local'): void {
   root.dataset.state = state;
 }
 
-const BADGE_LIVE = '● LIVE';
+// The live dot is drawn by CSS (.trace[data-state='live'] .trace-badge::before),
+// not as a text glyph — a ● character misaligns at 10px with letter-spacing.
+const BADGE_LIVE = 'LIVE';
 const BADGE_LOCAL = 'Local · Simulated';
 
 // ---------------------------------------------------------------------------

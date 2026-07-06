@@ -168,6 +168,9 @@
      slate-blue (never red/broken), loading slate. Same layout in all states so
      filling values causes no layout shift (CLS ≈ 0). */
   .trace-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
     color: #64748b;
     border-color: rgba(100, 116, 139, 0.4);
     background: rgba(100, 116, 139, 0.08);
@@ -176,6 +179,29 @@
     color: #34d399;
     border-color: rgba(52, 211, 153, 0.4);
     background: rgba(52, 211, 153, 0.1);
+  }
+  /* The LIVE dot is a real circle, not a text glyph — centered and crisp. */
+  .trace[data-state='live'] .trace-badge::before {
+    content: '';
+    width: 0.35rem;
+    height: 0.35rem;
+    border-radius: 9999px;
+    background: #34d399;
+    box-shadow: 0 0 4px rgba(52, 211, 153, 0.7);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .trace[data-state='live'] .trace-badge::before {
+      animation: trace-pulse 2s ease-in-out infinite;
+    }
+  }
+  @keyframes trace-pulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.35;
+    }
   }
   .trace[data-state='local'] .trace-badge {
     color: #7dd3fc;
