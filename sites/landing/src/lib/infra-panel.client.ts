@@ -1,0 +1,155 @@
+/**
+ * infra-panel.client.ts — the browser glue for the live infra widgets.
+ *
+ * ONE copy of the fetch + timeout + populate logic, consumed by the
+ * /about-this-web request trace (mountTrace). The truthfulness logic lives in
+ * the pure `infra-panel.ts` module (unit-tested); this file only fetches and
+ * writes to the DOM.
+ *
+ * Flow (fail-closed):
+ *
+ *   fetch('/meta.json', 2s AbortController)
+ *      │
+ *      ├─ !ok / abort / network error ─────► buildFallbackView()  ("Local / Simulated")
+ *      ├─ body not JSON ──────────────────► buildFallbackView()
+ *      ├─ missing required field ─────────► buildFallbackView()
+ *      └─ valid ─► detectEnv(host, provider) ─► buildView()  (LIVE, or local if provider≠aws)
+ *
+ * One shared, memoized fetch promise: even if several widgets ever co-render,
+ * the page makes exactly one request to /meta.json.
+ */
+
+import {
+  detectEnv,
+  isValidMeta,
+  buildView,
+  buildFallbackView,
+  type CloudFrontInfo,
+  type InfraView,
+  type PerfInfo,
+} from './infra-panel';
+
+const META_URL = '/meta.json';
+const TIMEOUT_MS = 2000;
+
+let viewPromise: Promise<InfraView> | null = null;
+
+/** Memoized single fetch shared by every widget on the page. */
+function getView(): Promise<InfraView> {
+  if (!viewPromise) viewPromise = fetchView();
+  return viewPromise;
+}
+
+function readPerf(): PerfInfo {
+  try {
+    const nav = performance.getEntriesByType('navigation')[0] as
+      | PerformanceNavigationTiming
+      | undefined;
+    if (!nav) return { ttfbMs: null, protocol: null };
+    const ttfb = Math.round(nav.responseStart);
+    return { ttfbMs: ttfb > 0 ? ttfb : null, protocol: nav.nextHopProtocol || null };
+  } catch {
+    return { ttfbMs: null, protocol: null };
+  }
+}
+
+async function fetchView(): Promise<InfraView> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
+  try {
+    const res = await fetch(META_URL, {
+      signal: controller.signal,
+      headers: { Accept: 'application/json' },
+    });
+    if (!res.ok) return buildFallbackView();
+
+    const headers: CloudFrontInfo = {
+      pop: res.headers.get('x-amz-cf-pop'),
+      cache: res.headers.get('x-cache'),
+      via: res.headers.get('via'),
+    };
+
+    let data: unknown;
+    try {
+      data = await res.json();
+    } catch {
+      return buildFallbackView();
+    }
+    if (!isValidMeta(data)) return buildFallbackView();
+
+    const env = detectEnv(location.hostname, data.provider);
+    return buildView(data, headers, readPerf(), env);
+  } catch {
+    return buildFallbackView();
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// DOM helpers
+// ---------------------------------------------------------------------------
+
+function setText(root: ParentNode, field: string, value: string): void {
+  const el = root.querySelector<HTMLElement>(`[data-field="${field}"]`);
+  if (el) el.textContent = value;
+}
+
+function setState(root: HTMLElement, state: 'live' | 'local'): void {
+  root.dataset.state = state;
+}
+
+const BADGE_LIVE = '● LIVE';
+const BADGE_LOCAL = 'Local · Simulated';
+
+// ---------------------------------------------------------------------------
+// /about-this-web request trace
+// ---------------------------------------------------------------------------
+
+export async function mountTrace(root: HTMLElement): Promise<void> {
+  const view = await getView();
+  renderTrace(root, view);
+}
+
+const INFERRED_CLOUDFRONT = 'vía CloudFront (POP no expuesto)';
+
+function renderTrace(root: HTMLElement, view: InfraView): void {
+  const badge = root.querySelector<HTMLElement>('[data-trace-badge]');
+  const envNote = root.querySelector<HTMLElement>('[data-trace-env]');
+
+  // Performance API — the visitor's own request (live whenever available).
+  setText(root, 'ttfb', view.perf.ttfbMs != null ? `${view.perf.ttfbMs} ms` : 'n/d');
+  setText(root, 'protocol', view.perf.protocol ?? 'n/d');
+
+  // CloudFront edge — live from response headers, or inferred when absent.
+  setText(root, 'pop', view.cloudfront.pop ?? INFERRED_CLOUDFRONT);
+  setText(root, 'cache', view.cloudfront.cache ?? 'inferido');
+
+  if (view.status === 'live' && view.instance) {
+    setState(root, 'live');
+    if (badge) badge.textContent = BADGE_LIVE;
+    setText(root, 'traceInstanceId', view.instance.id);
+    setText(root, 'traceAz', view.instance.az);
+    setText(root, 'traceType', view.instance.type);
+    setText(root, 'traceRelease', view.release);
+  } else {
+    setState(root, 'local');
+    if (badge) badge.textContent = BADGE_LOCAL;
+    setText(root, 'traceInstanceId', '—');
+    setText(root, 'traceAz', '—');
+    setText(root, 'traceType', '—');
+    setText(root, 'traceRelease', view.release);
+  }
+
+  if (envNote) {
+    if (view.env === 'dev') {
+      envNote.textContent = 'Entorno dev: CloudFront → bastion (sin ALB/WAF delante).';
+    } else if (view.env === 'local') {
+      envNote.textContent =
+        'Entorno local: sin CDN ni balanceador — los datos de instancia no aplican.';
+    } else {
+      envNote.textContent =
+        'Ábrelo en DevTools → Network y compruébalo: cabeceras de CloudFront, TTFB y protocolo salen de tu propia petición.';
+    }
+  }
+}

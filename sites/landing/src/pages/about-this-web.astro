@@ -1,13 +1,22 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import ArchitectureSection from "../components/ArchitectureSection.astro";
+import Layout from '../layouts/Layout.astro';
+import ArchitectureSection from '../components/ArchitectureSection.astro';
+import RequestTraceSection from '../components/RequestTraceSection.astro';
 ---
 
 <Layout
   title="Sobre esta web | Alejandro Vega"
-  description="Arquitectura técnica de agevega.com: infraestructura AWS con Zero Trust, Terraform IaC, Docker, CI/CD con GitHub Actions y CloudFront."
+  description="Arquitectura técnica de agevega.com: infraestructura AWS con Zero Trust, Terraform IaC, Docker, CI/CD con GitHub Actions y CloudFront. Con la traza en vivo de cómo se sirve cada petición."
 >
   <main class="pt-16">
+    <RequestTraceSection />
     <ArchitectureSection />
   </main>
 </Layout>
+
+<script>
+  import { mountTrace } from '../lib/infra-panel.client';
+
+  const el = document.getElementById('request-trace');
+  if (el) mountTrace(el);
+</script>
