@@ -66,11 +66,17 @@ export interface InstanceInfo {
 
 /**
  * The view-model the widgets consume. `status` drives the visual treatment:
- *  - 'live'  → real instance data, LIVE badge
- *  - 'local' → "Local (Simulated)" honest fallback, no LIVE badge, no fabricated values
+ *  - 'live'        → real instance data, LIVE badge
+ *  - 'local'       → provider says non-AWS: honest "Local (Simulated)" state
+ *  - 'unavailable' → /meta.json could not be read (timeout, non-200, malformed,
+ *                    missing field). We know NOTHING about the environment, so
+ *                    we say exactly that — never "local", which could be false
+ *                    on a production fetch failure.
  */
+export type InfraStatus = 'live' | 'local' | 'unavailable';
+
 export interface InfraView {
-  status: 'live' | 'local';
+  status: InfraStatus;
   env: Env;
   /** null in local/fallback — we never invent instance values. */
   instance: InstanceInfo | null;
@@ -145,8 +151,8 @@ export function buildView(
 }
 
 /**
- * The single honest fallback for every failure (timeout, non-200, malformed
- * JSON, missing field) and for local runs. Never emits a real-looking value.
+ * The honest state for a TRUE local run (meta.json read fine, provider ≠ aws).
+ * Never emits a real-looking value.
  */
 export function buildFallbackView(env: Env = 'local', release = 'Localhost'): InfraView {
   return {
@@ -156,5 +162,22 @@ export function buildFallbackView(env: Env = 'local', release = 'Localhost'): In
     release,
     cloudfront: { ...EMPTY_CLOUDFRONT },
     perf: { ...EMPTY_PERF },
+  };
+}
+
+/**
+ * The honest state when /meta.json could not be read at all (timeout, non-200,
+ * malformed JSON, missing required field). Distinct from 'local': claiming
+ * "local environment" on a production fetch failure would be a lie. The
+ * visitor's own perf data (TTFB) is still real and may be shown.
+ */
+export function buildUnavailableView(perf: PerfInfo = { ...EMPTY_PERF }): InfraView {
+  return {
+    status: 'unavailable',
+    env: 'local', // unknown — renderers must not derive claims from env here
+    instance: null,
+    release: 'n/d',
+    cloudfront: { ...EMPTY_CLOUDFRONT },
+    perf: { ttfbMs: perf.ttfbMs, protocol: perf.protocol },
   };
 }

@@ -10,10 +10,13 @@
  *
  *   fetch('/meta.json', 2s AbortController)
  *      │
- *      ├─ !ok / abort / network error ─────► buildFallbackView()  ("Local / Simulated")
- *      ├─ body not JSON ──────────────────► buildFallbackView()
- *      ├─ missing required field ─────────► buildFallbackView()
+ *      ├─ !ok / abort / network error ─────► buildUnavailableView()  ("sin datos")
+ *      ├─ body not JSON ──────────────────► buildUnavailableView()
+ *      ├─ missing required field ─────────► buildUnavailableView()
  *      └─ valid ─► detectEnv(host, provider) ─► buildView()  (LIVE, or local if provider≠aws)
+ *
+ * 'unavailable' ≠ 'local': a fetch failure says nothing about the environment,
+ * so the widget says "no data" instead of claiming to run locally.
  *
  * One shared, memoized fetch promise: even if several widgets ever co-render,
  * the page makes exactly one request to /meta.json.
@@ -23,8 +26,9 @@ import {
   detectEnv,
   isValidMeta,
   buildView,
-  buildFallbackView,
+  buildUnavailableView,
   type CloudFrontInfo,
+  type InfraStatus,
   type InfraView,
   type PerfInfo,
 } from './infra-panel';
@@ -61,7 +65,7 @@ async function fetchView(): Promise<InfraView> {
       signal: controller.signal,
       headers: { Accept: 'application/json' },
     });
-    if (!res.ok) return buildFallbackView();
+    if (!res.ok) return buildUnavailableView(readPerf());
 
     const headers: CloudFrontInfo = {
       pop: res.headers.get('x-amz-cf-pop'),
@@ -73,14 +77,14 @@ async function fetchView(): Promise<InfraView> {
     try {
       data = await res.json();
     } catch {
-      return buildFallbackView();
+      return buildUnavailableView(readPerf());
     }
-    if (!isValidMeta(data)) return buildFallbackView();
+    if (!isValidMeta(data)) return buildUnavailableView(readPerf());
 
     const env = detectEnv(location.hostname, data.provider);
     return buildView(data, headers, readPerf(), env);
   } catch {
-    return buildFallbackView();
+    return buildUnavailableView(readPerf());
   } finally {
     clearTimeout(timer);
   }
@@ -95,7 +99,7 @@ function setText(root: ParentNode, field: string, value: string): void {
   if (el) el.textContent = value;
 }
 
-function setState(root: HTMLElement, state: 'live' | 'local'): void {
+function setState(root: HTMLElement, state: InfraStatus): void {
   root.dataset.state = state;
 }
 
@@ -103,6 +107,7 @@ function setState(root: HTMLElement, state: 'live' | 'local'): void {
 // not as a text glyph — a ● character misaligns at 10px with letter-spacing.
 const BADGE_LIVE = 'LIVE';
 const BADGE_LOCAL = 'Local · Simulated';
+const BADGE_UNAVAILABLE = 'Sin datos';
 
 // ---------------------------------------------------------------------------
 // /about-this-web request trace
@@ -130,6 +135,12 @@ function renderTrace(root: HTMLElement, view: InfraView): void {
     setText(root, 'traceAz', view.instance.az);
     setText(root, 'traceType', view.instance.type);
     setText(root, 'traceRelease', view.release);
+  } else if (view.status === 'unavailable') {
+    setState(root, 'unavailable');
+    if (badge) badge.textContent = BADGE_UNAVAILABLE;
+    setText(root, 'traceAz', '—');
+    setText(root, 'traceType', '—');
+    setText(root, 'traceRelease', view.release);
   } else {
     setState(root, 'local');
     if (badge) badge.textContent = BADGE_LOCAL;
@@ -139,7 +150,11 @@ function renderTrace(root: HTMLElement, view: InfraView): void {
   }
 
   if (envNote) {
-    if (view.env === 'dev') {
+    if (view.status === 'unavailable') {
+      // A fetch failure says nothing about the environment — claim nothing.
+      envNote.textContent =
+        'No se pudieron leer los metadatos de la instancia (/meta.json) — sin datos, nada inventado.';
+    } else if (view.env === 'dev') {
       envNote.textContent = 'Entorno de desarrollo: CloudFront → bastion (sin ALB/WAF delante).';
     } else if (view.env === 'local') {
       envNote.textContent =

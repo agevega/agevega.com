@@ -71,7 +71,7 @@ bun install        # Install dependencies (frozen lockfile in CI)
 bun run dev        # Dev server at http://localhost:4321
 bun run build      # Build static site to dist/
 bun run preview    # Preview built site
-bun run test       # Vitest — 56 tests across 9 files
+bun run test       # Vitest — 62 tests across 9 files
 bun run check      # astro check (static type validation — CI gate)
 bun run lint       # ESLint 9 flat config (eslint.config.js — CI gate)
 bun run format     # Prettier check (uses sites/.prettierrc)
@@ -121,7 +121,7 @@ Two-stage Docker image:
 - If local/non-AWS: falls back to `"Local (Simulated)"` values.
 - Then exec's nginx.
 
-`/meta.json` has two consumers: `public/pages/instance.html` (linked from `LaboratorioSection.astro`) and the `/about-this-web` request trace (`RequestTraceSection.astro`). The trace's client module, `src/lib/infra-panel.client.ts` (fetch + populate glue), is backed by the pure, unit-tested `src/lib/infra-panel.ts` (env detection, validation, view-model, fail-closed). Values are LIVE, build-time, or inferred-and-labeled — never fabricated. On local/non-AWS runs the trace renders an honest "Local (Simulated)" state. nginx serves `/meta.json` with `Cache-Control: no-store` (defense-in-depth; CloudFront already enforces TTL 0 + no_cache for this path).
+`/meta.json` has two consumers: `public/pages/instance.html` (linked from `LaboratorioSection.astro`) and the `/about-this-web` request trace (`RequestTraceSection.astro`). The trace's client module, `src/lib/infra-panel.client.ts` (fetch + populate glue), is backed by the pure, unit-tested `src/lib/infra-panel.ts` (env detection, validation, view-model, fail-closed). Values are LIVE, build-time, or inferred-and-labeled — never fabricated. On local/non-AWS runs the trace renders an honest "Local (Simulated)" state; if `/meta.json` cannot be read at all it renders a distinct "Sin datos" state (a fetch failure says nothing about the environment, so it claims none). nginx serves `/meta.json` with `Cache-Control: no-store` (defense-in-depth; CloudFront already enforces TTL 0 + no_cache for this path).
 
 ## Deployment
 
@@ -138,7 +138,7 @@ CI/CD: tag `v*` → `00-generate-docker-image` builds `./sites/landing/` → pus
 
 - **Framework:** Vitest 4 (node environment) using `getViteConfig` from `astro/config` so vitest shares Astro's vite resolver.
 - **Pattern:** Astro Container API (`experimental_AstroContainer.create()`) renders components to HTML strings; assertions run on the strings.
-- **Coverage:** 56 tests across 9 files (env, build regression, Navigation, Hero, Footer, license, infra-panel pure logic, RequestTrace, about-this-web composition). See `TESTING.md` for the strategy.
+- **Coverage:** 62 tests across 9 files (env, build regression, Navigation, Hero, Footer, license, infra-panel pure logic, RequestTrace, about-this-web composition). See `TESTING.md` for the strategy.
 - **Run:** `PUBLIC_API_URL=stub bun run test` (envField requires PUBLIC_API_URL at runtime — provide a stub in test env).
 - **CI:** `.github/workflows/03-test-sites.yml` runs vitest on PRs + push to master, matrix [landing, academy].
 

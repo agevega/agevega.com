@@ -50,6 +50,12 @@ describe('RequestTraceSection', () => {
     expect(html).toContain('estático');
   });
 
+  it('tells the truth without JavaScript (noscript fallback)', async () => {
+    const html = await render();
+    expect(html).toMatch(/<noscript>/);
+    expect(html).toContain('Sin JavaScript no hay traza en vivo');
+  });
+
   it('ships NO fabricated values in the static HTML', async () => {
     const html = await render();
     expect(html).not.toMatch(/i-[0-9a-f]{8,}/); // instance id

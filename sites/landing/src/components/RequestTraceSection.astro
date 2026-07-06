@@ -161,6 +161,17 @@
         >
           Trazando tu petición…
         </p>
+        <noscript>
+          <style is:inline>
+            #request-trace [data-trace-env] {
+              display: none;
+            }
+          </style>
+          <p class="flex items-center text-xs text-slate-500 leading-relaxed min-h-[2.5rem] m-0">
+            Sin JavaScript no hay traza en vivo — los datos se leen desde tu navegador y aquí no se
+            inventa nada.
+          </p>
+        </noscript>
       </div>
     </div>
   </div>
@@ -318,13 +329,16 @@
     border-color: rgba(148, 163, 184, 0.3);
     background: rgba(148, 163, 184, 0.06);
   }
-  /* In the local fallback, the LIVE tags would lie — dim them to neutral. */
-  .trace[data-state='local'] .tag--live {
+  /* In the local and no-data fallbacks, the LIVE tags would lie — dim them to
+     neutral. (data-state='unavailable' keeps the default slate badge.) */
+  .trace[data-state='local'] .tag--live,
+  .trace[data-state='unavailable'] .tag--live {
     color: #7dd3fc;
     border-color: rgba(125, 211, 252, 0.3);
     background: rgba(125, 211, 252, 0.06);
   }
-  .trace[data-state='local'] .v {
+  .trace[data-state='local'] .v,
+  .trace[data-state='unavailable'] .v {
     color: #7dd3fc;
   }
 

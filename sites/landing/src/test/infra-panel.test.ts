@@ -4,6 +4,7 @@ import {
   isValidMeta,
   buildView,
   buildFallbackView,
+  buildUnavailableView,
   type MetaJson,
   type CloudFrontInfo,
   type PerfInfo,
@@ -125,6 +126,37 @@ describe('buildFallbackView — the single honest fallback (3A fail-closed)', ()
 
   it('threat assertion: a fallback view carries no instance id / az / type anywhere', () => {
     const serialized = JSON.stringify(buildFallbackView('local', 'Localhost'));
+    expect(serialized).not.toMatch(/i-[0-9a-f]{8,}/);
+    expect(serialized).not.toContain('eu-south-2');
+    expect(serialized).not.toContain('t4g');
+  });
+});
+
+describe('buildUnavailableView — fetch failure is NOT "local"', () => {
+  it('reports unavailable, never claims a local environment', () => {
+    const v = buildUnavailableView();
+    expect(v.status).toBe('unavailable');
+    expect(v.instance).toBeNull();
+    expect(v.release).toBe('n/d');
+    expect(v.cloudfront).toEqual({ pop: null, cache: null, via: null });
+  });
+
+  it('is distinct from the true-local fallback', () => {
+    expect(buildUnavailableView().status).not.toBe(buildFallbackView().status);
+  });
+
+  it("keeps the visitor's own perf data — it is real even when /meta.json fails", () => {
+    const v = buildUnavailableView({ ttfbMs: 43, protocol: 'h2' });
+    expect(v.perf.ttfbMs).toBe(43);
+    expect(v.perf.protocol).toBe('h2');
+  });
+
+  it('defaults perf to nulls when not provided', () => {
+    expect(buildUnavailableView().perf).toEqual({ ttfbMs: null, protocol: null });
+  });
+
+  it('threat assertion: carries no real-looking value anywhere', () => {
+    const serialized = JSON.stringify(buildUnavailableView());
     expect(serialized).not.toMatch(/i-[0-9a-f]{8,}/);
     expect(serialized).not.toContain('eu-south-2');
     expect(serialized).not.toContain('t4g');
