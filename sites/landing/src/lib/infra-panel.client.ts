@@ -111,31 +111,26 @@ export async function mountTrace(root: HTMLElement): Promise<void> {
   renderTrace(root, view);
 }
 
-const INFERRED_CLOUDFRONT = 'vía CloudFront (POP no expuesto)';
-
 function renderTrace(root: HTMLElement, view: InfraView): void {
   const badge = root.querySelector<HTMLElement>('[data-trace-badge]');
   const envNote = root.querySelector<HTMLElement>('[data-trace-env]');
 
   // Performance API — the visitor's own request (live whenever available).
   setText(root, 'ttfb', view.perf.ttfbMs != null ? `${view.perf.ttfbMs} ms` : 'n/d');
-  setText(root, 'protocol', view.perf.protocol ?? 'n/d');
 
-  // CloudFront edge — live from response headers, or inferred when absent.
-  setText(root, 'pop', view.cloudfront.pop ?? INFERRED_CLOUDFRONT);
-  setText(root, 'cache', view.cloudfront.cache ?? 'inferido');
+  // The negotiated TLS version is not readable from browser JS, but the scheme
+  // is — and https implies TLS. Read live, never asserted.
+  setText(root, 'tls', location.protocol === 'https:' ? 'cifrado · https' : 'sin cifrar · http');
 
   if (view.status === 'live' && view.instance) {
     setState(root, 'live');
     if (badge) badge.textContent = BADGE_LIVE;
-    setText(root, 'traceInstanceId', view.instance.id);
     setText(root, 'traceAz', view.instance.az);
     setText(root, 'traceType', view.instance.type);
     setText(root, 'traceRelease', view.release);
   } else {
     setState(root, 'local');
     if (badge) badge.textContent = BADGE_LOCAL;
-    setText(root, 'traceInstanceId', '—');
     setText(root, 'traceAz', '—');
     setText(root, 'traceType', '—');
     setText(root, 'traceRelease', view.release);
@@ -149,7 +144,7 @@ function renderTrace(root: HTMLElement, view: InfraView): void {
         'Entorno local: sin CDN ni balanceador — los datos de instancia no aplican.';
     } else {
       envNote.textContent =
-        'Ábrelo en DevTools → Network y compruébalo: cabeceras de CloudFront, TTFB y protocolo salen de tu propia petición.';
+        'Ábrelo en DevTools → Network y compruébalo: el TTFB sale de tu propia petición y los datos de la instancia, de /meta.json.';
     }
   }
 }

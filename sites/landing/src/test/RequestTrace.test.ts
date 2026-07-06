@@ -19,26 +19,22 @@ describe('RequestTraceSection', () => {
     expect(html).toMatch(/data-state="loading"/);
   });
 
-  it('renders all six hops of the production chain', async () => {
+  it('renders all six hops of the production chain (WAF as a CloudFront sub-line)', async () => {
     const html = await render();
-    for (const node of ['Tú', 'CloudFront', 'AWS WAF', 'ALB', 'EC2', 'nginx']) {
+    for (const node of ['Tú', 'CloudFront', 'AWS WAF', 'ALB', 'EC2', 'Nginx · Docker', 'Release']) {
       expect(html).toContain(node);
     }
   });
 
   it('exposes the live data-field hooks for the client to populate', async () => {
     const html = await render();
-    for (const field of [
-      'ttfb',
-      'protocol',
-      'pop',
-      'cache',
-      'traceInstanceId',
-      'traceAz',
-      'traceType',
-      'traceRelease',
-    ]) {
+    for (const field of ['ttfb', 'tls', 'traceAz', 'traceType', 'traceRelease']) {
       expect(html).toMatch(new RegExp(`data-field="${field}"`));
+    }
+    // Removed on purpose — must NOT come back: protocol (h2/h3 noise),
+    // CloudFront pop/x-cache, and the instance id.
+    for (const gone of ['protocol', 'pop', 'cache', 'traceInstanceId']) {
+      expect(html).not.toMatch(new RegExp(`data-field="${gone}"`));
     }
   });
 
