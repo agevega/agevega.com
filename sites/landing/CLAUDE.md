@@ -148,6 +148,6 @@ CI/CD: tag `v*` → `00-generate-docker-image` builds `./sites/landing/` → pus
 - Add `@astrojs/tailwind` integration. Use `@tailwindcss/vite` in `astro.config.mjs:vite.plugins`.
 - Add SSL certs to the runtime image manually; the self-signed cert is generated in the Dockerfile RUN step.
 - Use SPA-style `try_files ... /index.html` in `nginx.conf` — this is SSG, use `$uri $uri/ $uri.html =404` (already configured).
-- Pin `vite` to 8.x. Astro 6.4.4 depends on vite `^7.3.2`; `vite` is pinned exact to `7.3.2` in `devDependencies` to match. Mismatched vite versions break `@tailwindcss/vite`.
+- Pin `vite` to 8.x. Astro 6.4.6 depends on vite `^7.3.2`; `vite` is pinned exact to `7.3.5` in `devDependencies` to match (both sites in lockstep). Mismatched vite versions break `@tailwindcss/vite`.
 - Add back `.eslintrc.cjs`. Lint is ESLint 9 flat config (`eslint.config.js`); the old eslintrc could not parse TypeScript inside `<script>` tags. Keep both sites in lockstep.
 - Install new dependencies without explicit approval.
