@@ -152,8 +152,7 @@ function renderTrace(root: HTMLElement, view: InfraView): void {
   if (envNote) {
     if (view.status === 'unavailable') {
       // A fetch failure says nothing about the environment — claim nothing.
-      envNote.textContent =
-        'No se pudieron leer los metadatos de la instancia (/meta.json) — sin datos, nada inventado.';
+      envNote.textContent = 'No se pudieron leer los metadatos';
     } else if (view.env === 'dev') {
       envNote.textContent = 'Entorno de desarrollo: CloudFront → bastion (sin ALB/WAF delante).';
     } else if (view.env === 'local') {
